@@ -97,10 +97,12 @@
 <meta property="og:url" content="/2017/05/20/深入xss-prompt-1-挑战/index.html">
 <meta property="og:site_name" content="Glad2metU">
 <meta property="og:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。">
-<meta property="og:updated_time" content="2017-05-20T10:58:14.000Z">
+<meta property="og:image" content="/Level-8.png">
+<meta property="og:updated_time" content="2017-05-20T10:59:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入xss-prompt(1)挑战">
 <meta name="twitter:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。">
+<meta name="twitter:image" content="/Level-8.png">
 
 
 
@@ -413,7 +415,7 @@
 <p><em>Talk:</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">虽然限制长度，但是此题思路应该是两种，利用html注释和js注释进行绕过。</div><div class="line">HTML注释太长，暂未想出payload。第二个payload的利用比较有意思，利</div><div class="line">用了p标签的双引号，同时用单引号进行了避免冲突。</div></pre></td></tr></table></figure></p>
 <h4 id="Level-8"><a href="#Level-8" class="headerlink" title="Level-8"></a>Level-8</h4><p><em>regex:</em> <code>/[\r\n&lt;/&quot;]/g</code><br><em>过滤点:</em> <code>换行,斜线,双引号,左尖括号</code><br><em>Payload:</em><br><a href="https://pastebin.com/GJ7U3hzh" target="_blank" rel="external">Vector</a></p>
 <p><em>Talk:</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">这道题目很有意思，关键点是如何进行换行。</div><div class="line">这里需要知道常见的换行符以及utf-8和unicode的关系，</div><div class="line">最重要的是如何将换行符写成代码的形式，还有&lt;!--和--&gt;区别。</div></pre></td></tr></table></figure></p>
-<p><em>UTF:</em><br>{% asset_img Level-8.png Prompt-1}</p>
+<p><em>UTF:</em><br><img src="/Level-8.png" alt="Prompt(1)"></p>
 <p>根据图中对比可知不可见字符应该是<code>\xE2\x80\xA8</code>和<code>\x0A</code>，此时是utf编码，转为unicode分别是<code>\u2028</code>和<code>\u000A</code>，对应的字符分别是<code>LS(Line Separator)</code>和<code>LF(Line Feed)</code>。LF是人为加上去以作区分。   </p>
 <p><a href="https://en.wikipedia.org/wiki/Newline" target="_blank" rel="external">换行符</a></p>
 <blockquote>
