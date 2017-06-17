@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Ꭰ博客">
 <meta property="og:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
 <meta property="og:image" content="/2017/06/17/how-to-ssrf/net.png">
-<meta property="og:updated_time" content="2017-06-17T10:09:33.000Z">
+<meta property="og:updated_time" content="2017-06-17T10:19:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(译)如何伪造服务端请求-SSRF">
 <meta name="twitter:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
@@ -405,7 +405,7 @@ require &apos;open-uri&apos;
 get &apos;/&apos; do
   format &apos;RESPONSE: %s&apos;, open(params[:url]).read
 end
-</code></pre><p>为了本地运行这些代码，将其保存为server.rb文件，执行gem install sinatra，接着执行ruby server.rb(我使用的是ruby 2.3.3p222版本)。现在你可以尝试访问<a href="http://localhost:4567。在环回地址以外的地址运行该代码会引起[代码执行漏洞][2]，所以不要这么做。" target="_blank" rel="external">http://localhost:4567。在环回地址以外的地址运行该代码会引起[代码执行漏洞][2]，所以不要这么做。</a></p>
+</code></pre><p>为了本地运行这些代码，将其保存为server.rb文件，执行gem install sinatra，接着执行ruby server.rb(我使用的是ruby 2.3.3p222版本)。现在你可以尝试访问<em><a href="http://localhost:4567" target="_blank" rel="external">http://localhost:4567</a></em>。在环回地址以外的地址运行该代码会引起<a href="https://sakurity.com/blog/2015/02/28/openuri.html" target="_blank" rel="external">代码执行漏洞</a>，所以不要这么做。</p>
 <p>收到<em><a href="http://localhost:4568/?url=https://google.com" target="_blank" rel="external">http://localhost:4568/?url=https://google.com</a></em>请求时，<em>open()</em>函数会请求<em><a href="https://google.com" target="_blank" rel="external">https://google.com</a></em>并将响应内容返回给客户端。</p>
 <pre><code>hack-box-01 $ curl http://localhost:4567/\?
 url\=https://google.com
@@ -427,7 +427,7 @@ content=&quot;/images/branding/googleg/1x/googleg_standard_color_128dp.png&quot;
 RESPONSE: &lt;html&gt;&lt;head&gt;&lt;title&gt;Internal admin panel&lt;/title&gt;&lt;/head&gt;...&lt;/html&gt;
 </code></pre><p>因为web服务器能够访问admin-panel(10.0.0.2)，所以web服务器会发送http请求给admin-panel，admin-panel将响应通过web服务器返回至外网。理所当然你可以把web服务器当成双向web代理，去往admin-panel的流量都必须经过10.0.0.3。</p>
 <h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><p>既然你对SSRF有了基本的了解，接下来介绍如何测试。在我经历过的SSRF漏洞经验里，拥有自己可以控制的服务器是非常有帮助的。我倾向用DigitalOcean盒子提供的服务器去调适发现潜在的漏洞，无论什么服务器，只要你选择的服务器能够转发流量就行了。</p>
-<p>接着通过ping你控制的服务器来调试<a href="http://web-server.com:4567上的SSRF。首先，使用netcat监听流量：" target="_blank" rel="external">http://web-server.com:4567上的SSRF。首先，使用netcat监听流量：</a></p>
+<p>接着通过ping你控制的服务器来调试<em><a href="http://web-server.com:4567" target="_blank" rel="external">http://web-server.com:4567</a></em>上的SSRF。首先，使用netcat监听流量：</p>
 <pre><code>hack-box-1 $ nc -l -n -vv -p 8080 -k
 
 Listening on [0.0.0.0] (family 0, port 8080)
