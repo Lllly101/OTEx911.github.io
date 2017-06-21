@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ssrf,pentest," />
+  <meta name="keywords" content="pentest,ssrf," />
 
 
 
@@ -91,14 +91,14 @@
 
 
 <meta name="description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
-<meta name="keywords" content="ssrf,pentest">
+<meta name="keywords" content="pentest,ssrf">
 <meta property="og:type" content="article">
 <meta property="og:title" content="(译)如何伪造服务端请求-SSRF">
 <meta property="og:url" content="/2017/06/17/how-to-ssrf/index.html">
 <meta property="og:site_name" content="Ꭰ博客">
 <meta property="og:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
 <meta property="og:image" content="/2017/06/17/how-to-ssrf/net.png">
-<meta property="og:updated_time" content="2017-06-21T13:59:22.000Z">
+<meta property="og:updated_time" content="2017-06-21T15:18:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(译)如何伪造服务端请求-SSRF">
 <meta name="twitter:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
@@ -478,7 +478,7 @@
 </table>
 <p>对于开放和关闭的端口，每个SSRF响应都不同。试着以不同的响应为基础建立一个开放、闭合端口和标志符之间的映射。上面的表格就是一个例子。</p>
 <h2 id="提取EC2配置文件"><a href="#提取EC2配置文件" class="headerlink" title="提取EC2配置文件"></a>提取EC2配置文件</h2><p>这是我最喜欢的技巧之一。越来越多的公司将部分基础设施放到亚马逊的EC2服务器上。亚马逊公开内部服务，每台EC实例都能查询主机元数据。<a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html" target="_blank" rel="external">这是AWS文档</a>。如果你在EC2上发现了SSRF漏洞，试着请求<em><a href="http://169.254.169.254/latest/meta-data" target="_blank" rel="external">http://169.254.169.254/latest/meta-data</a></em>。响应会提供许多有用的信息便于对基础设施有一定的了解，甚至可能会泄漏亚马逊S3的访问token，API token等等。你也可以下载<em> <a href="http://169.254.169.254/latest/user-data" target="_blank" rel="external">http://169.254.169.254/latest/user-data</a></em>和解压数据。</p>
-<h1 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h1><p>正如你所猜想的那样，不是所有SSRF漏洞都是用HTTP协议。有些时候，可以通过重定向指向一个不同的协议或者交换机协议。在Redis队列推送异步作业的场景下，如果能由应用使用<em>gopher://protocol</em>去执行代码，这将是SSRF升级成远程代码执行的关键。Redis大多数实例不使用任何形式的授权认证，这种方式非常方便。所以可以利用这一点来攻击。</p>
+<h1 id="跳板"><a href="#跳板" class="headerlink" title="跳板"></a>跳板</h1><p>正如你所猜想的那样，不是所有SSRF漏洞都是用HTTP协议。有些时候，可以通过重定向指向一个不同的协议或者交换机协议。在Redis队列推送异步作业的场景下，如果能由应用使用<em>gopher://protocol</em>去执行代码，这将是SSRF升级成远程代码执行的关键。Redis大多数实例不使用任何形式的授权认证，这种方式非常方便。所以可以利用这一点来攻击。</p>
 <p>在此期间，关键点总是来自于发现了的内部服务，这将扩大漏洞的影响范围。比如当你发现了未授权的admin面板。如果程序允许，想想你将如何使用内部服务将多个漏洞综合利用提高发现漏洞的影响范围。</p>
 <p>愉快的黑客吧！</p>
 <p>Jobert</p>
@@ -513,9 +513,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ssrf/" rel="tag"># ssrf</a>
-          
             <a href="/tags/pentest/" rel="tag"># pentest</a>
+          
+            <a href="/tags/ssrf/" rel="tag"># ssrf</a>
           
         </div>
       
@@ -537,6 +537,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/22/cmd-inject/" rel="prev" title="（译）命令注入和原理">
+                （译）命令注入和原理 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -610,7 +614,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -621,7 +625,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -701,7 +705,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#影响"><span class="nav-number">3.</span> <span class="nav-text">影响</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#暴露内网-防火墙后的系统"><span class="nav-number">3.1.</span> <span class="nav-text">暴露内网/防火墙后的系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务探测和端口扫描"><span class="nav-number">3.2.</span> <span class="nav-text">服务探测和端口扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提取EC2配置文件"><span class="nav-number">3.3.</span> <span class="nav-text">提取EC2配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核心"><span class="nav-number">4.</span> <span class="nav-text">核心</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#影响"><span class="nav-number">3.</span> <span class="nav-text">影响</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#暴露内网-防火墙后的系统"><span class="nav-number">3.1.</span> <span class="nav-text">暴露内网/防火墙后的系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务探测和端口扫描"><span class="nav-number">3.2.</span> <span class="nav-text">服务探测和端口扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提取EC2配置文件"><span class="nav-number">3.3.</span> <span class="nav-text">提取EC2配置文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#跳板"><span class="nav-number">4.</span> <span class="nav-text">跳板</span></a></li></ol></div>
             
 
           </div>
