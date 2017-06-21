@@ -97,12 +97,12 @@
 <meta property="og:url" content="/2017/06/17/how-to-ssrf/index.html">
 <meta property="og:site_name" content="Ꭰ博客">
 <meta property="og:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
-<meta property="og:image" content="/2017/06/17/how-to-ssrf/how-to-ssrf/net.png">
+<meta property="og:image" content="/2017/06/17/how-to-ssrf/net.png">
 <meta property="og:updated_time" content="2017-06-21T13:59:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="(译)如何伪造服务端请求-SSRF">
 <meta name="twitter:description" content="世人笑我忒疯癫，我笑世人看不穿。    SSRF是服务端请求伪造的缩写，这类漏洞讲述的是黑客控制服务器发送请求的行为。这篇文章将着重于漏洞影响、如何测试漏洞，潜在的风险点，突破限制和警告。">
-<meta name="twitter:image" content="/2017/06/17/how-to-ssrf/how-to-ssrf/net.png">
+<meta name="twitter:image" content="/2017/06/17/how-to-ssrf/net.png">
 
 
 
@@ -394,7 +394,7 @@
 <p>web服务器收到<em><a href="http://localhost:4568/?url=https://google.com" target="_blank" rel="external">http://localhost:4568/?url=https://google.com</a></em>请求时，<em>open()</em>函数会请求<em><a href="https://google.com" target="_blank" rel="external">https://google.com</a></em>并将响应内容返回给客户端。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">hack-box-01 $ curl http://localhost:4567/\?</div><div class="line">url\=https://google.com</div><div class="line"></div><div class="line">RESPONSE: &lt;!doctype html&gt;&lt;html itemscope="" </div><div class="line">itemtype="http://schema.org/WebPage" lang="en"&gt;&lt;head&gt;&lt;meta content="Search the world's information, including</div><div class="line">webpages, images, videos and more. Google has many special </div><div class="line">features to help you find exactly what you're looking </div><div class="line">for." name="description"&gt;&lt;meta content="noodp" </div><div class="line">name="robots"&gt;&lt;meta content="text/html; charset=UTF-8"</div><div class="line">http-equiv="Content-Type"&gt;&lt;meta</div><div class="line">content="/images/branding/googleg/1x/googleg_standard_color_128dp.png" itemprop="image"&gt;&lt;title&gt;Google&lt;/title&gt;</div></pre></td></tr></table></figure>
 <p>在互联网上通过url访问网站并不让人兴奋，这本身并不会有问题。既然是位于互联网上，所有人都可以访问它。现在来考虑下局域网情况，大量网络隐藏在路由器和防火墙背后。路由器通过NAT将内部子网的流量与互联网进行交互。</p>
-<p><img src="how-to-ssrf/net.png" alt="net-pic"></p>
+<p><img src="/2017/06/17/how-to-ssrf/net.png" alt="net-pic"></p>
 <p>为了清楚的了解影响，假设正在运行ruby代码的服务器IP是10.0.0.3，和它处于同一网络的另外一台服务器admin-panel的IP是10.0.0.2。admin-panel服务器在80端口开放着不需授权的web服务。路由器10.0.0.1负责路由内部流量到互联网。内部服务器之间没有任何防火墙规则。admin-panel是外网不可达的。通过web-server.com可以访问web服务器(10.0.0.3)。</p>
 <p>我们知道web服务器10.0.0.3能够处理我们发送给它的请求。admin-panel服务器在4567端口上提供HTTP接口。现在来看看通过web服务器向admin-panel服务器发起请求会发生什么。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hack-box-01 $ curl http://web-server.com:4567/\?url\=http://10.0.0.2/</div></pre></td></tr></table></figure>

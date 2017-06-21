@@ -97,19 +97,19 @@
 <meta property="og:url" content="/2017/05/28/sop-and-jsonp/index.html">
 <meta property="og:site_name" content="Ꭰ博客">
 <meta property="og:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/img-jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/src-jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/src-ex-jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/src-simple-jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/scr-ex-jsonp.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/cors-simple.png">
-<meta property="og:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/cors-preflight.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/img-jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/src-jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/src-ex-jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/src-simple-jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/scr-ex-jsonp.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/cors-simple.png">
+<meta property="og:image" content="/2017/05/28/sop-and-jsonp/cors-preflight.png">
 <meta property="og:updated_time" content="2017-06-21T13:59:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sop、jsonp和cors">
 <meta name="twitter:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
-<meta name="twitter:image" content="/2017/05/28/sop-and-jsonp/sop-and-jsonp/jsonp.png">
+<meta name="twitter:image" content="/2017/05/28/sop-and-jsonp/jsonp.png">
 
 
 
@@ -396,17 +396,17 @@
 <h3 id="SOP"><a href="#SOP" class="headerlink" title="SOP"></a>SOP</h3><p>同源策略严格的控制了两个源之间的资源交互。这是用来隔离恶意文件的安全机制。</p>
 <h4 id="同源的定义"><a href="#同源的定义" class="headerlink" title="同源的定义"></a>同源的定义</h4><p>拥有相同<code>协议</code>,<code>端口</code>,<code>主机</code>的页面才称为同源。假设有这么个页面(<a href="http://localhost/index.html" target="_blank" rel="external">http://localhost/index.html</a>)</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http://localhost/other.html  <span class="comment">#同源</span></div><div class="line">http://localhost/inner/another.html  <span class="comment">#同源</span></div><div class="line">https://localhost/ssl.html </div><div class="line">http://localhost:<span class="number">8888</span>/index.html</div><div class="line">http://www.localhost/index.html</div></pre></td></tr></table></figure>
-<h4 id="同源的作用"><a href="#同源的作用" class="headerlink" title="同源的作用"></a>同源的作用</h4><p><img src="sop-and-jsonp/jsonp.png" alt="同源的作用"></p>
+<h4 id="同源的作用"><a href="#同源的作用" class="headerlink" title="同源的作用"></a>同源的作用</h4><p><img src="/2017/05/28/sop-and-jsonp/jsonp.png" alt="同源的作用"></p>
 <p>Server端: <code>http://localhost:8000</code><br>Client端: <code>http://localhost:8080</code></p>
 <p>Server端放了一串字符<code>Server data</code>。Client代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var url = <span class="string">"http://localhost:8000"</span>;</div><div class="line"><span class="keyword">var</span> req = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">req.addEventListener(<span class="string">"load"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);  <span class="comment">// 打印出服务端的数据</span></div><div class="line">&#125;)</div><div class="line">req.open(<span class="string">"GET"</span>, url);</div><div class="line">req.send()</div></pre></td></tr></table></figure></p>
 <p>打开localhost:8080时，控制台并没有打印出服务端的数据，而是提示了<em>Cross-origin Request Blocked</em>。</p>
 <h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>在开发中，经常能看到<code>script</code>和<code>img</code>标签引用外部资源(不同源),这是合法的。所以为了解决同源问题，在js代码中创造<code>img</code>和<code>script</code>标签来进行数据交互。</p>
-<p><img src="sop-and-jsonp/img-jsonp.png" alt="img"><br>从图中可以看出只要给创建的img对象src赋值就可以进行跨域请求。<br><img src="sop-and-jsonp/src-jsonp.png" alt="src"><br>而script标签却不是如此，它需要将script标签插入document中才行。注意script标签是js环境，所以server data会被js解析器解析，console台上会出现<code>Syntaxerror</code>。<br><img src="sop-and-jsonp/src-ex-jsonp.png" alt="src"></p>
-<h4 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h4><p>利用script进行数据传输，这是jsonp的最简单模型。<br><img src="sop-and-jsonp/src-simple-jsonp.png" alt="jsonp原型"><br>平时常见的jsonp一般都是<code>http://xxxx/q=?&amp;callback=?</code>。<br><img src="sop-and-jsonp/scr-ex-jsonp.png" alt="scr"></p>
+<p><img src="/2017/05/28/sop-and-jsonp/img-jsonp.png" alt="img"><br>从图中可以看出只要给创建的img对象src赋值就可以进行跨域请求。<br><img src="/2017/05/28/sop-and-jsonp/src-jsonp.png" alt="src"><br>而script标签却不是如此，它需要将script标签插入document中才行。注意script标签是js环境，所以server data会被js解析器解析，console台上会出现<code>Syntaxerror</code>。<br><img src="/2017/05/28/sop-and-jsonp/src-ex-jsonp.png" alt="src"></p>
+<h4 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h4><p>利用script进行数据传输，这是jsonp的最简单模型。<br><img src="/2017/05/28/sop-and-jsonp/src-simple-jsonp.png" alt="jsonp原型"><br>平时常见的jsonp一般都是<code>http://xxxx/q=?&amp;callback=?</code>。<br><img src="/2017/05/28/sop-and-jsonp/scr-ex-jsonp.png" alt="scr"></p>
 <h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。CORS通信的关键在服务器端的设置。详情参考阮一峰老师的文章。</p>
 <p>HTTP请求被CORS标准分成了两类，一种是Simple，一种Preflight。如果说A、B同时从一个位置出发，那么Simple则是选择了直达车，而Preflight则是选择了中转方案。当然无论是直达车还是中转车，都需要票（<code>Access-Control-Allow-Origin和Access-Control-Allow-Methods</code>）的存在才能抵达终点。</p>
-<p><em>直达车(Simple):</em><br><img src="sop-and-jsonp/cors-simple.png" alt="simple"></p>
-<p><em>中转(Preflight):</em><br><img src="sop-and-jsonp/cors-preflight.png" alt="simple"></p>
+<p><em>直达车(Simple):</em><br><img src="/2017/05/28/sop-and-jsonp/cors-simple.png" alt="simple"></p>
+<p><em>中转(Preflight):</em><br><img src="/2017/05/28/sop-and-jsonp/cors-preflight.png" alt="simple"></p>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
 <li><a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank" rel="external">CORS-wiki</a></li>
 <li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a></li>
