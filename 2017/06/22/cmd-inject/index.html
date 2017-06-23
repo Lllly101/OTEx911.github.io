@@ -93,13 +93,13 @@
 <meta name="description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
 <meta name="keywords" content="cmd-inject,pentest">
 <meta property="og:type" content="article">
-<meta property="og:title" content="（译）命令注入和原理">
+<meta property="og:title" content="【译】命令注入和原理">
 <meta property="og:url" content="/2017/06/22/cmd-inject/index.html">
-<meta property="og:site_name" content="Ꭰ博客">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
-<meta property="og:updated_time" content="2017-06-21T17:02:25.000Z">
+<meta property="og:updated_time" content="2017-06-21T17:08:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="（译）命令注入和原理">
+<meta name="twitter:title" content="【译】命令注入和原理">
 <meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <title>（译）命令注入和原理 | Ꭰ博客</title>
+  <title>【译】命令注入和原理 | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -180,7 +180,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Ꭰ博客</span>
+        <span class="site-title">Ꭰ's security blog</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -292,7 +292,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ꭰ博客">
+      <meta itemprop="name" content="Ꭰ's security blog">
     </span>
 
     
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">（译）命令注入和原理</h1>
+          <h1 class="post-title" itemprop="name headline">【译】命令注入和原理</h1>
         
 
         <div class="post-meta">
@@ -352,7 +352,7 @@
 
           
           
-             <span id="/2017/06/22/cmd-inject/" class="leancloud_visitors" data-flag-title="（译）命令注入和原理">
+             <span id="/2017/06/22/cmd-inject/" class="leancloud_visitors" data-flag-title="【译】命令注入和原理">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -461,8 +461,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/17/how-to-ssrf/" rel="next" title="(译)如何伪造服务端请求-SSRF">
-                <i class="fa fa-chevron-left"></i> (译)如何伪造服务端请求-SSRF
+              <a href="/2017/06/17/how-to-ssrf/" rel="next" title="【译】如何伪造服务端请求-SSRF">
+                <i class="fa fa-chevron-left"></i> 【译】如何伪造服务端请求-SSRF
               </a>
             
           </div>
@@ -470,6 +470,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/23/pdo-inject-principle-analysis/" rel="prev" title="【转】-PDO防注入原理分析以及使用PDO注意事项">
+                【转】-PDO防注入原理分析以及使用PDO注意事项 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -526,7 +530,7 @@
                alt="oTex911" />
           <p class="site-author-name" itemprop="name">oTex911</p>
            
-              <p class="site-description motion-element" itemprop="description">水土不服的ctbf</p>
+              <p class="site-description motion-element" itemprop="description">Just another infosec lover blog</p>
           
         </div>
         <nav class="site-state motion-element">
@@ -534,7 +538,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -545,7 +549,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -556,7 +560,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

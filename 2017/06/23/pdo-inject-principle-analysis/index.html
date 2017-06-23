@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="python,snmp,mac," />
+  <meta name="keywords" content="db,php," />
 
 
 
@@ -90,17 +90,22 @@
 
 
 
-<meta name="description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
-<meta name="keywords" content="python,snmp,mac">
+<meta name="description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta name="keywords" content="db,php">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记笔记-SIP和SNMP-python拓展安装">
-<meta property="og:url" content="/2017/05/18/Net-snmp-python拓展安装/index.html">
+<meta property="og:title" content="【转】-PDO防注入原理分析以及使用PDO注意事项">
+<meta property="og:url" content="/2017/06/23/pdo-inject-principle-analysis/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
-<meta property="og:updated_time" content="2017-05-18T16:01:41.000Z">
+<meta property="og:description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta property="og:image" content="/2017/06/23/pdo-inject-principle-analysis/wireshark01.jpg">
+<meta property="og:image" content="/2017/06/23/pdo-inject-principle-analysis/wireshark02.jpg">
+<meta property="og:image" content="/2017/06/23/pdo-inject-principle-analysis/wireshark03.jpg">
+<meta property="og:image" content="/2017/06/23/pdo-inject-principle-analysis/wireshark04.jpg">
+<meta property="og:updated_time" content="2017-06-23T14:44:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记笔记-SIP和SNMP-python拓展安装">
-<meta name="twitter:description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
+<meta name="twitter:title" content="【转】-PDO防注入原理分析以及使用PDO注意事项">
+<meta name="twitter:description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta name="twitter:image" content="/2017/06/23/pdo-inject-principle-analysis/wireshark01.jpg">
 
 
 
@@ -128,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="/2017/05/18/Net-snmp-python拓展安装/"/>
+  <link rel="canonical" href="/2017/06/23/pdo-inject-principle-analysis/"/>
 
 
 
 
 
-  <title>记笔记-SIP和SNMP-python拓展安装 | Ꭰ's security blog</title>
+  <title>【转】-PDO防注入原理分析以及使用PDO注意事项 | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -283,7 +288,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/05/18/Net-snmp-python拓展安装/">
+    <link itemprop="mainEntityOfPage" href="/2017/06/23/pdo-inject-principle-analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="oTex911">
@@ -300,7 +305,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">记笔记-SIP和SNMP-python拓展安装</h1>
+          <h1 class="post-title" itemprop="name headline">【转】-PDO防注入原理分析以及使用PDO注意事项</h1>
         
 
         <div class="post-meta">
@@ -312,8 +317,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-18T12:38:34+08:00">
-                2017-05-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T22:44:42+08:00">
+                2017-06-23
               </time>
             
 
@@ -335,8 +340,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/notes/" itemprop="url" rel="index">
-                    <span itemprop="name">notes</span>
+                  <a href="/categories/sql/" itemprop="url" rel="index">
+                    <span itemprop="name">sql</span>
                   </a>
                 </span>
 
@@ -352,7 +357,7 @@
 
           
           
-             <span id="/2017/05/18/Net-snmp-python拓展安装/" class="leancloud_visitors" data-flag-title="记笔记-SIP和SNMP-python拓展安装">
+             <span id="/2017/06/23/pdo-inject-principle-analysis/" class="leancloud_visitors" data-flag-title="【转】-PDO防注入原理分析以及使用PDO注意事项">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,14 +385,68 @@
       
 
       
-        <p><em>OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。</em><a id="more"></a><em>所以有些时候，你需要关闭SIP。</em></p>
-<h3 id="关闭SIP"><a href="#关闭SIP" class="headerlink" title="关闭SIP"></a>关闭SIP</h3><p>开机，command+R进入恢复模式，打开terminal，输入csrutil命令。根据提示进行关闭或者启用SIP。</p>
-<h3 id="net-snmp安装"><a href="#net-snmp安装" class="headerlink" title="net-snmp安装"></a>net-snmp安装</h3><p>Mac本身自带了net-snmp，但并没有提供python的扩展。尝试用pip和easy_install去安装，仍然无果。只能源码安装。</p>
-<blockquote>
-<p><a href="http://downloads.sourceforge.net/project/net-snmp/net-snmp/5.6.2/net-snmp-5.6.2.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnet-snmp%2Ffiles%2Fnet-snmp%2F5.6.2%2F&amp;ts=1357547749&amp;use_mirror=nchc" target="_blank" rel="external">net-snmp-5.6.2</a></p>
+        <blockquote class="blockquote-center"><p>今天遇到了一个假Hiberate的注入点，于是有了这篇转载</p>
 </blockquote>
-<p>下载完成后，进行编译、测试、安装即可。</p>
-<h3 id="资料参考"><a href="#资料参考" class="headerlink" title="资料参考"></a>资料参考</h3><p><a href="http://www.huilog.com/?p=629" target="_blank" rel="external">Mac OS X系统上安装net-snmp python扩展</a><br><a href="https://support.apple.com/zh-cn/HT204899" target="_blank" rel="external">关于 Mac 上的系统完整性保护</a><br><a href="https://en.wikipedia.org/wiki/System_Integrity_Protection" target="_blank" rel="external">System Integrity Protection</a></p>
+<p><em>我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题</em>：<a id="more"></a></p>
+<ol>
+<li>为什么要使用PDO而不是mysql_connect？</li>
+<li>为何PDO能防注入？使用PDO防注入的时候应该特别注意什么?</li>
+</ol>
+<h1 id="为何要优先使用PDO"><a href="#为何要优先使用PDO" class="headerlink" title="为何要优先使用PDO?"></a>为何要优先使用PDO?</h1><p>PHP手册上说得很清楚：</p>
+<blockquote>
+<p>Prepared statements and stored procedures</p>
+<p>Many of the more mature databases support the concept of prepared statements. What are they? They can be thought of as a kind of compiled template for the SQL that an application wants to run, that can be customized using variable parameters. Prepared statements offer two major benefits: </p>
+<p>The query only needs to be parsed (or prepared) once, but can be executed multiple times with the same or different parameters. When the query is prepared, the database will analyze, compile and optimize its plan for executing the query. For complex queries this process can take up enough time that it will noticeably slow down an application if there is a need to repeat the same query many times with different parameters. By using a prepared statement the application avoids repeating the analyze/compile/optimize cycle. This means that prepared statements use fewer resources and thus run faster.</p>
+<p>The parameters to prepared statements don’t need to be quoted; the driver automatically handles this. If an application exclusively uses prepared statements, the developer can be sure that no SQL injection will occur (however, if other portions of the query are being built up with unescaped input, SQL injection is still possible).</p>
+</blockquote>
+<p>即使用PDO的prepare方式，主要是提高相同SQL模板查询性能、阻止SQL注入</p>
+<p>同时，PHP手册中给出了警告信息:</p>
+<blockquote>
+<p>Prior to PHP 5.3.6, this element was silently ignored. The same behaviour can be partly replicated with the <strong>PDO::MYSQL_ATTR_INIT_COMMAND</strong> driver option, as the following example shows.</p>
+<p><strong>Warning</strong>The method in the below example can only be used with character sets that share the same lower 7 bit representation as ASCII, such as ISO-8859-1 and UTF-8. Users using character sets that have different representations (such as UTF-16 or Big5) <em>must</em> use the <em>charset</em> option provided in PHP 5.3.6 and later versions.</p>
+</blockquote>
+<p>意思是说，在PHP 5.3.6及以前版本中，并不支持在DSN中的charset定义，而应该使用<strong>PDO::MYSQL_ATTR_INIT_COMMAND设置初始SQL, 即我们常用的 set names gbk指令。</strong></p>
+<p>我看到一些程序，还在尝试使用addslashes达到防注入的目的，殊不知这样其实问题更多, 详情请看<a href="http://www.lorui.com/addslashes-mysql_escape_string-mysql_real_eascape_string.html" target="_blank" rel="external">http://www.lorui.com/addslashes-mysql_escape_string-mysql_real_eascape_string.html</a></p>
+<p>还有一些做法：在执行数据库查询前，将SQL中的select, union, ….之类的关键词清理掉。这种做法显然是非常错误的处理方式，如果提交的正文中确实包含 the students’s union , 替换后将篡改本来的内容，滥杀无辜，不可取。</p>
+<h1 id="为何PDO能防SQL注入？"><a href="#为何PDO能防SQL注入？" class="headerlink" title="为何PDO能防SQL注入？"></a>为何PDO能防SQL注入？</h1><p>请先看以下PHP代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">"mysql:host=192.168.0.1;dbname=test;charset=utf8"</span>,<span class="string">"root"</span>);</div><div class="line">$st = $pdo-&gt;prepare(<span class="string">"select * from info where id =? and name = ?"</span>);</div><div class="line"> </div><div class="line">$id = <span class="number">21</span>;</div><div class="line">$name = <span class="string">'zhangsan'</span>;</div><div class="line">$st-&gt;bindParam(<span class="number">1</span>,$id);</div><div class="line">$st-&gt;bindParam(<span class="number">2</span>,$name);</div><div class="line"> </div><div class="line">$st-&gt;execute();</div><div class="line">$st-&gt;fetchAll();</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>环境如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PHP 5.4.7</div><div class="line">Mysql 协议版本 10</div><div class="line">MySQL Server 5.5.27</div></pre></td></tr></table></figure>
+<p>为了彻底搞清楚php与mysql server通讯的细节，我特别使用了wireshark抓包进行研究之,安装wireshak之后，我们设置过滤条件为tcp.port==3306, 如下图：</p>
+<p><img src="/2017/06/23/pdo-inject-principle-analysis/wireshark01.jpg" alt="tcp-port3306"></p>
+<p>如此只显示与mysql 3306端口的通信数据，避免不必要的干扰。特别要注意的是wireshak基于wincap驱动，不支持本地环回接口的侦听（即使用php连接本地mysql的方法是无法侦听的），请连接其它机器（桥接网络的虚拟机也可）的MySQL进行测试。</p>
+<p>然后运行我们的PHP程序，侦听结果如下，我们发现，PHP只是简单地将SQL直接发送给MySQL Server :</p>
+<p><img src="/2017/06/23/pdo-inject-principle-analysis/wireshark02.jpg" alt="tcp-port3306"></p>
+<p>其实，这与我们平时使用mysql_real_escape_string将字符串进行转义，再拼接成SQL语句没有差别（只是由PDO本地驱动完成转义的），显然这种情况下还是有可能造成SQL注入的，也就是说在php本地调用pdo prepare中的mysql_real_escape_string来操作query，使用的是本地单字节字符集，而我们传递多字节编码的变量时，有可能还是会造成SQL注入漏洞(php 5.3.6以前版本的问题之一，这也就解释了为何在使用PDO时，建议升级到php 5.3.6+，并在DSN字符串中指定charset的原因。</p>
+<p>针对php 5.3.6以前版本，以下代码仍然可能造成SQL注入问题：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$pdo-&gt;query(<span class="string">'SET NAMES GBK'</span>); </div><div class="line">$var = chr(<span class="number">0xbf</span>) . chr(<span class="number">0x27</span>) . <span class="string">" OR 1=1 /*"</span>; </div><div class="line">$query = <span class="string">"SELECT * FROM info WHERE name = ?"</span>; </div><div class="line">$stmt = $pdo-&gt;prepare($query); </div><div class="line">$stmt-&gt;execute(<span class="keyword">array</span>($var));</div></pre></td></tr></table></figure>
+<p>原因与上面的分析是一致的。</p>
+<p>而正确的转义应该是给mysql Server指定字符集，并将变量发送给MySQL Server完成根据字符转义。 </p>
+<p>那么，如何才能禁止PHP本地转义而交由MySQL Server转义呢？</p>
+<p>PDO有一项参数，名为PDO::ATTR_EMULATE_PREPARES ，表示是否使用PHP本地模拟prepare，此项参数默认值未知。而且根据我们刚刚抓包分析结果来看，php 5.3.6+默认还是使用本地变量转，拼接成SQL发送给MySQL Server的，我们将这项值设置为false, 试试效果，如以下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">"mysql:host=192.168.0.1;dbname=test;"</span>,<span class="string">"root"</span>);</div><div class="line">$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES, <span class="keyword">false</span>);</div><div class="line"> </div><div class="line">$st = $pdo-&gt;prepare(<span class="string">"select * from info where id =? and name = ?"</span>);</div><div class="line">$id = <span class="number">21</span>;</div><div class="line">$name = <span class="string">'zhangsan'</span>;</div><div class="line"> </div><div class="line">$st-&gt;bindParam(<span class="number">1</span>,$id);</div><div class="line">$st-&gt;bindParam(<span class="number">2</span>,$name);</div><div class="line">$st-&gt;execute();</div><div class="line">$st-&gt;fetchAll();</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>红色行是我们刚加入的内容，运行以下程序，使用wireshark抓包分析，得出的结果如下：</p>
+<p><img src="/2017/06/23/pdo-inject-principle-analysis/wireshark03.jpg" alt="tcp-port3306"></p>
+<p><img src="/2017/06/23/pdo-inject-principle-analysis/wireshark04.jpg" alt="tcp-port3306"></p>
+<p>看到了吗？这就是神奇之处，可见这次PHP是将SQL模板和变量是分两次发送给MySQL的，由MySQL完成变量的转义处理，既然变量和SQL模板是分两次发送的，那么就不存在SQL注入的问题了，但需要在DSN中指定charset属性，如：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">'mysql:host=localhost;dbname=test;charset=utf8'</span>, <span class="string">'root'</span>);</div></pre></td></tr></table></figure>
+<p>如此，即可从根本上杜绝SQL注入的问题。</p>
+<h1 id="使用PDO的注意事项"><a href="#使用PDO的注意事项" class="headerlink" title="使用PDO的注意事项"></a>使用PDO的注意事项</h1><p>知道以上几点之后，我们就可以总结使用PDO杜绝SQL注入的几个注意事项：</p>
+<ol>
+<li>php升级到5.3.6+，生产环境强烈建议升级到php 5.3.9+ php 5.4+，php 5.3.8存在致命的hash碰撞漏洞。</li>
+<li>若使用php 5.3.6+, 请在在PDO的DSN中指定charset属性</li>
+<li>如果使用了PHP 5.3.6及以前版本，设置PDO::ATTR_EMULATE_PREPARES参数为false（即由MySQL进行变量处理），php 5.3.6以上版本已经处理了这个问题，无论是使用本地模拟prepare还是调用mysql server的prepare均可。在DSN中指定charset是无效的，同时<code>set names &lt;charset&gt;</code>的执行是必不可少的。</li>
+<li>如果使用了PHP 5.3.6及以前版本, 因Yii框架默认并未设置ATTR_EMULATE_PREPARES的值，请在数据库配置文件中指定emulatePrepare的值为false。</li>
+</ol>
+<p>那么，有个问题，如果在DSN中指定了charset, 是否还需要执行<code>set names &lt;charset&gt;</code>呢？</p>
+<p>是的，不能省。<code>set names &lt;charset&gt;</code>其实有两个作用：</p>
+<blockquote>
+<p>A.  告诉mysql server, 客户端（PHP程序）提交给它的编码是什么</p>
+<p>B.  告诉mysql server, 客户端需要的结果的编码是什么</p>
+</blockquote>
+<p>也就是说，如果数据表使用gbk字符集，而PHP程序使用UTF-8编码，我们在执行查询前运行set names utf8, 告诉mysql server正确编码即可，无须在程序中编码转换。这样我们以utf-8编码提交查询到mysql server, 得到的结果也会是utf-8编码。省却了程序中的转换编码问题，不要有疑问，这样做不会产生乱码。</p>
+<p>那么在DSN中指定charset的作用是什么? 只是告诉PDO, 本地驱动转义时使用指定的字符集（并不是设定mysql server通信字符集），设置mysql server通信字符集，还得使用<code>set names &lt;charset&gt;</code>指令。</p>
+<p><a href="http://zhangxugg-163-com.iteye.com/blog/1835721" target="_blank" rel="external">转载原文</a></p>
 
       
     </div>
@@ -417,11 +476,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/python/" rel="tag"># python</a>
+            <a href="/tags/db/" rel="tag"># db</a>
           
-            <a href="/tags/snmp/" rel="tag"># snmp</a>
-          
-            <a href="/tags/mac/" rel="tag"># mac</a>
+            <a href="/tags/php/" rel="tag"># php</a>
           
         </div>
       
@@ -434,8 +491,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/12/markdown语法-指南/" rel="next" title="markdown语法-指南">
-                <i class="fa fa-chevron-left"></i> markdown语法-指南
+              <a href="/2017/06/22/cmd-inject/" rel="next" title="【译】命令注入和原理">
+                <i class="fa fa-chevron-left"></i> 【译】命令注入和原理
               </a>
             
           </div>
@@ -443,10 +500,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/20/deepXssPrompt1/" rel="prev" title="深入xss-prompt(1)挑战">
-                深入xss-prompt(1)挑战 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -611,7 +664,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭SIP"><span class="nav-number">1.</span> <span class="nav-text">关闭SIP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-snmp安装"><span class="nav-number">2.</span> <span class="nav-text">net-snmp安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资料参考"><span class="nav-number">3.</span> <span class="nav-text">资料参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为何要优先使用PDO"><span class="nav-number">1.</span> <span class="nav-text">为何要优先使用PDO?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为何PDO能防SQL注入？"><span class="nav-number">2.</span> <span class="nav-text">为何PDO能防SQL注入？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用PDO的注意事项"><span class="nav-number">3.</span> <span class="nav-text">使用PDO的注意事项</span></a></li></ol></div>
             
 
           </div>
