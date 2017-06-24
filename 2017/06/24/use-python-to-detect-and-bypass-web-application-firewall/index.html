@@ -98,10 +98,10 @@
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！   web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/web-applicaion-firewall-cyberpersons.gif">
-<meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-web-application-firewall-present.PNG">
+<meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-web-application-firewall-present.png">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-firewall-present.PNG">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/cross-site-scripting-encoded-html-tags.png">
-<meta property="og:updated_time" content="2017-06-24T06:46:26.000Z">
+<meta property="og:updated_time" content="2017-06-24T06:47:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】使用python检测和绕过web防火墙">
 <meta name="twitter:description" content="说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！   web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
@@ -435,7 +435,7 @@
 <li>打印显示响应</li>
 </ol>
 <p>因为我现在还没安装防火墙，所以我得到的请求是这样的:</p>
-<p><img src="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-web-application-firewall-present.PNG" alt="no-firewall"></p>
+<p><img src="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-web-application-firewall-present.png" alt="no-firewall"></p>
 <p>正如你所见的，payload回显出来了，这意味着应用的代码没有任何过滤，同时也因为没有防火墙我们的请求没有被屏蔽。</p>
 <h1 id="第五步：检测防火墙的存在"><a href="#第五步：检测防火墙的存在" class="headerlink" title="第五步：检测防火墙的存在"></a>第五步：检测防火墙的存在</h1><p>变量名’response’存储着从服务器返回的响应，我们可以通过响应来判断防火墙的存在。在本文中我们将去检测以下几款防火墙的存在。</p>
 <ol>
