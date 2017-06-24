@@ -90,21 +90,21 @@
 
 
 
-<meta name="description" content="web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
+<meta name="description" content="说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！   web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
 <meta name="keywords" content="bypass,firewall">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【译】-使用python检测和绕过web防火墙">
 <meta property="og:url" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
+<meta property="og:description" content="说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！   web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/web-applicaion-firewall-cyberpersons.gif">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-web-application-firewall-present.PNG">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/no-firewall-present.PNG">
 <meta property="og:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/cross-site-scripting-encoded-html-tags.png">
-<meta property="og:updated_time" content="2017-06-24T06:43:07.000Z">
+<meta property="og:updated_time" content="2017-06-24T06:45:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】-使用python检测和绕过web防火墙">
-<meta name="twitter:description" content="web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
+<meta name="twitter:description" content="说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！   web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。">
 <meta name="twitter:image" content="/2017/06/24/use-python-to-detect-and-bypass-web-application-firewall/web-applicaion-firewall-cyberpersons.gif">
 
 
@@ -385,7 +385,9 @@
       
 
       
-        <p><em>web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。</em></p>
+        <blockquote class="blockquote-center"><p>说好的今天去厦大呢，杭州上海都下雨就厦门不下雨！ </p>
+</blockquote>
+<p><em>web应用防火墙一般部署在web服务器前面，用来过滤来自服务器的恶意流量。如果你被某些公司雇佣为渗透人员，同时他们忘记告诉你他们使用了web应用防火墙，这可能会使你在渗透时遇到极大困阻。下面的插图会向你描述简单的web应用防火墙的原理。</em></p>
 <a id="more"></a>
 <p>很明显防火墙就像web流量和web服务器之间的一堵墙，通常现代的web应用防火墙都是基于签名的。</p>
 <h1 id="什么是基于签名的防火墙"><a href="#什么是基于签名的防火墙" class="headerlink" title="什么是基于签名的防火墙"></a>什么是基于签名的防火墙</h1><p>在基于签名的防火墙中，你可以定义签名。因为你知道web攻击遵从着类似的模式或签名。所以我们可以定义匹配模式然后屏蔽攻击。例如：</p>
@@ -460,7 +462,7 @@
 <p>很明显被编码的字符没有得到解码。</p>
 <h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>本文的目的是提前训练你，这样在黑客入侵前可以对防火墙进行测试加强防御。对自己的网络基础设备进行漏洞测试总是个好选择，因为我们总是关心应用的启动和运行，而忽略了安全部分。但这是不应该的，日后这可能会令人很头疼。文章中完整的代码可以<a href="https://paste.ee/p/T9qb5" target="_blank" rel="external">从这里下载</a>。</p>
 <h2 id="作者信息"><a href="#作者信息" class="headerlink" title="作者信息"></a>作者信息</h2><p>Usman Nasir，<a href="http://cyberpersons.com/" target="_blank" rel="external">Cyberpersions</a>的创始人、作者，同时也是计算机学科专业的学生。同时也作为技术支持员工服务于不同的主机公司，热爱写linux和web应用安全的文章。</p>
-<p>[原文][<a href="http://www.kalitutorials.net/2016/12/python-detect-and-bypass-web-application-firewall.html?m=1" target="_blank" rel="external">http://www.kalitutorials.net/2016/12/python-detect-and-bypass-web-application-firewall.html?m=1</a>]</p>
+<p><a href="http://www.kalitutorials.net/2016/12/python-detect-and-bypass-web-application-firewall.html?m=1" target="_blank" rel="external">原文</a></p>
 
       
     </div>
