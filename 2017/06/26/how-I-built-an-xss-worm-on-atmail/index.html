@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="xss," />
+  <meta name="keywords" content="OTEx911, security, web" />
 
 
 
@@ -90,18 +90,17 @@
 
 
 
-<meta name="description" content="～今天肯定得犯困～  本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。">
-<meta name="keywords" content="xss">
+<meta name="description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【译】看我如何在atmail上构建xss蠕虫">
+<meta property="og:title" content="Ꭰ&#39;s security blog">
 <meta property="og:url" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="～今天肯定得犯困～  本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。">
+<meta property="og:description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
 <meta property="og:image" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/DreamHost1.png">
-<meta property="og:updated_time" content="2017-06-26T01:48:19.000Z">
+<meta property="og:updated_time" content="2017-06-26T14:45:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【译】看我如何在atmail上构建xss蠕虫">
-<meta name="twitter:description" content="～今天肯定得犯困～  本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。">
+<meta name="twitter:title" content="Ꭰ&#39;s security blog">
+<meta name="twitter:description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
 <meta name="twitter:image" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/DreamHost1.png">
 
 
@@ -136,7 +135,7 @@
 
 
 
-  <title>【译】看我如何在atmail上构建xss蠕虫 | Ꭰ's security blog</title>
+  <title> | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -302,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">【译】看我如何在atmail上构建xss蠕虫</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -325,28 +324,6 @@
           </span>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/web/" itemprop="url" rel="index">
-                    <span itemprop="name">web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -354,7 +331,7 @@
 
           
           
-             <span id="/2017/06/26/how-I-built-an-xss-worm-on-atmail/" class="leancloud_visitors" data-flag-title="【译】看我如何在atmail上构建xss蠕虫">
+             <span id="/2017/06/26/how-I-built-an-xss-worm-on-atmail/" class="leancloud_visitors" data-flag-title="">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -382,11 +359,8 @@
       
 
       
-        <blockquote class="blockquote-center"><p>～今天肯定得犯困～</p>
-</blockquote>
-<p>本文由高级安全分析师Zach Julian编写。你可以在推特上联系<a href="https://twitter.com/tprime_" target="_blank" rel="external">他</a>。</p>
+        <p>本文由高级安全分析师Zach Julian编写。你可以在推特上联系<a href="https://twitter.com/tprime_" target="_blank" rel="external">他</a>。</p>
 <p>Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。</p>
-<a id="more"></a>
 <p>作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的email跨站脚本攻击，所以我打算在atmail的web客户端挖掘前端漏洞。数小时后，我发现了一个能起作用的payload，但想通过构造一只<a href="https://en.wikipedia.org/wiki/XSS_worm" target="_blank" rel="external">xss蠕虫</a>进一步利用。xss蠕虫最出名的案例是<a href="https://en.wikipedia.org/wiki/Samy_(computer_worm" target="_blank" rel="external">05年MySpace遭受攻击</a>)，在那之后2014年<a href="https://nakedsecurity.sophos.com/2014/06/11/twitter-jumps-to-block-xss-worm-in-tweetdeck/" target="_blank" rel="external">TwitterDeck遭05年蠕虫变种的攻击</a>。</p>
 <p>本文中，我将详细讲述构造通过利用受害者联系人来自我繁殖的XSS攻击。</p>
 <h1 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h1><p>在开始前，我准备了简单的测试环境。将xss测试payload通过管道命令写入邮件正文，使用下面的命令发送邮件：</p>
@@ -452,12 +426,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/xss/" rel="tag"># xss</a>
-          
-        </div>
-      
 
       
         
@@ -476,6 +444,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/01/imagemagick-rce-vulnerability/" rel="prev" title="【译】-Imagemagick远程代码执行漏洞">
+                【译】-Imagemagick远程代码执行漏洞 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -549,7 +521,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -571,7 +543,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
