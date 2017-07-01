@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="OTEx911, security, web" />
+  <meta name="keywords" content="xss," />
 
 
 
@@ -91,15 +91,16 @@
 
 
 <meta name="description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
+<meta name="keywords" content="xss">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ꭰ&#39;s security blog">
+<meta property="og:title" content="【译】看我在atmail上构建XSS蠕虫">
 <meta property="og:url" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
 <meta property="og:image" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/DreamHost1.png">
-<meta property="og:updated_time" content="2017-06-26T14:45:40.000Z">
+<meta property="og:updated_time" content="2017-07-01T06:39:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ꭰ&#39;s security blog">
+<meta name="twitter:title" content="【译】看我在atmail上构建XSS蠕虫">
 <meta name="twitter:description" content="本文由高级安全分析师Zach Julian编写。你可以在推特上联系他。 Atmail是一家以云端和本地电子邮件服务著名的供应商。Atmail的客户有普通公司、主机供应商以及包括DreamHost、美国的LegalShield、波斯尼亚的m:tel、iiNet和澳大利亚的Optus互联网服务供应商。 作为DreamHost的atmail用户，在漏洞奖励机制工作期间，我曾经历过数个令人记忆犹新的ema">
 <meta name="twitter:image" content="/2017/06/26/how-I-built-an-xss-worm-on-atmail/DreamHost1.png">
 
@@ -135,7 +136,7 @@
 
 
 
-  <title> | Ꭰ's security blog</title>
+  <title>【译】看我在atmail上构建XSS蠕虫 | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -301,7 +302,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">【译】看我在atmail上构建XSS蠕虫</h1>
         
 
         <div class="post-meta">
@@ -313,7 +314,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-26T09:35:11+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-26T19:58:00+08:00">
                 2017-06-26
               </time>
             
@@ -324,6 +325,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -331,7 +354,7 @@
 
           
           
-             <span id="/2017/06/26/how-I-built-an-xss-worm-on-atmail/" class="leancloud_visitors" data-flag-title="">
+             <span id="/2017/06/26/how-I-built-an-xss-worm-on-atmail/" class="leancloud_visitors" data-flag-title="【译】看我在atmail上构建XSS蠕虫">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -426,6 +449,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/xss/" rel="tag"># xss</a>
+          
+        </div>
+      
 
       
         
@@ -445,8 +474,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/07/01/imagemagick-rce-vulnerability/" rel="prev" title="【译】-Imagemagick远程代码执行漏洞">
-                【译】-Imagemagick远程代码执行漏洞 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/07/01/imagemagick-rce-vulnerability/" rel="prev" title="【译】Imagemagick远程代码执行漏洞">
+                【译】Imagemagick远程代码执行漏洞 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
