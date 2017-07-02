@@ -283,6 +283,184 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/2017/07/02/local-file-inclusion-vulnerability/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="oTex911">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/02/local-file-inclusion-vulnerability/" itemprop="url">【译】本地文件包含漏洞</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-02T19:06:42+08:00">
+                2017-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/02/local-file-inclusion-vulnerability/" class="leancloud_visitors" data-flag-title="【译】本地文件包含漏洞">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="本地文件包含介绍"><a href="#本地文件包含介绍" class="headerlink" title="本地文件包含介绍"></a>本地文件包含介绍</h1><p>文件包含是web上所有高级服务端脚本语言的一部分。该功能通常被用来保持web应用代码的整洁和可维护性，除此也允许web应用从文件系统读取文件，提供下载功能、配置文件解析以及一些其他类似的任务。设想下如果该功能没有正确的实现，那该功能可能成为恶意攻击者可利用的web漏洞。</p>
+<h1 id="本地文件包含的原理"><a href="#本地文件包含的原理" class="headerlink" title="本地文件包含的原理"></a>本地文件包含的原理</h1><p>通常情况下你想打开某个文件，那个文件的路径会作为函数的实际参数，函数执行完后可能将整个文件内容作为字符串返回或在当前页面打印出来或将其作为文档并用对应的语言进行解析。</p>
+<h1 id="本地文件包含的典型场景和风险"><a href="#本地文件包含的典型场景和风险" class="headerlink" title="本地文件包含的典型场景和风险"></a>本地文件包含的典型场景和风险</h1><h2 id="场景1-包含文件的内容是由解析器解析呈现的"><a href="#场景1-包含文件的内容是由解析器解析呈现的" class="headerlink" title="场景1:包含文件的内容是由解析器解析呈现的"></a>场景1:包含文件的内容是由解析器解析呈现的</h2><p>为了保证网站源码的可读性和模块化，源码通常被分为多个文件和目录，理想的分为逻辑块。你必须指定正确的文件路径并传给对应的函数以此来告诉解析器这些文件的位置。这个函数将读取文件并用文档承载新内容。通过这种方式解析器才将其视为有效代码，接着对它进行解析。</p>
+<h3 id="用例"><a href="#用例" class="headerlink" title="用例"></a>用例</h3><p>假设你的某个页面是几个模块组成，通常是将对应函数所在的文件名放置在GET参数后。</p>
+<p><code>https://example.com/?module=contact.php</code></p>
+<h3 id="风险"><a href="#风险" class="headerlink" title="风险"></a>风险</h3><p>如果开发人员未能对参数文件进行有效的过滤，攻击者则可以用敏感文件路径替换<code>contact.php</code>，从而充分利用本地文件包含漏洞。通常情况下替换文件能够被解析，攻击者可以读取内容。</p>
+<p><code>https://example.com/?module=/etc/passwd</code></p>
+<p>在这种场景下，恶意的黑客也可能在web服务器的其他位置注入代码并由解析器解析为LFI漏洞产生的指令。构建一张含有恶意代码的图片并通过图片上传功能来完成攻击是一种非常棒的方式。</p>
+<p><code>https://example.com/?module=uploads/avatar102.gif</code></p>
+<h2 id="场景2-包含文件的内容是以打印方式呈现的"><a href="#场景2-包含文件的内容是以打印方式呈现的" class="headerlink" title="场景2:包含文件的内容是以打印方式呈现的"></a>场景2:包含文件的内容是以打印方式呈现的</h2><p>有时你可能需要一份文件的内容同时被几个不同页面共享，比如说<code>header</code>头文件。这种做法比较方便，尤其是如果你需要<code>header</code>文件的变化呈现在所有包含了它的页面。这类文件通常是html，服务端不会对其进行解析。所以这可以用来展示其他数据，比如纯文本文件。</p>
+<h3 id="用例-1"><a href="#用例-1" class="headerlink" title="用例"></a>用例</h3><p>你有许多help txt文件想通过web应用访问，并希望可以通过下面的链接去访问。</p>
+<p><code>https://example.com/?helpfile=login.txt</code></p>
+<p>在这个场景中文件的内容将直接呈现出来，这不需要数据库存储任何信息。</p>
+<h3 id="风险-1"><a href="#风险-1" class="headerlink" title="风险"></a>风险</h3><p>如果没有正确的过滤，攻击者可以将链接改成<code>https://example.com/?helpfile=../secret/.htpasswd</code>以获取<code>.htpasswd</code>文件中的哈希密码，该文件通常包含了所有能够访问web服务器禁区的用户认证信息。</p>
+<p>攻击者也可能读取其他有密码的隐藏配置文件内容或其他敏感信息。</p>
+<h1 id="场景3-包含文件以下载文件形式呈现"><a href="#场景3-包含文件以下载文件形式呈现" class="headerlink" title="场景3:包含文件以下载文件形式呈现"></a>场景3:包含文件以下载文件形式呈现</h1><p>有些文件（比如PDF）的访问会被浏览器自动打开。如果你想提供一些下载文件而不是在浏览器窗口中展示内容，你不得不在http请求头添加额外参数引导浏览器这么去做。在请求头重包含<code>Content-Disposition：attachment;filename=file.pdf</code>，浏览器不会打开文件而是提供下载。</p>
+<h3 id="用例-2"><a href="#用例-2" class="headerlink" title="用例"></a>用例</h3><p>你手上有一份pdf格式的公司介绍手册，web应用访客可以通过下面这个链接下载。</p>
+<p><code>https://example.com/?download=brochure.pdf</code></p>
+<h3 id="风险-2"><a href="#风险-2" class="headerlink" title="风险"></a>风险</h3><p>如果请求没有进行充分的过滤，攻击者可以请求下载web应用的组成文件（源码），这会导致源码的泄漏和其他web应用漏洞的发现或敏感内容泄漏。比如说攻击者可以同样的函数去读取<code>connection.php</code>文件的源码：</p>
+<p><code>https://example.com/?download=../include/connection.php</code></p>
+<p>如果攻击者发现了数据库用户、主机和密码，他可以使用窃取来的身份信息来连接数据库。到了这个地步的话，恶意黑客便能执行数据库命令了，如果该数据库用户拥有写的权限便能控制web服务器了。</p>
+<h1 id="本地文件包含漏洞的影响"><a href="#本地文件包含漏洞的影响" class="headerlink" title="本地文件包含漏洞的影响"></a>本地文件包含漏洞的影响</h1><p>如上所述，LFI的影响因信息泄漏程度而异，导致系统完全沦陷。即使包含文件的代码没有执行，这仍为攻击者进一步控制系统提供了宝贵的信息。即使第一种场景的利用方式在大多数现代系统上不起作用了，仍存在很多通过代码执行的方法导致系统沦陷。</p>
+<h1 id="防止LFI"><a href="#防止LFI" class="headerlink" title="防止LFI"></a>防止LFI</h1><h2 id="用户读取或下载文件功能的安全小贴士"><a href="#用户读取或下载文件功能的安全小贴士" class="headerlink" title="用户读取或下载文件功能的安全小贴士"></a>用户读取或下载文件功能的安全小贴士</h2><ul>
+<li>将文件路径保存到数据库中同时为每条路径分配一个ID。这样做的话，用户只能看到ID而不能看到和改变路径。</li>
+<li>使用文件白名单，忽略其他文件名和路径。</li>
+<li>如果条件允许，将文件内容存储在数据库中而不是包含服务器上的文件。</li>
+<li>指示服务器自动发送download报头，而不是在指定目录（如<code>/download/</code>）下执行文件。你可以将用户直接引向服务器上的文件，而不用为下载写额外的代码。一个例子看上去是这样的：<code>https://example.com/downloads/brochure2.pdf</code></li>
+</ul>
+<h1 id="危险的方法-避免LFI漏洞"><a href="#危险的方法-避免LFI漏洞" class="headerlink" title="危险的方法-避免LFI漏洞"></a>危险的方法-避免LFI漏洞</h1><ul>
+<li>文件名黑名单：攻击者手里有许多不同的信息泄漏或代码执行文件名。从实际角度来说维护这份名单是不太靠谱的。光靠用于测试<code>/etc/passwd</code>或者<code>/etc/hosts</code>LFI这类黑名单是不够的。</li>
+<li>删除或禁止某些字符序列。目前已存在绕过方法</li>
+<li>对文件路径进行base64、bin2hex或其他相似功能进行编码，但由于这个过程对于攻击者来说非常容易逆转，所以不可靠。</li>
+</ul>
+<p>Source: <a href="https://www.netsparker.com/blog/web-security/local-file-inclusion-vulnerability/" target="_blank" rel="external">web-security/local-file-inclusion-vulnerability/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1025,157 +1203,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/06/22/cmd-inject/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="oTex911">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/header.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ꭰ's security blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/06/22/cmd-inject/" itemprop="url">【译】命令注入和原理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-22T00:55:27+08:00">
-                2017-06-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/06/22/cmd-inject/" class="leancloud_visitors" data-flag-title="【译】命令注入和原理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote class="blockquote-center"><p>枕上听新蝉，偷得浮日闲  </p>
-</blockquote>
-<p><em>命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。</em></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/22/cmd-inject/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1225,7 +1252,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
