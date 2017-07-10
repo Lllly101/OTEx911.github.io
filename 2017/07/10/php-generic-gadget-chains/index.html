@@ -90,20 +90,20 @@
 
 
 
-<meta name="description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。 黑暗中寻找gadget对于渗透测试人员来说，如果发现了反">
+<meta name="description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。">
 <meta name="keywords" content="php">
 <meta property="og:type" content="article">
 <meta property="og:title" content="php通用gadget工具包：黑夜中反序列化利器">
 <meta property="og:url" content="/2017/07/10/php-generic-gadget-chains/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。 黑暗中寻找gadget对于渗透测试人员来说，如果发现了反">
+<meta property="og:description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。">
 <meta property="og:image" content="/2017/07/10/php-generic-gadget-chains/php_unserailize_exploitation_tool.png">
 <meta property="og:image" content="/2017/07/10/php-generic-gadget-chains/payload.png">
 <meta property="og:image" content="/2017/07/10/php-generic-gadget-chains/result.png">
-<meta property="og:updated_time" content="2017-07-10T02:12:14.000Z">
+<meta property="og:updated_time" content="2017-07-10T02:36:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="php通用gadget工具包：黑夜中反序列化利器">
-<meta name="twitter:description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。 黑暗中寻找gadget对于渗透测试人员来说，如果发现了反">
+<meta name="twitter:description" content="unserialize函数的现状因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是json_decode()函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。">
 <meta name="twitter:image" content="/2017/07/10/php-generic-gadget-chains/php_unserailize_exploitation_tool.png">
 
 
@@ -386,6 +386,7 @@
       
         <p><img src="/2017/07/10/php-generic-gadget-chains/php_unserailize_exploitation_tool.png" alt="php_unserailize_exploitation_tool"></p>
 <h1 id="unserialize函数的现状"><a href="#unserialize函数的现状" class="headerlink" title="unserialize函数的现状"></a>unserialize函数的现状</h1><p>因为恶意的输入，unserialize函数的使用一直令人诟病，使用unserialize算是个存个存在多年的漏洞了。所以许多cms和框架已经明令禁止了，取而代之的是<code>json_decode()</code>函数。然而，该漏洞在今天仍然存在，尤其是一些定制化的网站中。渗透测试时，如果不知道源码的话，想利用该漏洞是比较困难的。</p>
+<a id="more"></a>
 <h1 id="黑暗中寻找gadget"><a href="#黑暗中寻找gadget" class="headerlink" title="黑暗中寻找gadget"></a>黑暗中寻找gadget</h1><p>对于渗透测试人员来说，如果发现了反序列化数据的方法，那剩下的问题就是找到正确的gadgets。如果不知道应用源码，那只能转向使用二进制的exp，这可能非常耗费时间，尽管这能成功。</p>
 <p>越来越多的web开发者选择使用框架而不是从零开始编写所有内容。常见的框架有Laravel、Symfony、Zend、Code Igniter等等。</p>
 <p>结合开发中的实际情况（比如说php的自动加载机制经常被使用，文件之间的依赖通过composer.json来管理）考虑下，在对环境不了解情况下，成功的利用<code>unserialize()</code>一般源于gadget构建的攻击载荷，gadget是从通用库中提取出来的。如果渗透测试人员无法识别应用开发的框架/库，逐一测试攻击载荷仍是个办法。</p>
