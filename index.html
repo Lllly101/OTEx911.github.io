@@ -283,6 +283,155 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/2017/08/07/cracking-lens-targeting-https-hidden/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="oTex911">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/07/cracking-lens-targeting-https-hidden/" itemprop="url">打破热点：剑指HTTP隐藏的攻击面</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-07T22:52:59+08:00">
+                2017-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/08/07/cracking-lens-targeting-https-hidden/" class="leancloud_visitors" data-flag-title="打破热点：剑指HTTP隐藏的攻击面">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>现代网站为了提高性能，获取数据并提供更多的服务，通常采取透明系统（译者注: 透明系统是指程序的输入输出可知）镜像来供用户访问。这种几乎不可见的攻击面已经被人们过于的忽略了。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/07/cracking-lens-targeting-https-hidden/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="/2017/07/17/Honeypot-Visualization-Revisited/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -383,132 +532,14 @@
 
       
         
-          
-            <p>在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。</p>
-<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在上篇博客中，我已经讨论了可视化蜜罐数据。这次，我发现对于我的Cowrie蜜罐和Dionaea数据来说，最好的选择就是使用 Kippo-Graph和DionaeaFR。</p>
-<p>我的上篇博客详细介绍了一些你需要了解的曲折和技巧，这样便于你正常运行 Kippo-Graph和DionaeaFR。但问题是随着底层软件的依赖新版本的发布， 关于曲折和技巧的清单可能会增加或者变动。但最本质的问题却是当大多数底层依赖的软件要更新了，而用来视觉化的包却没有及时更新。</p>
-<p>即使你在蜜罐服务器上成功的运行了Kippo-Graph和DionaeaFR，再次重新配置所有东西只是时间问题 。我的习惯是是定期重构我的蜜罐——频率也许是每一个月或二个月 。</p>
-<p>你需要了解的是构建新的网络环境或重新安装蜜罐从来都不是问题，这是一个很快的过程（参见上篇博客）。我完成这些大概需要5-10分钟。</p>
-<p>每次都得重装前端软件又是一个单独的故事，这也是我开始写本文的原因。</p>
-<h1 id="寻找解决方案"><a href="#寻找解决方案" class="headerlink" title="寻找解决方案"></a>寻找解决方案</h1><p>在这次案例中，我总结出了最佳实践方案，那就是在虚拟机里安装视觉化软件。在虚拟机中我可以做出任何有助于软件正常工作的调整，并且再也不担心什么时候重构蜜罐服务器了。我使用scp命令将蜜罐服务器的数据拷贝到本地虚拟机，然后在那儿开始演示视觉化操作。</p>
-<p>在我决定用那个方法后，突然我就意识到可能存在其他可以使用的视觉化方案。</p>
-<p>自从我初步试验了下现代蜜罐网络（MHN）技术后，我就对使用ELK技术栈来可视化我的蜜罐数据非常感兴趣。对于不熟悉ELK技术栈的朋友，这里简单介绍下：ELK技术栈是指同一家公司Elastic开发的开源软件组合。这个缩写代表着：</p>
-<ul>
-<li>E - Elasticsearch</li>
-<li>L - Logstash</li>
-<li>K - Kibana</li>
-</ul>
-<p>简而言之，Logstash以不同的形式处理日志文件，然后将数据发送给Elasticsearch索引去分类、组织和检索。最后Kibana提出了一种方法，在浏览器中对存储在Elasticsearch索引中的数据进行可视化展示。这样就可以使用Kibana可以创建一个高度定制的可视化主控界面。</p>
-<p>现在，我打算使用本地虚拟机作为可视化服务器成为了可能，同时可搭载ELK。</p>
-<p>如果你刚开始使用ELK技术栈组件，我认为最好的入门视频是Minsuk Heo的<a href="https://youtu.be/69OoC7haeeA" target="_blank" rel="external">这个</a>。尽管有时他的口音很糟糕，但在我看来，这依然是互联网上最好的“从头开始了解ELK”的视频。</p>
-<h1 id="尝试ELK"><a href="#尝试ELK" class="headerlink" title="尝试ELK"></a>尝试ELK</h1><p>通常情况，ELKstack环境会包含额外用来发送服务器数据到ELK电脑上的组件。Elastic公司提供了Filebeats工具来完成这个操作。这个过程的数据流看起来是这样的：</p>
-<blockquote>
-<p>Data source(s) —&gt; Filebeats –&gt; Logstash –&gt;Elasticsearch –&gt; Kibana</p>
-</blockquote>
-<p>当我意识到这种数据流方式并不是我想要的方案时，我就知道如果不按照这个流程来，如何去实现这么个效果，这必然是我的第一个难题，因为我的ELK stack在我的家庭电脑上的一台虚拟机上运行，而我的蜜罐部署在云中。接着这个问题的第二部分出现了，因为我找遍了所有的文档和指导手册，但它们都是以上面那种用法（数据流）来讲的。我需要找到一种将本地存储的数据放入Elasticsearch索引的方法。这时我发现了源自MirkoNasato的一篇<a href="https://labs.encoded.io/2015/01/02/analytics-with-elasticsearch-and-kibana/" target="_blank" rel="external">博客</a>和一个<a href="https://www.youtube.com/watch?v=wHWb1d_VGp8" target="_blank" rel="external">伴侣视频</a>。Mirko的背景比较有意思，他运营着一个Wordismic的社交媒体游戏。在他的博客和视频中，他详细介绍了如何将本地游戏数据导入到Elasticsearch中，就像我们想要做的那样。</p>
-<p>在Mirko的教程帮助下，我可以给我的Cowrie蜜罐数据构造索引了，然后使用Kibana进行可视化展示。这真的很容易，因为Cowrie可以以JSON格式本地记录其数据。很快的，我就有了下面这样的主控界面了。</p>
-<p><img src="/2017/07/17/Honeypot-Visualization-Revisited/kibana2.png" alt="kibana2"></p>
-<p>但对于Dionaea来说，使用ELK又是另一个故事了。</p>
-<p>Dionaea有个选项是支持数据记录到JSON格式文件的。该文件后缀是yaml，你一定会启用的文件（与Dionaea中其他的服务和handler一样）。在测试过程中，我曾经使用过这个特性，但因为某些原因，JSON记录不再正常工作了。当时那个情况持续了好几个星期。</p>
-<p>为了解决这个问题，我决定在本地虚拟机上安装DionaeaFR去观察我的Dionaea数据。 但直到我在推特上向Ignacio Sanmilan发送了关于Dionaea和MHN的消息，这个问题才感觉快被解决了。第二天，他向我发送了一条链接展示了他完成的最基本可视化效果。那效果太难忘了。在那之后，他还添加了一些其他的特性，那效果特别棒，就像是赋予了生命般 。</p>
-<p><img src="/2017/07/17/Honeypot-Visualization-Revisited/DionTracker.png" alt="DionTracker"></p>
-<p>在得知Ignacio能够快速的重组前端界面后，这促使我开始思考是否要制作自己的Dionaea主控界面。但事实证明这比我想象的要困难的多了（很明显我的php很烂）。所以目前来说，我还是坚持用本地版本的DionaeaFR。</p>
-<h1 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h1><p>以下是我的honeypot可视化解决方案的运行安装过程的详细信息</p>
-<h3 id="VM配置"><a href="#VM配置" class="headerlink" title="VM配置"></a>VM配置</h3><ol>
-<li>VirturalBox配64位Linux Mint （GuestAdditions）</li>
-<li>1处理器／3GB RAM／50GB固态</li>
-<li>1个共享文件夹</li>
-</ol>
-<h5 id="可选项"><a href="#可选项" class="headerlink" title="可选项"></a>可选项</h5><p>如果你通过共享文件夹在VM和主机之间传输数据，下面的命令会有助于你可能遇上的问题。</p>
-<p><code>sudo adduser username vboxsf</code></p>
-<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade</div><div class="line">sudo apt-get install curl</div><div class="line">sudo apt-get install software-properties-common</div><div class="line">sudo apt-get install ubuntu-restricted-extras</div></pre></td></tr></table></figure>
-<h3 id="ELK的安装"><a href="#ELK的安装" class="headerlink" title="ELK的安装"></a>ELK的安装</h3><p>ELK stack的安装需要较新的JDK版本。</p>
-<p>你可以从<a href="[here](http://www.oracle.com/technetwork/java/javase/downloads/index.html">这</a>)下载最新的JDK</p>
-<p>在写这篇文章前我已经下载了jdk1.8.0_131-linux-x64.tar.gz，现在将这个压缩文件拷贝到/opt文件夹下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo cp jdk1.8.0_131-linux-x64.tar.gz /opt</div><div class="line">cd /opt</div><div class="line">tar -zxvf jdk1.8.0_131-linux-x64.tar.gz</div><div class="line">chown -R root jdk1.8.0_131</div></pre></td></tr></table></figure>
-<p>解压后可以删除原始的tar.gz文件了。</p>
-<p>下一步，需要安装一些java组件的可选项了。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo update-alternatives --install /usr/bin/java java /opt/jdk1.8.0_60/bin/java 1</div><div class="line">sudo update-alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_60/bin/javac 1</div><div class="line">sudo update-alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_60/bin/jar 1</div></pre></td></tr></table></figure>
-<p>java的版本是必须手动设置的，命令如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo update-alternatives --config java</div></pre></td></tr></table></figure>
-<p>所以选择你刚才安装的版本。</p>
-<p>如果有需要的话，你可以通过命令行运行它们来进行测试（比如，输入java命令，确保运行了正确的版本）</p>
-<h3 id="ELK-Stack"><a href="#ELK-Stack" class="headerlink" title="ELK Stack"></a>ELK Stack</h3><p>有很多方法安装和运行ELK组件。其中一种方式是下载DEB后缀文件的组件，然后通过GDebi安装他们。安装完成后，你可以将组件作为服务运行，并配置成自启动。这过程非常容易，我初次安装用的就是这种方式。</p>
-<p>在我的初次试用ELK和Cowrie中，我没有使用Logstash。毕竟我们只需要将本地数据存储到索引中然后将其可视化。这也是Mirko<br>Nasato在他博客中提到的如何导入数据的方式。我们将继续使用这个，而不用Logstash处理数据。</p>
-<h4 id="选项一：将ELK组件以服务运行"><a href="#选项一：将ELK组件以服务运行" class="headerlink" title="选项一：将ELK组件以服务运行"></a>选项一：将ELK组件以服务运行</h4><p>访问Elastic网站，下载最新的组件 —— Elasticsearch, Logstash 和 Kibana（Linux用户应该下载.DEB文件）</p>
-<p>下载完成后，使用GDebi安装每个组件。这种安装方式默认安装在/usr/share/elasticsearch目录下（其他组件也是安装类似的目录下）。</p>
-<p>接着通过下面的命令启动服务：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo service elasticsearch start</div><div class="line">sudo service kibana start</div></pre></td></tr></table></figure>
-<h5 id="将ELK设置成开机启动"><a href="#将ELK设置成开机启动" class="headerlink" title="将ELK设置成开机启动"></a>将ELK设置成开机启动</h5><p>先判断你的系统使用的是SysV还是systemd</p>
-<p><code>ps -p 1</code></p>
-<p>假设你使用systemd来运行ElasticSearch（比如，Elementary OS）。</p>
-<p>通过下面的命令启动和停止ElasticSearch：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo systemctl start elasticsearch.service</div><div class="line">sudo systemctl stop elasticsearch.service</div></pre></td></tr></table></figure>
-<p>接着为了让Elasticsearch开机自启，运行下面的命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo /bin/systemctl daemon-reload</div><div class="line">sudo /bin/systemctl enable elasticsearch.service</div></pre></td></tr></table></figure>
-<p>假设你使用SysV init来运行ElasticSearch（比如 Linux Mint）</p>
-<p>通过下面的命令启动和停止ElasticSearch：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo -i service elasticsearch start</div><div class="line">sudo -i service elasticsearch stop</div></pre></td></tr></table></figure>
-<p>接着配置Elastic自启：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo update-rc.d elasticsearch defaults 95 10</div></pre></td></tr></table></figure>
-<p>对于Kibana和logstash来说，你也可以这样配置。</p>
-<h4 id="选项二：按需运行ELK组件"><a href="#选项二：按需运行ELK组件" class="headerlink" title="选项二：按需运行ELK组件"></a>选项二：按需运行ELK组件</h4><p>我将虚拟机配置成按需运行ELK，所以我从<a href="https://www.elastic.co/downloads" target="_blank" rel="external">这</a>下载了ELK Stack组件文件，格式是tar.gz。</p>
-<p>打开终端窗口，将下载目录下的文件拷贝到/opt文件夹下。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo cp elasticsearch-5.4.3.tar.gz /opt</div><div class="line">sudo cp kibana-5.4.3-linux-x86_64.tar.gz /opt</div><div class="line">sudo cp logstash-5.4.3.tar.gz /opt</div></pre></td></tr></table></figure>
-<p>接着，切换目录到/opt下，解压所有文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd /opt</div><div class="line">sudo tar -zxvf elasticsearch-5.4.3.tar.gz</div><div class="line">sudo tar -zxvf kibana-5.4.3-linux-x86_64.tar.gz</div><div class="line">sudo tar -zxvf logstash-5.4.3.tar.gz</div></pre></td></tr></table></figure>
-<p>现在你可以启动Elasticsearch，举个例子，你只需要这么做：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd elasticsearch-5.4.3</div><div class="line">./bin/elasticsearch</div></pre></td></tr></table></figure>
-<p>对于Kibana和Logstash来说，过程是一样的</p>
-<h4 id="配置修改"><a href="#配置修改" class="headerlink" title="配置修改"></a>配置修改</h4><p>在启动组件前，我对配置文件进行了最小的修改，尽管这并不是必须的。我使用了下面的命令来修改文件：</p>
-<p><code>sudo nano /etc/elasticsearch/elasticsearch.yml</code></p>
-<p>接着，修改Cluster和Node的名字，我是这样改的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cluster-name: honeypot-cluster</div><div class="line">node-name: honeypots</div></pre></td></tr></table></figure>
-<p>然后，我还将<code>network.host:192.168.0.1</code>改成了<code>network-host: localhost</code>。</p>
-<p>保存退出。</p>
-<h4 id="启动，访问ELK"><a href="#启动，访问ELK" class="headerlink" title="启动，访问ELK"></a>启动，访问ELK</h4><p>现在你已经运行了ELK，我们可以通过浏览器在本地的9200端口和5601端口分别访问Elasticsearch和Kibana了。</p>
-<h4 id="使用ELK工作吧"><a href="#使用ELK工作吧" class="headerlink" title="使用ELK工作吧"></a>使用ELK工作吧</h4><p>我已经将下面会提到的脚本上传到了<a href="https://github.com/executemalware/Honeypot-Visualizations" target="_blank" rel="external">github</a>。</p>
-<p>首先我们需要的是存储数据的Elasticsearch索引。一般来说，索引的创建非常简单。在终端下输入下面的命令就可以创建叫做test的索引了。</p>
-<p><code>curl -XPUT &#39;localhost:9200/test&#39;</code></p>
-<p>你应该能看到true的结果返回，你也可以通过下面的这个命令来验证test索引的存在。</p>
-<p><code>curl -XGET &#39;localhost:9200/test?pretty&#39;</code></p>
-<p>这个脚本在Elasticsearch创建了Cowrie索引，同时也提供了映射信息：</p>
-<p><code>./create_index.sh</code></p>
-<p>现在，你需要将数据存入新的Elasticsearch索引。下面的这个脚本会循环遍历名为’cowrie’文件夹然后使用’./bulk_index.sh’脚本处理每个文件。这个脚本会在cowrie数据文件中的每一行中插入正确的数据，并以正确的JSON格式（便于Elasticsearch）组合起来，接着会把文件添加到我们刚建立的’cowrie’索引中。</p>
-<p><code>for JSON in cowrie/*.*; do ./bulk_index.sh $JSON; done</code></p>
-<p>现在你已经将数据存到了Elasticsearch索引中，接着可以通过Kibana来进行可视化了。</p>
-<h4 id="使用Kibana"><a href="#使用Kibana" class="headerlink" title="使用Kibana"></a>使用Kibana</h4><ul>
-<li>打开浏览器，访问localhost:5601</li>
-<li>在要求你创建索引名的字段位置，删掉原来的logstash-*，然后输入cowrie</li>
-<li>确认勾选了以时间为索引的复选框</li>
-<li>点击创建</li>
-<li>在左侧菜单点击发现去校验和观察你的数据</li>
-<li>此时最可能出现的情况是，右上角的数据只显示了最近15分钟—— 你可以自己调整范围。</li>
-</ul>
-<p>接着，添加可视化选项。</p>
-<ul>
-<li>点击左侧菜单的可视化</li>
-<li>点击创建可视化视图，然后关闭。</li>
-</ul>
-<p>（温馨提示：我并不打算指导你如何在Kibana中创建可视化视图，因为网络上有很多非常棒的相关资源）</p>
-<p>目前来说，我们所遇到的ELK困惑中只有一个尚未解决，就是将IP地址转为地理位置以便在地图上标注出来。为了完成这个，我们需要借助Logstash的力量。到目前为止，我并没有让它正常工作，一旦没问题我会发篇相关简短的博客。</p>
-<h3 id="可视化Dionaea数据"><a href="#可视化Dionaea数据" class="headerlink" title="可视化Dionaea数据"></a>可视化Dionaea数据</h3><p>因为在之前的博客中介绍了DionaeaFR，所以这里不会深入任何相关的细节。关于DionaeaFR安装唯一要注意的新内容是现在有一个脚本，它能够完成所有繁重的操作。我在原始的DionaeaFR博客上收到了来自R1ckyz1的评论，他说他写了一个能够自动安装DionaeaFR和所有依赖的脚本。于是我将这个脚本进行了修改，你可以在从这获取它。</p>
-<p>在DionaeaFR安装完成后，你可以通过这个脚本来启动。在那之后，你可以通过本地8000端口来访问。</p>
-<h3 id="结论和未完成的部分"><a href="#结论和未完成的部分" class="headerlink" title="结论和未完成的部分"></a>结论和未完成的部分</h3><p>就本文的大部分来说，我并不满意这篇文章。因为有太多未完成的。在你考虑如何将你捕获的数据进行展示和计算时，希望这篇漫长的蜜罐可视化文章能够给你一些启发。</p>
-<p>关于这个主题，下面的条目是我仍想继续做的：</p>
-<h4 id="Kibana"><a href="#Kibana" class="headerlink" title="Kibana"></a>Kibana</h4><ol>
-<li>找到能够在一次可视化中展示多个字段的方法（比如同时显示用户名/密码）</li>
-<li>清理修改Kibana主控板—— 删除可视化标签</li>
-<li>将IP地址转为地理位置，以便在地图上显示</li>
-<li>找出使Dionaea Json再次正常工作的解决方法，便于我使用ELK展示数据</li>
-</ol>
-<h4 id="amChars"><a href="#amChars" class="headerlink" title="amChars"></a>amChars</h4><ol>
-<li>试着通过amCharst来重新构造DionaeaFR来展示数据</li>
-</ol>
-<p>我想这些意味着未来的某个时候还有下篇（希望很快就来）【译者注：外国人真墨迹，就四个字的意思-未完待续-要扯那么多】</p>
-<p><a href="http://executemalware.com/?p=355" target="_blank" rel="external">原文在这</a></p>
-
-          
+          <p>在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/17/Honeypot-Visualization-Revisited/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1150,155 +1181,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/07/01/imagemagick-rce-vulnerability/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="oTex911">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/header.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ꭰ's security blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/01/imagemagick-rce-vulnerability/" itemprop="url">【译】Imagemagick远程代码执行漏洞</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-01T14:29:27+08:00">
-                2017-07-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/07/01/imagemagick-rce-vulnerability/" class="leancloud_visitors" data-flag-title="【译】Imagemagick远程代码执行漏洞">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>ImageMagick是一款非常出名的软件，主要用于图像的编辑、转化等。ImageMagick为几乎所有的编程语言（PHP、Python、Ruby等等）提供了函数库支持，因为容易上手的特性，大多数开发者在遇到图片操作或剪切需求都会选择ImageMagick。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/01/imagemagick-rce-vulnerability/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1348,7 +1230,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

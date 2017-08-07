@@ -90,19 +90,19 @@
 
 
 
-<meta name="description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。 问题在上篇博客中，我已经讨论了可视化蜜罐数据。这次，我发现对于我的Cowrie蜜罐和Dionaea数据来说，最好的选择就是使用 Kippo-Graph和Di">
+<meta name="description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。">
 <meta name="keywords" content="honeypot">
 <meta property="og:type" content="article">
 <meta property="og:title" content="重踏蜜罐可视化之旅">
 <meta property="og:url" content="/2017/07/17/Honeypot-Visualization-Revisited/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。 问题在上篇博客中，我已经讨论了可视化蜜罐数据。这次，我发现对于我的Cowrie蜜罐和Dionaea数据来说，最好的选择就是使用 Kippo-Graph和Di">
+<meta property="og:description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。">
 <meta property="og:image" content="/2017/07/17/Honeypot-Visualization-Revisited/kibana2.png">
 <meta property="og:image" content="/2017/07/17/Honeypot-Visualization-Revisited/DionTracker.png">
-<meta property="og:updated_time" content="2017-07-17T14:08:58.000Z">
+<meta property="og:updated_time" content="2017-08-07T14:51:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="重踏蜜罐可视化之旅">
-<meta name="twitter:description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。 问题在上篇博客中，我已经讨论了可视化蜜罐数据。这次，我发现对于我的Cowrie蜜罐和Dionaea数据来说，最好的选择就是使用 Kippo-Graph和Di">
+<meta name="twitter:description" content="在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。">
 <meta name="twitter:image" content="/2017/07/17/Honeypot-Visualization-Revisited/kibana2.png">
 
 
@@ -384,6 +384,7 @@
 
       
         <p>在上篇博客中，我提到过很快会再出篇新的可视化蜜罐文章。但由于一些原因推迟到今日，所以我想对期待这篇文章的读者说声抱歉。我自认为我已经选择了关于可视化蜜罐的最佳方案，但正如你所见的，并不是这样的，可能因为我太年轻了。先提醒各位读者：本文非常长。</p>
+<a id="more"></a>
 <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在上篇博客中，我已经讨论了可视化蜜罐数据。这次，我发现对于我的Cowrie蜜罐和Dionaea数据来说，最好的选择就是使用 Kippo-Graph和DionaeaFR。</p>
 <p>我的上篇博客详细介绍了一些你需要了解的曲折和技巧，这样便于你正常运行 Kippo-Graph和DionaeaFR。但问题是随着底层软件的依赖新版本的发布， 关于曲折和技巧的清单可能会增加或者变动。但最本质的问题却是当大多数底层依赖的软件要更新了，而用来视觉化的包却没有及时更新。</p>
 <p>即使你在蜜罐服务器上成功的运行了Kippo-Graph和DionaeaFR，再次重新配置所有东西只是时间问题 。我的习惯是是定期重构我的蜜罐——频率也许是每一个月或二个月 。</p>
@@ -558,6 +559,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/08/07/cracking-lens-targeting-https-hidden/" rel="prev" title="打破热点：剑指HTTP隐藏的攻击面">
+                打破热点：剑指HTTP隐藏的攻击面 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -630,7 +635,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
