@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/11/26/Escalating seven chars to get shell/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
-<meta property="og:updated_time" content="2017-11-27T15:45:17.280Z">
+<meta property="og:updated_time" content="2017-11-27T15:48:59.057Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Escalate seven chars rce to get shell">
 <meta name="twitter:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
@@ -420,10 +420,11 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash bb index.html name.php</div></pre></td></tr></table></figure>
 <p>In shell, there is a special process called expansion. Here is the explanation.</p>
 <blockquote>
-<p>Each time you type a command line and press the enter key, bash performs several processes upon the text before it carries out your command. We have seen a couple of cases of how a simple character sequence, for example “<em>”, can have a lot of meaning to the shell. The process that makes this happen is called </em>expansion*. </p>
+<p>Each time you type a command line and press the enter key, bash performs several processes upon the text before it carries out your command. We have seen a couple of cases of how a simple character sequence, for example “*”, can have a lot of meaning to the shell. The process that makes this happen is called <em>expansion</em>. </p>
 </blockquote>
-<p>First , the command<figure class="highlight plain"><figcaption><span>``` will be substituted by the name of files in current directory then ``` bash bb index.html name.php``` will be executed. Is this a end to the ``` `*` ``` command? The output of the  ``` bash bb index.html name.php``` command will be returned to the main terminal and it's still in the [Command-Substitutation](http://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). So the command will be executed once again.</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">If you can&apos;t believe that, you can try to change the content of `bb` to `whoami`. After that, you&apos;ll see the following.</div></pre></td></tr></table></figure></p>
-<p>The program ‘root’ is currently not installed. You can install it by typing:<br>apt install root-system-bin<br>```</p>
+<p>First , the command`*` will be substituted by the name of files in current directory then <code>bash bb index.html name.php</code> will be executed. Is this a end to the  `*` command? The output of the  <code>bash bb index.html name.php</code> command will be returned to the main terminal and it’s still in the <a href="http://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html" target="_blank" rel="external">Command-Substitutation</a>. So the command will be executed once again.</p>
+<p>If you can’t believe that, you can try to change the content of <code>bb</code> to <code>whoami</code>. After that, you’ll see the following.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">The program &apos;root&apos; is currently not installed. You can install it by typing:</div><div class="line">apt install root-system-bin</div></pre></td></tr></table></figure>
 <p>Talk is cheap, show me your code.</p>
 <p>Happy weekend!</p>
 <h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul>
