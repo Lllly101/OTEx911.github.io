@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/11/26/Escalating seven chars to get shell/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
-<meta property="og:updated_time" content="2017-11-27T15:53:36.403Z">
+<meta property="og:updated_time" content="2017-11-27T15:54:02.159Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Escalate seven chars rce to get shell">
 <meta name="twitter:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
@@ -390,7 +390,7 @@
 <p>In fact, the second one is the challenge named <a href="https://github.com/p4-team/ctf/tree/master/2015-12-27-32c3/tiny_hosting_web_250#eng-version" target="_blank" rel="external">TinyHosting in the 2015 32c3 ctf</a>.  I added  some html code based on the primitive php code just for convenience. Please note that you must have a directory named files with others write permissions in web directory.</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">drwxr-xrwx  3 root root 4096 Nov 25 14:41 files</div><div class="line">-rw-r--r--  1 root root  793 Nov 25 14:37 index.php</div></pre></td></tr></table></figure>
 <p>The common in the two challenges is that you only have seven chars to make it.</p>
-<h3 id="The-solutions"><a href="#The-solutions" class="headerlink" title="The solutions"></a>The solutions</h3><p>#####0X00</p>
+<h3 id="The-solutions"><a href="#The-solutions" class="headerlink" title="The solutions"></a>The solutions</h3><p>####0X00</p>
 <p>In truth, the first time to solve them is difficult for me. So I found the write up and tried to make it. Let’s focus on the solution.</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(strlen($_GET[<span class="number">1</span>])&lt;<span class="number">8</span>) &#123;</div><div class="line">	shell_exec($_GET[<span class="number">1</span>])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Oh my god! What I can do is only 7 chars. I can just execute some simple command, for example: <code>ls /</code>, <code>pwd</code>, <code>whoami</code>,<code>sh file</code> . </p>
@@ -413,7 +413,7 @@
 <li>In shell, whitespace and backslash <code>\</code> should be always escaped, and the backslash can be used to split long command over multiple lines.</li>
 <li>The file <code>1</code> with 1 on the first line will not affect the execution of the  <code>shell</code>  script. (Can someone give me more detail about this, XD)</li>
 </ul>
-<p>#####0X01</p>
+<p>####0X01</p>
 <p>The key of the second challenge is I can upload any files with content limited within 7 chars. It looks so similar with the first one that I almost believe that’s truth. </p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$savepath=<span class="string">"files/"</span>.sha1($_SERVER[<span class="string">'REMOTE_ADDR'</span>].$_SERVER[<span class="string">'HTTP_USER_AGENT'</span>]).<span class="string">"/"</span>;</div><div class="line"><span class="keyword">if</span>(!is_dir($savepath))&#123;</div><div class="line">	    $oldmask = umask(<span class="number">0</span>);</div><div class="line">	    mkdir($savepath, <span class="number">0777</span>);</div><div class="line">	    umask($oldmask);</div><div class="line">	    touch($savepath.<span class="string">"/index.html"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>((@$_POST[<span class="string">'filename'</span>]) &amp;&amp; (@$_POST[<span class="string">'content'</span>]) )&#123;</div><div class="line">	    $fp = fopen(<span class="string">"$savepath"</span>.$_POST[<span class="string">'filename'</span>], <span class="string">'w'</span>);</div><div class="line">	    fwrite($fp, substr($_POST[<span class="string">'content'</span>],<span class="number">0</span>,<span class="number">7</span>) );</div><div class="line">	    fclose($fp);</div><div class="line">	    $msg = <span class="string">'File saved to &lt;a&gt;'</span>.$savepath.htmlspecialchars($_POST[<span class="string">'filename'</span>]).<span class="string">"&lt;/a&gt;"</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
 <p>There is a new file named <code>index.html</code> in every <code>$savepath</code>. I can upload the following files then execute command .</p>
