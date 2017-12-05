@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta name="description" content="枕上听新蝉，偷得浮日闲    Monaco 命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
 <meta name="keywords" content="cmd-inject">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【译】命令注入和原理">
 <meta property="og:url" content="/cmd-inject/index.html">
 <meta property="og:site_name" content="Ꭰ&#39;s security blog">
-<meta property="og:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
-<meta property="og:updated_time" content="2017-12-05T14:26:16.820Z">
+<meta property="og:description" content="枕上听新蝉，偷得浮日闲    Monaco 命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta property="og:updated_time" content="2017-12-05T15:00:21.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】命令注入和原理">
-<meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
+<meta name="twitter:description" content="枕上听新蝉，偷得浮日闲    Monaco 命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。">
 
 
 
@@ -382,6 +382,7 @@
       
         <blockquote class="blockquote-center"><p>枕上听新蝉，偷得浮日闲  </p>
 </blockquote>
+<p>Monaco</p>
 <p><em>命令注入漏洞可以让攻击者在操作系统上执行一个或多个命令。通过sleep命令(比如sleep 5)去观察请求的响应时间是检查该漏洞的最好方式之一。</em><a id="more"></a>假定系统响应时间通常是在500毫秒左右，当你尝试进行命令注入时，如果响应时间是5500毫秒（5秒的任意倍数，但至少得比没有进行命令注入时的响应时间要长）则表明命令注入成功。为了确保不是误报，请使用不同的时间参数进行sleep的调用(sleep 3 ，sleep 10等等)。如果RTT与你所输入的参数符合，很有可能你发现了一个注入漏洞。并不是所有的命令注入都是同样的利用方式，尝试下面不同的payloads：</p>
 <ul>
 <li>;sleep 5</li>
