@@ -1,0 +1,951 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="json,jsonp," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
+<meta name="keywords" content="json,jsonp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sop、jsonp和cors">
+<meta property="og:url" content="/sop-and-jsonp/index.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
+<meta property="og:image" content="/sop-and-jsonp/jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/img-jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/src-jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/src-ex-jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/src-simple-jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/scr-ex-jsonp.png">
+<meta property="og:image" content="/sop-and-jsonp/cors-simple.png">
+<meta property="og:image" content="/sop-and-jsonp/cors-preflight.png">
+<meta property="og:updated_time" content="2017-12-05T14:34:00.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sop、jsonp和cors">
+<meta name="twitter:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
+<meta name="twitter:image" content="/sop-and-jsonp/jsonp.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/sop-and-jsonp/"/>
+
+
+
+
+
+  <title>sop、jsonp和cors | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/sop-and-jsonp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sop、jsonp和cors</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-28T20:59:06+08:00">
+                2017-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/FrontEnd/" itemprop="url" rel="index">
+                    <span itemprop="name">FrontEnd</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/sop-and-jsonp/" class="leancloud_visitors" data-flag-title="sop、jsonp和cors">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。 </p>
+</blockquote>
+<p><em>SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。</em></p>
+<a id="more"></a>
+<h3 id="SOP"><a href="#SOP" class="headerlink" title="SOP"></a>SOP</h3><p>同源策略严格的控制了两个源之间的资源交互。这是用来隔离恶意文件的安全机制。</p>
+<h4 id="同源的定义"><a href="#同源的定义" class="headerlink" title="同源的定义"></a>同源的定义</h4><p>拥有相同<code>协议</code>,<code>端口</code>,<code>主机</code>的页面才称为同源。假设有这么个页面(<a href="http://localhost/index.html" target="_blank" rel="external">http://localhost/index.html</a>)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http://localhost/other.html  <span class="comment">#同源</span></div><div class="line">http://localhost/inner/another.html  <span class="comment">#同源</span></div><div class="line">https://localhost/ssl.html </div><div class="line">http://localhost:<span class="number">8888</span>/index.html</div><div class="line">http://www.localhost/index.html</div></pre></td></tr></table></figure>
+<h4 id="同源的作用"><a href="#同源的作用" class="headerlink" title="同源的作用"></a>同源的作用</h4><p><img src="/sop-and-jsonp/jsonp.png" alt="同源的作用"></p>
+<p>Server端: <code>http://localhost:8000</code><br>Client端: <code>http://localhost:8080</code></p>
+<p>Server端放了一串字符<code>Server data</code>。Client代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var url = <span class="string">"http://localhost:8000"</span>;</div><div class="line"><span class="keyword">var</span> req = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">req.addEventListener(<span class="string">"load"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);  <span class="comment">// 打印出服务端的数据</span></div><div class="line">&#125;)</div><div class="line">req.open(<span class="string">"GET"</span>, url);</div><div class="line">req.send()</div></pre></td></tr></table></figure></p>
+<p>打开localhost:8080时，控制台并没有打印出服务端的数据，而是提示了<em>Cross-origin Request Blocked</em>。</p>
+<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>在开发中，经常能看到<code>script</code>和<code>img</code>标签引用外部资源(不同源),这是合法的。所以为了解决同源问题，在js代码中创造<code>img</code>和<code>script</code>标签来进行数据交互。</p>
+<p><img src="/sop-and-jsonp/img-jsonp.png" alt="img"><br>从图中可以看出只要给创建的img对象src赋值就可以进行跨域请求。<br><img src="/sop-and-jsonp/src-jsonp.png" alt="src"><br>而script标签却不是如此，它需要将script标签插入document中才行。注意script标签是js环境，所以server data会被js解析器解析，console台上会出现<code>Syntaxerror</code>。<br><img src="/sop-and-jsonp/src-ex-jsonp.png" alt="src"></p>
+<h4 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h4><p>利用script进行数据传输，这是jsonp的最简单模型。<br><img src="/sop-and-jsonp/src-simple-jsonp.png" alt="jsonp原型"><br>平时常见的jsonp一般都是<code>http://xxxx/q=?&amp;callback=?</code>。<br><img src="/sop-and-jsonp/scr-ex-jsonp.png" alt="scr"></p>
+<h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。CORS通信的关键在服务器端的设置。详情参考阮一峰老师的文章。</p>
+<p>HTTP请求被CORS标准分成了两类，一种是Simple，一种Preflight。如果说A、B同时从一个位置出发，那么Simple则是选择了直达车，而Preflight则是选择了中转方案。当然无论是直达车还是中转车，都需要票（<code>Access-Control-Allow-Origin和Access-Control-Allow-Methods</code>）的存在才能抵达终点。</p>
+<p><em>直达车(Simple):</em><br><img src="/sop-and-jsonp/cors-simple.png" alt="simple"></p>
+<p><em>中转(Preflight):</em><br><img src="/sop-and-jsonp/cors-preflight.png" alt="simple"></p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank" rel="external">CORS-wiki</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a></li>
+<li><a href="http://www.cnblogs.com/chopper/archive/2012/03/24/2403945.html" target="_blank" rel="external">深入浅出JSONP–解决ajax跨域问题</a></li>
+<li><a href="http://www.infoq.com/cn/articles/JSONP-attack" target="_blank" rel="external">利用JSONP进行水坑攻击</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/json/" rel="tag"># json</a>
+          
+            <a href="/tags/jsonp/" rel="tag"># jsonp</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/url-encode/" rel="next" title="聊聊编码">
+                <i class="fa fa-chevron-left"></i> 聊聊编码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/keyboard-symbol/" rel="prev" title="键盘符号英文">
+                键盘符号英文 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="Ꭰ" />
+          <p class="site-author-name" itemprop="name">Ꭰ</p>
+           
+              <p class="site-description motion-element" itemprop="description">a lazy person. me</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SOP"><span class="nav-number">1.</span> <span class="nav-text">SOP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#同源的定义"><span class="nav-number">1.1.</span> <span class="nav-text">同源的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同源的作用"><span class="nav-number">1.2.</span> <span class="nav-text">同源的作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONP"><span class="nav-number">2.</span> <span class="nav-text">JSONP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据传输"><span class="nav-number">2.1.</span> <span class="nav-text">数据传输</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CORS"><span class="nav-number">3.</span> <span class="nav-text">CORS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

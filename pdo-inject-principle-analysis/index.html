@@ -1,0 +1,985 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="php,sqli," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta name="keywords" content="php,sqli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转】PDO防注入原理分析以及使用PDO注意事项">
+<meta property="og:url" content="/pdo-inject-principle-analysis/index.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta property="og:image" content="/pdo-inject-principle-analysis/wireshark01.jpg">
+<meta property="og:image" content="/pdo-inject-principle-analysis/wireshark02.jpg">
+<meta property="og:image" content="/pdo-inject-principle-analysis/wireshark03.jpg">
+<meta property="og:image" content="/pdo-inject-principle-analysis/wireshark04.jpg">
+<meta property="og:updated_time" content="2017-12-05T14:32:55.463Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转】PDO防注入原理分析以及使用PDO注意事项">
+<meta name="twitter:description" content="今天遇到了一个假Hiberate的注入点，于是有了这篇转载  我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题：">
+<meta name="twitter:image" content="/pdo-inject-principle-analysis/wireshark01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/pdo-inject-principle-analysis/"/>
+
+
+
+
+
+  <title>【转】PDO防注入原理分析以及使用PDO注意事项 | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/pdo-inject-principle-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【转】PDO防注入原理分析以及使用PDO注意事项</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-23T22:44:42+08:00">
+                2017-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vulnerability/" itemprop="url" rel="index">
+                    <span itemprop="name">Vulnerability</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/pdo-inject-principle-analysis/" class="leancloud_visitors" data-flag-title="【转】PDO防注入原理分析以及使用PDO注意事项">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>今天遇到了一个假Hiberate的注入点，于是有了这篇转载</p>
+</blockquote>
+<p><em>我们都知道，只要合理正确使用PDO,可以基本上防止SQL注入的产生，本文主要回答以下两个问题</em>：<a id="more"></a></p>
+<ol>
+<li>为什么要使用PDO而不是mysql_connect？</li>
+<li>为何PDO能防注入？使用PDO防注入的时候应该特别注意什么?</li>
+</ol>
+<h1 id="为何要优先使用PDO"><a href="#为何要优先使用PDO" class="headerlink" title="为何要优先使用PDO?"></a>为何要优先使用PDO?</h1><p>PHP手册上说得很清楚：</p>
+<blockquote>
+<p>Prepared statements and stored procedures</p>
+<p>Many of the more mature databases support the concept of prepared statements. What are they? They can be thought of as a kind of compiled template for the SQL that an application wants to run, that can be customized using variable parameters. Prepared statements offer two major benefits: </p>
+<p>The query only needs to be parsed (or prepared) once, but can be executed multiple times with the same or different parameters. When the query is prepared, the database will analyze, compile and optimize its plan for executing the query. For complex queries this process can take up enough time that it will noticeably slow down an application if there is a need to repeat the same query many times with different parameters. By using a prepared statement the application avoids repeating the analyze/compile/optimize cycle. This means that prepared statements use fewer resources and thus run faster.</p>
+<p>The parameters to prepared statements don’t need to be quoted; the driver automatically handles this. If an application exclusively uses prepared statements, the developer can be sure that no SQL injection will occur (however, if other portions of the query are being built up with unescaped input, SQL injection is still possible).</p>
+</blockquote>
+<p>即使用PDO的prepare方式，主要是提高相同SQL模板查询性能、阻止SQL注入</p>
+<p>同时，PHP手册中给出了警告信息:</p>
+<blockquote>
+<p>Prior to PHP 5.3.6, this element was silently ignored. The same behaviour can be partly replicated with the <strong>PDO::MYSQL_ATTR_INIT_COMMAND</strong> driver option, as the following example shows.</p>
+<p><strong>Warning</strong>The method in the below example can only be used with character sets that share the same lower 7 bit representation as ASCII, such as ISO-8859-1 and UTF-8. Users using character sets that have different representations (such as UTF-16 or Big5) <em>must</em> use the <em>charset</em> option provided in PHP 5.3.6 and later versions.</p>
+</blockquote>
+<p>意思是说，在PHP 5.3.6及以前版本中，并不支持在DSN中的charset定义，而应该使用<strong>PDO::MYSQL_ATTR_INIT_COMMAND设置初始SQL, 即我们常用的 set names gbk指令。</strong></p>
+<p>我看到一些程序，还在尝试使用addslashes达到防注入的目的，殊不知这样其实问题更多, 详情请看<a href="http://www.lorui.com/addslashes-mysql_escape_string-mysql_real_eascape_string.html" target="_blank" rel="external">http://www.lorui.com/addslashes-mysql_escape_string-mysql_real_eascape_string.html</a></p>
+<p>还有一些做法：在执行数据库查询前，将SQL中的select, union, ….之类的关键词清理掉。这种做法显然是非常错误的处理方式，如果提交的正文中确实包含 the students’s union , 替换后将篡改本来的内容，滥杀无辜，不可取。</p>
+<h1 id="为何PDO能防SQL注入？"><a href="#为何PDO能防SQL注入？" class="headerlink" title="为何PDO能防SQL注入？"></a>为何PDO能防SQL注入？</h1><p>请先看以下PHP代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">"mysql:host=192.168.0.1;dbname=test;charset=utf8"</span>,<span class="string">"root"</span>);</div><div class="line">$st = $pdo-&gt;prepare(<span class="string">"select * from info where id =? and name = ?"</span>);</div><div class="line"> </div><div class="line">$id = <span class="number">21</span>;</div><div class="line">$name = <span class="string">'zhangsan'</span>;</div><div class="line">$st-&gt;bindParam(<span class="number">1</span>,$id);</div><div class="line">$st-&gt;bindParam(<span class="number">2</span>,$name);</div><div class="line"> </div><div class="line">$st-&gt;execute();</div><div class="line">$st-&gt;fetchAll();</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>环境如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PHP 5.4.7</div><div class="line">Mysql 协议版本 10</div><div class="line">MySQL Server 5.5.27</div></pre></td></tr></table></figure>
+<p>为了彻底搞清楚php与mysql server通讯的细节，我特别使用了wireshark抓包进行研究之,安装wireshak之后，我们设置过滤条件为tcp.port==3306, 如下图：</p>
+<p><img src="/pdo-inject-principle-analysis/wireshark01.jpg" alt="tcp-port3306"></p>
+<p>如此只显示与mysql 3306端口的通信数据，避免不必要的干扰。特别要注意的是wireshak基于wincap驱动，不支持本地环回接口的侦听（即使用php连接本地mysql的方法是无法侦听的），请连接其它机器（桥接网络的虚拟机也可）的MySQL进行测试。</p>
+<p>然后运行我们的PHP程序，侦听结果如下，我们发现，PHP只是简单地将SQL直接发送给MySQL Server :</p>
+<p><img src="/pdo-inject-principle-analysis/wireshark02.jpg" alt="tcp-port3306"></p>
+<p>其实，这与我们平时使用mysql_real_escape_string将字符串进行转义，再拼接成SQL语句没有差别（只是由PDO本地驱动完成转义的），显然这种情况下还是有可能造成SQL注入的，也就是说在php本地调用pdo prepare中的mysql_real_escape_string来操作query，使用的是本地单字节字符集，而我们传递多字节编码的变量时，有可能还是会造成SQL注入漏洞(php 5.3.6以前版本的问题之一，这也就解释了为何在使用PDO时，建议升级到php 5.3.6+，并在DSN字符串中指定charset的原因。</p>
+<p>针对php 5.3.6以前版本，以下代码仍然可能造成SQL注入问题：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$pdo-&gt;query(<span class="string">'SET NAMES GBK'</span>); </div><div class="line">$var = chr(<span class="number">0xbf</span>) . chr(<span class="number">0x27</span>) . <span class="string">" OR 1=1 /*"</span>; </div><div class="line">$query = <span class="string">"SELECT * FROM info WHERE name = ?"</span>; </div><div class="line">$stmt = $pdo-&gt;prepare($query); </div><div class="line">$stmt-&gt;execute(<span class="keyword">array</span>($var));</div></pre></td></tr></table></figure>
+<p>原因与上面的分析是一致的。</p>
+<p>而正确的转义应该是给mysql Server指定字符集，并将变量发送给MySQL Server完成根据字符转义。 </p>
+<p>那么，如何才能禁止PHP本地转义而交由MySQL Server转义呢？</p>
+<p>PDO有一项参数，名为PDO::ATTR_EMULATE_PREPARES ，表示是否使用PHP本地模拟prepare，此项参数默认值未知。而且根据我们刚刚抓包分析结果来看，php 5.3.6+默认还是使用本地变量转，拼接成SQL发送给MySQL Server的，我们将这项值设置为false, 试试效果，如以下代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">"mysql:host=192.168.0.1;dbname=test;"</span>,<span class="string">"root"</span>);</div><div class="line">$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES, <span class="keyword">false</span>);</div><div class="line"> </div><div class="line">$st = $pdo-&gt;prepare(<span class="string">"select * from info where id =? and name = ?"</span>);</div><div class="line">$id = <span class="number">21</span>;</div><div class="line">$name = <span class="string">'zhangsan'</span>;</div><div class="line"> </div><div class="line">$st-&gt;bindParam(<span class="number">1</span>,$id);</div><div class="line">$st-&gt;bindParam(<span class="number">2</span>,$name);</div><div class="line">$st-&gt;execute();</div><div class="line">$st-&gt;fetchAll();</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>红色行是我们刚加入的内容，运行以下程序，使用wireshark抓包分析，得出的结果如下：</p>
+<p><img src="/pdo-inject-principle-analysis/wireshark03.jpg" alt="tcp-port3306"></p>
+<p><img src="/pdo-inject-principle-analysis/wireshark04.jpg" alt="tcp-port3306"></p>
+<p>看到了吗？这就是神奇之处，可见这次PHP是将SQL模板和变量是分两次发送给MySQL的，由MySQL完成变量的转义处理，既然变量和SQL模板是分两次发送的，那么就不存在SQL注入的问题了，但需要在DSN中指定charset属性，如：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$pdo = <span class="keyword">new</span> PDO(<span class="string">'mysql:host=localhost;dbname=test;charset=utf8'</span>, <span class="string">'root'</span>);</div></pre></td></tr></table></figure>
+<p>如此，即可从根本上杜绝SQL注入的问题。</p>
+<h1 id="使用PDO的注意事项"><a href="#使用PDO的注意事项" class="headerlink" title="使用PDO的注意事项"></a>使用PDO的注意事项</h1><p>知道以上几点之后，我们就可以总结使用PDO杜绝SQL注入的几个注意事项：</p>
+<ol>
+<li>php升级到5.3.6+，生产环境强烈建议升级到php 5.3.9+ php 5.4+，php 5.3.8存在致命的hash碰撞漏洞。</li>
+<li>若使用php 5.3.6+, 请在在PDO的DSN中指定charset属性</li>
+<li>如果使用了PHP 5.3.6及以前版本，设置PDO::ATTR_EMULATE_PREPARES参数为false（即由MySQL进行变量处理），php 5.3.6以上版本已经处理了这个问题，无论是使用本地模拟prepare还是调用mysql server的prepare均可。在DSN中指定charset是无效的，同时<code>set names &lt;charset&gt;</code>的执行是必不可少的。</li>
+<li>如果使用了PHP 5.3.6及以前版本, 因Yii框架默认并未设置ATTR_EMULATE_PREPARES的值，请在数据库配置文件中指定emulatePrepare的值为false。</li>
+</ol>
+<p>那么，有个问题，如果在DSN中指定了charset, 是否还需要执行<code>set names &lt;charset&gt;</code>呢？</p>
+<p>是的，不能省。<code>set names &lt;charset&gt;</code>其实有两个作用：</p>
+<blockquote>
+<p>A.  告诉mysql server, 客户端（PHP程序）提交给它的编码是什么</p>
+<p>B.  告诉mysql server, 客户端需要的结果的编码是什么</p>
+</blockquote>
+<p>也就是说，如果数据表使用gbk字符集，而PHP程序使用UTF-8编码，我们在执行查询前运行set names utf8, 告诉mysql server正确编码即可，无须在程序中编码转换。这样我们以utf-8编码提交查询到mysql server, 得到的结果也会是utf-8编码。省却了程序中的转换编码问题，不要有疑问，这样做不会产生乱码。</p>
+<p>那么在DSN中指定charset的作用是什么? 只是告诉PDO, 本地驱动转义时使用指定的字符集（并不是设定mysql server通信字符集），设置mysql server通信字符集，还得使用<code>set names &lt;charset&gt;</code>指令。</p>
+<p><a href="http://zhangxugg-163-com.iteye.com/blog/1835721" target="_blank" rel="external">转载原文</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/php/" rel="tag"># php</a>
+          
+            <a href="/tags/sqli/" rel="tag"># sqli</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/cmd-inject/" rel="next" title="【译】命令注入和原理">
+                <i class="fa fa-chevron-left"></i> 【译】命令注入和原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/use-python-to-detect-and-bypass-web-application-firewall/" rel="prev" title="【译】使用python检测和绕过web防火墙">
+                【译】使用python检测和绕过web防火墙 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="Ꭰ" />
+          <p class="site-author-name" itemprop="name">Ꭰ</p>
+           
+              <p class="site-description motion-element" itemprop="description">a lazy person. me</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为何要优先使用PDO"><span class="nav-number">1.</span> <span class="nav-text">为何要优先使用PDO?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为何PDO能防SQL注入？"><span class="nav-number">2.</span> <span class="nav-text">为何PDO能防SQL注入？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用PDO的注意事项"><span class="nav-number">3.</span> <span class="nav-text">使用PDO的注意事项</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

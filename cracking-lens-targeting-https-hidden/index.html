@@ -1,0 +1,1018 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="http," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="现代网站为了提高性能，获取数据并提供更多的服务，通常采取透明系统（译者注: 透明系统是指程序的输入输出可知）镜像来供用户访问。这种几乎不可见的攻击面已经被人们过于的忽略了。">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】打破热点：剑指HTTP隐藏的攻击面">
+<meta property="og:url" content="/cracking-lens-targeting-https-hidden/index.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="现代网站为了提高性能，获取数据并提供更多的服务，通常采取透明系统（译者注: 透明系统是指程序的输入输出可知）镜像来供用户访问。这种几乎不可见的攻击面已经被人们过于的忽略了。">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/netflixHTTP.png">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/pipeline.png">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/misroute.png">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/croppedTrace.png">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/parity.png">
+<meta property="og:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/cache.png">
+<meta property="og:updated_time" content="2017-12-05T14:27:35.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】打破热点：剑指HTTP隐藏的攻击面">
+<meta name="twitter:description" content="现代网站为了提高性能，获取数据并提供更多的服务，通常采取透明系统（译者注: 透明系统是指程序的输入输出可知）镜像来供用户访问。这种几乎不可见的攻击面已经被人们过于的忽略了。">
+<meta name="twitter:image" content="/cracking-lens-targeting-https-hidden/cracking-lens-targeting-https-hidden/netflixHTTP.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/cracking-lens-targeting-https-hidden/"/>
+
+
+
+
+
+  <title>【译】打破热点：剑指HTTP隐藏的攻击面 | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/cracking-lens-targeting-https-hidden/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【译】打破热点：剑指HTTP隐藏的攻击面</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-07T22:52:59+08:00">
+                2017-08-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Translation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/cracking-lens-targeting-https-hidden/" class="leancloud_visitors" data-flag-title="【译】打破热点：剑指HTTP隐藏的攻击面">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现代网站为了提高性能，获取数据并提供更多的服务，通常采取透明系统（译者注: 透明系统是指程序的输入输出可知）镜像来供用户访问。这种几乎不可见的攻击面已经被人们过于的忽略了。</p>
+<a id="more"></a>
+<p>在这篇文章中，我会向大家展示如何使用畸形请求和迷惑的请求头去欺骗系统暴露它们自己，同时打开通往受害者网络的大门。同时我将分享如何把这些技术与bash组合去突破防御部门的网络，并在漏洞悬赏中获取了超过3万美元的奖励以及意外的渗透了自己的ISP（因特网服务供应商）。</p>
+<p>当论及到损害程度的话，我也会展示几个系统从隐藏到被揭露的状态，这不仅包括对英国最大的ISP的隐蔽请求的窃听，还有相当可疑的哥伦比亚ISP，令人困惑的Tor后台，以及一个能够将反射型XSS升级为SSRF的系统。你也可以了解到一些策略，用于屏蔽使用了exp链和缓存机制的盲打SSRF。最后，为了推动这些系统发展，我发布了一款Collaborator Everwhere—— 一个开源burp插件，通过选择最好的技术来增加你的网站流量，从而获得更多的来自合作网站的客户。</p>
+<p>这篇文章也可以打印成<a href="https://portswigger.net/knowledgebase/papers/CrackingTheLens-whitepaper.pdf" target="_blank" rel="external">白皮书</a>。与此对应的BlackHat USA演讲视频可能会在9月份公布。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>无论是ShellShock，StageFright还是ImageTragick，在被忽视的攻击面中发现一个严重的漏洞，其背后常常隐藏着许多类似的问题。这是由于安全测试人员的关注点不在重大的攻击面中的“柔软”部分了。在本文中，我将展示反向代理，负载平衡器和后端分析系统所带来的丰富的攻击面，尽管这被过度忽视了多年。我将通过一种简单的方法来高效地对这些系统进行大规模的审计，然后选择所发现的关键漏洞中的一部分进行展示。</p>
+<p>这次，我会发布两个工具。 Collaborator Everywhere是一个Burp Suite插件，可以自动将一些危害低的攻击载荷注入你的Web流量来揭露后端系统。它可以通过BApp商店安装，也可以通过<a href="https://github.com/PortSwigger/collaborator-everywhere来源安装。渲染引擎Hackability" target="_blank" rel="external">https://github.com/PortSwigger/collaborator-everywhere来源安装。渲染引擎Hackability</a> Probe是一个分析连接客户端的攻击面的网页，可从<a href="https://github.com/PortSwigger/hackability下载，或直接在http://portswigger-labs.net/hackability/下载" target="_blank" rel="external">https://github.com/PortSwigger/hackability下载，或直接在http://portswigger-labs.net/hackability/下载</a></p>
+<h1 id="方法论"><a href="#方法论" class="headerlink" title="方法论"></a>方法论</h1><h3 id="善于监听"><a href="#善于监听" class="headerlink" title="善于监听"></a>善于监听</h3><p>这一系列研究都需要目标系统被是成不可见的。过于明显的负载均衡在设计上就是失败的，而对于后端分析系统来说用户对其存在一无所知，毫无疑问这非常好。因此，我们不能依靠分析响应内容来可靠地识别这些系统中的漏洞。相反，我们应该发送攻击载荷使这些系统与我们联系，并从生成的DNS查找和HTTP请求中了解情况。本文提出的所有调查结果都是<a href="https://zh.wikipedia.org/wiki/Pingback" target="_blank" rel="external">pingback</a>开始的;如果没有这个开始，这些漏洞和系统都不会被发现。在这个过程我使用了Burp Collaborator记录这些请求，但你也可以同时托管自己的日志记录DNS服务器，或者需使用<a href="https://canarytokens.org/" target="_blank" rel="external">Canarytokens</a>来进行简单的探测。</p>
+<h3 id="研究线"><a href="#研究线" class="headerlink" title="研究线"></a>研究线</h3><p>一开始我使用简单的Burp匹配/替换奖硬编码的pingback攻击载荷注入到所有浏览器流量中。这种方法失败了，因为攻击载荷引起了太多的pingback，这导致了无法将pingback与请求匹配起来以及不知道是哪个网站触发的pingback。很快就看出有些攻击载荷会引起一些延迟（三分钟、几小时、甚至每24小时），然后pingback才返回。 </p>
+<p>为了帮助有效地区分pingback，我写了Collaborator Everywhere，一个简单的Burp扩展，将包含唯一标识符的攻击载荷注入到所有代理的流量中，并让它们自动将pingback与相应的攻击相关联。比如说，下面这张屏幕截图显示了Collaborator Everywhere已经识别出了在我访问Netfix网站后四个小时，Netflix访问了Referer头中指定的URL，并伪装是在x86 CPU上运行的iPhone。</p>
+<p><img src="cracking-lens-targeting-https-hidden/netflixHTTP.png" alt="netflixHTTP"></p>
+<h3 id="扩大规模"><a href="#扩大规模" class="headerlink" title="扩大规模"></a>扩大规模</h3><p>对于专注的手动审计来说，Collaborator Everywhere非常高效，本文中提及的漏洞有大概一半是通过它来发现的。然而，在这次研究中我发现了雅虎服务器的一个漏洞，该漏洞的通过扫描发现的概率只有30%。这个现象的根本原因是雅虎通过三台不同的前置服务器使用了DNS循环负载均衡来路由请求，这三台服务器只有一台是存在漏洞的。对于侧重后端应用程序的安全审计来说，这种奇怪的场景很少，但是这种情况可以作为渗透负载均衡的新奇淫技巧。为了确保没有存在漏洞的服务器不被检测到，有必要在目标基础设备的每个部分进行系统识别和直接攻击尝试。</p>
+<p><img src="cracking-lens-targeting-https-hidden/pipeline.png" alt="pipeline"></p>
+<p>为了按上面说的做，最开始我选择了<a href="https://github.com/robertdavidgraham/masscan" target="_blank" rel="external">Masscan</a>和Burp Collaborator，但最后用<a href="https://github.com/zmap/zgrab" target="_blank" rel="external">Zmap/ZGrab</a>代替了Masscan，因为它支持HTTP1.1和HTTPS。为了将pingback与目标相关联，我将目标主机名和每个payload进行了简单的相加，如果在example.com存在漏洞那么会导致DNS查找example.com.collaboratorid.burpcollaborator.net。这些目标域名和IP地址都是来自公开或者私有的漏洞悬赏中可测试的域名名单，接着我将这些域名和IP映射到<a href="https://scans.io/study/sonar.fdns_v2" target="_blank" rel="external">Rapid7的Project Sonar Forward DNS数据库</a>中。通过这个技术，我确定了几百万个IP地址，其中大约50000台主机监听着80/443端口。最初我试着使用反向DNS记录，但我发现了许多服务器伪装成google的基础设施，而且它们并对突如其来的安全审计表示了不欢迎。</p>
+<p>于是我向成千上万的服务器发送了攻击载荷，如果这些载荷根本没有击中存在漏洞的代码路径，那效果甚微。为了最大化覆盖率，每个IP地址我用了5个主机名，同时使用HTTP和HTTPS，并尝试使用了<code>X-Forwarded-Proto:HTTPS</code>和<code>Max-Forwards</code>去触发边缘情况。同时为了防止中间服务器破坏我的攻击载荷，我还发送了<code>Cache-Control:no-transform</code></p>
+<h1 id="错误路由请求"><a href="#错误路由请求" class="headerlink" title="错误路由请求"></a>错误路由请求</h1><p>反向代理会对收到的请求进行轮询，并转到适当的内部服务器。这些服务器通常处于一个特殊的网络位置，能够接受公网的请求同时也可以访问公司的DMZ区域，但这并不是整个内网。使用恰当的攻击载荷，可以操纵一些反向代理导致错误路由请求，这些请求的目的地是攻击者选择的。这些错误的请求相当于一道无限制访问目标内网的大门，也可以看成是SSRF的强大变体。下面是这种攻击的简单流程图：</p>
+<p><img src="cracking-lens-targeting-https-hidden/misroute.png" alt="misroute"></p>
+<p>请注意，这种攻击通常涉及高度畸形的请求，可能会破坏<a href="https://github.com/zaproxy/zaproxy/issues/1318" target="_blank" rel="external">诸如ZAP的工具</a>，并可能无意中利用了公司或ISP的中间网关。对于工具我建议使用Burp Suite，mitmproxy和Ncat / OpenSSL。</p>
+<h1 id="不正确的host字段"><a href="#不正确的host字段" class="headerlink" title="不正确的host字段"></a>不正确的host字段</h1><p>触发回调函数的最简单方法是发送不正确的HTTP主机头：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: uniqid.burpcollaborator.net</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>虽然这项技术在一些圈子里已经存在多年了，但它仍没令人满意。通过这个技术，我成功的渗透了27个DoD服务器，我的ISP、一个哥伦比亚ISP（通过DNS投毒将其暴露出来），还有<code>http://ats-vm.lorax.bf1.yahoo.com</code>的服务器。作为展示这个漏洞严重程度的例子，我们来来看看在<code>ats-vm.lorax.bf1.yahoo.com</code>发现的内部服务器。</p>
+<p>初略看一眼，并不能知道服务器在运行什么软件：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: XX.X.XXX.XX:8082</div><div class="line"></div><div class="line"><span class="http"></span></div><div class="line">HTTP/1.1 <span class="number">200</span> Connection Established</div><div class="line"><span class="attribute">Date</span>: Tue, 07 Feb 2017 16:32:50 GMT</div><div class="line"><span class="attribute">Transfer-Encoding</span>: chunked</div><div class="line"><span class="attribute">Connection</span>: close</div><div class="line"></div><div class="line"><span class="vbscript">Ok</span></div><div class="line">/ HTTP/<span class="number">1.1</span> <span class="keyword">is</span> unavailable</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div></pre></td></tr></table></figure>
+<p>接着不到一分钟，我就准确的知道了服务器在运行什么软件并且怎么和它通讯，这多亏了助人为乐的<code>HELP</code>命令：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">HELP</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: XX.X.XXX.XX:8082</div><div class="line"></div><div class="line"><span class="http"></span></div><div class="line">HTTP/1.1 <span class="number">200</span> Connection Established</div><div class="line"><span class="attribute">Date</span>: Tue, 07 Feb 2017 16:33:59 GMT</div><div class="line"><span class="attribute">Transfer-Encoding</span>: chunked</div><div class="line"><span class="attribute">Connection</span>: keep-alive</div><div class="line"></div><div class="line"><span class="vbscript">Ok</span></div><div class="line"></div><div class="line">  Traffic <span class="built_in">Server</span> Overseer Port</div><div class="line"></div><div class="line">  commands:</div><div class="line">    <span class="keyword">get</span> &lt;variable-list&gt;</div><div class="line">    <span class="keyword">set</span> &lt;variable-name&gt; = <span class="string">"&lt;value&gt;"</span></div><div class="line">    help</div><div class="line">    <span class="keyword">exit</span></div><div class="line"></div><div class="line">  example:</div><div class="line"></div><div class="line">    Ok</div><div class="line">    <span class="keyword">get</span> proxy.node.cache.contents.bytes_free</div><div class="line">    proxy.node.cache.contents.bytes_free = <span class="string">"56616048"</span></div><div class="line">    Ok</div><div class="line"></div><div class="line">  Variable lists are conf/yts/stats records, separated by commas</div><div class="line"></div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div></pre></td></tr></table></figure>
+<p>大量的<code>Unknown Command</code>是因为服务器将请求的每一行理解成一个命令了。我猜测服务器那的解释器正使用一个类换行符终止协议，这会导致经典的SSRF的exp很难构造。幸运的是，基于路由的SSRF更灵活，我能够构造一个POST风格内容（包含一条命令）的GET请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: XX.X.XXX.XX:8082</div><div class="line"><span class="attribute">Content-Length</span>: 34</div><div class="line"></div><div class="line"><span class="vbscript"><span class="keyword">GET</span> proxy.config.alarm_email</span></div><div class="line"></div><div class="line"></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> Connection Established</div><div class="line"><span class="built_in">Date</span>: Tue, <span class="number">07</span> Feb <span class="number">2017</span> <span class="number">16</span>:<span class="number">57</span>:<span class="number">02</span> GMT</div><div class="line">Transfer-Encoding: chunked</div><div class="line">Connection: keep-alive</div><div class="line"></div><div class="line">Ok</div><div class="line">/ HTTP/<span class="number">1.1</span> <span class="keyword">is</span> unavailable</div><div class="line">Ok</div><div class="line">Unknown Command</div><div class="line">Ok</div><div class="line">proxy.config.alarm_email = <span class="string">"nobody@yahoo-inc.com"</span></div></pre></td></tr></table></figure>
+<p>通过使用SET命令，我可以对Yahoo的负载平衡器池进行大范围的配置更改，包括<a href="https://docs.trafficserver.apache.org/en/latest/admin-guide/files/records.config.en.html#socks-processor" target="_blank" rel="external">启用SOCKS代理</a>和授予我的IP地址权限，<a href="https://docs.trafficserver.apache.org/en/latest/admin-guide/files/records.config.en.html#proxy-config-http-push-method-enabled" target="_blank" rel="external">直接将项目推送到其缓存中</a>。接着我向雅虎及时汇报了这个问题，他们为我的努力付出了15,000美元的奖励。几个星期后，ZGrab管道发现另一台具有相同漏洞的服务器，获得了额外的5,000美元。</p>
+<h1 id="调查对象-BT"><a href="#调查对象-BT" class="headerlink" title="调查对象-BT"></a>调查对象-<a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwikoabipr_VAhXIEbwKHeA5AZIQFggoMAA&amp;url=http%3A%2F%2Fhome.bt.com%2F&amp;usg=AFQjCNFKOrWqP1zPRTU20TOcEeYkSlL-xw" target="_blank" rel="external">BT</a></h1><p>在尝试错误的主机技术时，因为有些攻击载荷发送到完全不相关的公司（其中包括cloud.mail.ru），我发现了它们的pingbacks都来自一小块IP地址。最初我假设这些公司必须共同使用相同的云WAF解决方案，接着我发现可以欺骗这些服务器将我的请求错误的路由到到其内部管理界面。不过事情并不是一直顺利的，这个IP池的反向DNS解析是bn-proxyXX.ealing.ukcore.bt.net  -  BT是英国电信公司的ISP。从英国肯特发送一个攻击载荷到俄罗斯，获取的<code>pingback</code>是不可预料的。我决定使用Burp Repeater进行调试，调试中我发现响应在50ms内回来，这快得让人质疑，毕竟这是从英国到俄罗斯的请求，然后到爱尔兰的数据中心，最后从俄罗斯回到英国。于是我使用Traceroute，接着80端口的TCP跟踪信息揭示了事实：</p>
+<p><img src="cracking-lens-targeting-https-hidden/croppedTrace.png" alt="croppedTrace"></p>
+<p>我尝试与cloud.mail.ru建立TCP链接，但却被自己的ISP终止了。请注意发送到443端口的流量并没有受到保护，这就暗示了正在执行篡改操作的实体并没有控制mail.ru的TLS证书，甚至可能不需要mail.ru的授权和资料就能进行流量拦截。因为我在家里和办公室都可以复现这个场景，所以GHCQ（英国的政府网站）决定选择我来对这些奇怪数据包进行深度检测，接着是我意外的利用了他们的系统。为了排除这种偶然的可能性，我确认了我的朋友能够复现这个场景，但遗留的问题是这个系统是用来做什么的？</p>
+<p>为了揭开这个系统的真实面纱，我使用了<code>Masscan</code>在整个IPv4的空间里去ping 80端口，其中所有ping的TTL都是10，这是一次有效的全网追踪。在筛选掉缓存和自我托管的网站后，我拿到了一份完整的目标IP地址清单。通过对清单抽样发现这个系统主要是用来对受版权保护的内容进行访问控制限制。黑名单IP的流量会被重路由到代理池，这样他们就可以检查HTTP的host头，并且以‘我确信我们正直的英国读者是悉知的’消息提醒你被屏蔽了。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: www.icefilms.info</div><div class="line"></div><div class="line"><span class="vbscript">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span></div><div class="line">...</div><div class="line">&lt;p&gt;Access <span class="keyword">to</span> the websites listed <span class="keyword">on</span> this page has been blocked pursuant <span class="keyword">to</span> orders of the high court.&lt;/p&gt;</div></pre></td></tr></table></figure>
+<p>这个屏蔽可以被绕过，甚至不需要修改host头。但具体怎么操作，这就留给读者来完成了。</p>
+<p>整个过程有一些注意的结果。由于像谷歌这类的虚拟主机、云主机网站早就停止采用黑名单的策略，这就意味着从客户或BT用户到他们那的流量都是走的代理。站在被列入黑名单的服务器角度来想的话，可以得到结论：所有的BT用户共享了一个微小的IP地址池。这就导致了BT代理IP地址滥用黑名单，许多网站无法访问，影响所有的BT用户。这个时候，如果我使用之前提到的admin访问漏洞那就能够控制代理的管理界面了，甚至可能重新配置代理向流向BT用户的流量注入恶意内容。最终，这个漏洞的亮点就这么轻易的被忽略了。这么多年我和其他的英国渗透朋友一直都在通过存在问题的代理进行黑客行为，但却没注意到它的存在。</p>
+<p>最后的最后，我向bt的员工报告了能够访问内网控制面板的问题，他答复一定会及时修复。他们还向我透露了这个拦截系统是作为CleanFeed项目的一部分，缘由是政府想要拦截人们对虐待孩子图像的访问。但是，这个系统却不可避免的重新设计成阻止访问版权滥用。</p>
+<h1 id="调查对象-METROTEL"><a href="#调查对象-METROTEL" class="headerlink" title="调查对象-METROTEL"></a>调查对象-<a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwip64vIpr_VAhWCbrwKHaymCH0QFggoMAA&amp;url=http%3A%2F%2Fwww.metrotel.com.ar%2F&amp;usg=AFQjCNEXSVk7i8j_J8UnUhUUQrm743bbzg" target="_blank" rel="external">METROTEL</a></h1><p>后来的日子里，我见证了类似的行为发生在哥伦比亚ISP（METROTEL）。Rapid7的Sonar项目使用了一个公共的METROTEL DNS服务器，该服务器选择性的给特定域名进行DNS污染导致流量重定向<a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwjbpLPNp7_VAhXGXLwKHU7LBGgQFggoMAA&amp;url=https%3A%2F%2Fdpi.wi.gov%2F&amp;usg=AFQjCNEbgaOtIJxuzYoMQjm5jIFs8w4oZg" target="_blank" rel="external">DPI</a>代理服务器。为了通过HTTPS流量而不导致证书错误，他们从服务器名称指示器（SNI）字段中嗅探了远程主机。于是我通知了Rapid7去识别行为怪异的DNS服务器，这意味着我能够为其提供Alexa排名100w的域名列表，并从中识别出目标主机。但那台服务器似乎是针对不同的图像和视频主机的，以及一些不知名的社交网络。于是我尝试访问这些网站，结果被重定向到了<code>http://internetsano.metrotel.net.co/</code>，上面提示着该网站因为含有虐待儿童图片被屏蔽。</p>
+<p>这个系统和BT的情况一样，最初的目的是令人值得赞扬的。但是有证据显示它被利用了，除了以图像服务的网站为目标，这台DNS服务器还会对特定的新闻网站（包括<code>bbc.co.uk</code>）进行查找污染。这可能是为了屏蔽或者篡改某些新闻网站，尽管我还没确定哪些文章被作为了目标。</p>
+<h1 id="处理输入"><a href="#处理输入" class="headerlink" title="处理输入"></a>处理输入</h1><p>假如你真的把这一些列小事故当成偶然的一个错误，那就看看我接下来碰到的七台服务器池。他们收到请求是这样的：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: burpcollaborator.net</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>他们对外发送了一个请求。<the_supplied_domain>在路径中出现了两次：</the_supplied_domain></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/burpcollaborator.net/burpcollaborator.net</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: outage.burpcollaborator.net</div><div class="line"><span class="attribute">Via</span>: o2-b.ycpi.tp2.yahoo.net</div></pre></td></tr></table></figure>
+<p>这种行为是无法预测的，所以唯一合理的反应是确保你的服务器可以通过使用泛解析、wildcard SSL和多个协议来处理客户端的异常行为。这种特殊的行为看起来是无法利用的，因为内部服务器不可能在<code>/burpcollaborator.net/burpcollaborator.net</code>上托管敏感内容的。幸运的是，如果你注册了带外的域名（比如outage.yourdomain.com）并且将其解析到内部IP地址，这就可能利用规范的路径将请求发送到内部服务器的webroot:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: ../?x=.vcap.me</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>这个请求会导致下面这个请求：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">GET /vcap.me/../?=x=.vcap.me</div><div class="line">Host: outage.vcap.me</div><div class="line">Via: o2-b.ycpi.tp2.yahoo.net</div></pre></td></tr></table></figure>
+<p>在对路径正常化后，url会变成<code>http://outage.vcap.me/?x=whatever</code>。vcap.me是一个方便的公共域名，其中所有的子域名都是解析到<code>127.0.0.1</code>。因此这个请求就相当于访问<a href="http://127.0.0.1/。我就是通过这个获得了雅虎的5000刀奖励。" target="_blank" rel="external">http://127.0.0.1/。我就是通过这个获得了雅虎的5000刀奖励。</a></p>
+<h1 id="主机覆盖"><a href="#主机覆盖" class="headerlink" title="主机覆盖"></a>主机覆盖</h1><p>另外一个类似的技术是我之前用过的，当时是通过密码污染来重置邮件，这在美国国防部的某台服务器上生效了。这是因为有些服务器是对host头进行了白名单设置，但却忘记了请求行是可以指定优先级的。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">http://internal-website.mil/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: xxxxxxx.mil</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>将存在漏洞的前端系统作为大门，我获得了访问很多不同有意思的网站的权限，其中包括一个攻击面的库和公共论坛提到的文件传输服务。</p>
+<h1 id="奇怪的请求"><a href="#奇怪的请求" class="headerlink" title="奇怪的请求"></a>奇怪的请求</h1><p>有些目标是藏在Incapsula的以云为基础的web应用waf后面。Incapsula依赖于检测host头来判断请求该转发至哪台服务器，所以之前谈论的攻击在这不起作用。然而，只要是Incapsula所指定的端口，它都可以对host头进行解析，这意味着它会把下面的请求路由到<code>incapsula-client.net</code>：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: incapsula-client.net:80@burp-collaborator.net</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>Incapsula-client.net的后台会把这个输入变成链接<code>http://incapsula-client.net:80@burp-collaborator.net/</code>，这会导致后台会尝试使用<code>incapsula-client.net</code>用户名和密码<code>80</code>来授权<code>burp-collaborator.net</code>。这除了暴露了新的有意思的攻击面，同时也会揭露服务器的位置，这促使我绕过了Incapsula的保护直到后端系统。</p>
+<h1 id="出乎意料"><a href="#出乎意料" class="headerlink" title="出乎意料"></a>出乎意料</h1><p>坏掉的请求路由漏洞并不总是由于配置错误引起。比如说在New Relic基础设备上的这段代码就导致了严重的漏洞：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">Url backendURL = <span class="string">"http://public-backend/"</span>;</div><div class="line">String uri = ctx.getRequest().getRawUri();</div><div class="line"></div><div class="line">URI proxyUri;</div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">proxyUri = <span class="keyword">new</span> URIBuilder(uri)</div><div class="line">        .setHost(backendURL.getHost())</div><div class="line">        .setPort(backendURL.getPort())</div><div class="line">        .setScheme(backendURL.getScheme())</div><div class="line">        .build();</div><div class="line">&#125; <span class="keyword">catch</span> (URISyntaxException e) &#123;</div><div class="line">    Util.sendError(ctx, <span class="number">400</span>, INVALID_REQUEST_URL);</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码看起来似乎没有错误–首先接受用户输入的url，然后用硬编码在后端把域名换成了IP地址，不幸的是Apache HttpComponents 服务端库不能要求路径以<code>/</code>开头，这意味着如果我发送了下面这个请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">@burp-collaborator.net/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: newrelic.com</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>上述代码在处理这个时会把该请求重写成<code>http://public-backend@burp-collaborator.net/</code>接着将其路由到<code>burp-collaborator.net</code>。和之前一样，这个漏洞让我有了访问大量内部员工信息（包括未授权的管理界面和一个神秘的笑话）的权限。</p>
+<p>不幸的是，New Relic没有提供现金奖励，但他们信守承诺，在一个假日迅速的修复了漏洞，并向Apache HttpComponents报告了存在问题的底层库，随后<a href="https://issues.apache.org/jira/browse/HTTPCLIENT-1803" target="_blank" rel="external">这个问题被修复了</a>，所以其他正在使用Apache HttpComponents的朋友们不用担心了。这并不是第一次在受众面如此广的平台上出现准确的攻击载荷—— <a href="https://www.contextis.com/resources/blog/server-technologies-reverse-proxy-bypass/" target="_blank" rel="external">2011年的Apache mod_rewrite</a>。很明显这并不是众所周知的常识，除了New Relic受影响，我还发现这个问题同样存在于17台雅虎服务器上，所以我又赚了8000刀。</p>
+<h1 id="隧道"><a href="#隧道" class="headerlink" title="隧道"></a>隧道</h1><p>正如我们所看的，经常被忽视的功能（使用@构建一个误导性的URL）是非常有效的。但并不是所有的系统都支持这种url，所以我将之前的payload进行了改造：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">xyz.burpcollaborator.net:80/bar</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: demo.globaleaks.org</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>这条payload后的原理是存在问题的主机可能会把请求路由到<code>xyz.burpcollaborator.net</code>公共后端系统，这条记录会被我们的泛解析DNS记录。实际上我收到的是一串神秘的大小写混合的DNS查找记录，并且是来自不同的IP地址：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">xYZ.BurpcoLLABoRaTOR.neT.    from 89.234.157.254</div><div class="line">Xyz.burPColLABorAToR.nET.    from 62.210.18.16 </div><div class="line">xYz.burpColLaBorATOR.net.    from 91.224.149.254</div></pre></td></tr></table></figure>
+<p>GlobalLeaks（公司名）使用了Tor2Web将收到的请求转发Tor隐藏的服务接口从而隐藏自己的物理位置。Tor使用了一种模糊安全机制来提高DNS的安全性，原理是通过随机化请求的大小写，这种机制导致了Burp Collaborator服务器拒绝响应，所以触发了大量的dns查找。</p>
+<p>这个独特的漏洞非常不好量化。因为所有的请求都是通过Tor，这就不能滥用于访问任何内网服务。这就说，这是一种非常强大的方式，如果用于掩盖对第三方的攻击，特别是因为GlobalLeaks是一个举报平台，它不可能保留任何日志所以最终可能会乖乖替你背锅。此外，通过Tor使web服务器连接到竞争对手的网站的这种能力会暴露出大量的攻击面。</p>
+<h1 id="目标辅助系统"><a href="#目标辅助系统" class="headerlink" title="目标辅助系统"></a>目标辅助系统</h1><p>我们已经看到反向代理的显著多样性和使服务器错误路由请求技术的必要性，但迄今为止最终的效果都差不多。在这节中，我们将看到，在以后端分析和缓存之类的辅助系统为目标时，找出真正有用的漏洞通常比首先引发回调函数更困难。</p>
+<h3 id="收集信息"><a href="#收集信息" class="headerlink" title="收集信息"></a>收集信息</h3><p>不像以路由为基的攻击，这些攻击技术通常并不影响网站的正常功能。Collaborator Everywhere通过注入大量不同的攻击到每个请求中来利用这一点。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: store.starbucks.ca</div><div class="line"><span class="attribute">X-Forwarded-For</span>: a.burpcollaborator.net</div><div class="line"><span class="attribute">True-Client-IP</span>: b.burpcollaborator.net</div><div class="line"><span class="attribute">Referer</span>: http://c.burpcollaborator.net/</div><div class="line"><span class="attribute">X-WAP-Profile</span>: http://d.burpcollaborator.net/wap.xml</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<h5 id="X-Forwarded-For"><a href="#X-Forwarded-For" class="headerlink" title="X-Forwarded-For"></a>X-Forwarded-For</h5><p>易于触发但难以利用的回调技术的一个示例是X-Forwarded-For和True-Client-IP HTTP头，渗透人员通常利用它们来欺骗IP地址或主机名。信任这些头的应用会进行DNS查找去解析主机名到对应的IP地址。这就给了我们一个很友好的提示，表明他们容易受到IP欺骗攻击，但除非你有便携的DNS库内存损坏漏洞，否则不太好利用回调来攻击。</p>
+<h5 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h5><p>与前面相似，web分析系统会从来访者的Referer头中获取所有的未识别URL。一些分析系统为了SEO目的甚至会去尝试爬取referer中url的整个站点。这个动作可能是有用的，所以值得放一个允许的robots.txt文件来鼓励这种行为。从另外一个角度来说这很有可能是一个blind SSRF漏洞，因为用户无法查看分析系统请求的结果，且这发生的时间可能是在用户请求后几分钟或几小时，这会加大利用难度。</p>
+<h5 id="重复的参数"><a href="#重复的参数" class="headerlink" title="重复的参数"></a>重复的参数</h5><p>因为Incapsula会在请求字符串中获取指定的url两次。但不幸的是他们没有漏洞悬赏机制，所以我不能调查这是不是可利用的。</p>
+<h5 id="X-Wap-Profile"><a href="#X-Wap-Profile" class="headerlink" title="X-Wap-Profile"></a>X-Wap-Profile</h5><p>X-Wap-Profile是一个古老的http头，该头指定了设备的用户代理配置文件URL，这个文件是一个定义了设备的功能（如屏幕大小，蓝牙支持，支持的协议和字符集等）的XML文档。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: facebook.com</div><div class="line"><span class="attribute">X-Wap-Profile</span>: http://nds1.nds.nokia.com/uaprof/N6230r200.xml</div><div class="line"><span class="attribute">Connection</span>: close</div></pre></td></tr></table></figure>
+<p>按套路出牌的程序会从请求头中提取url，然后解析到指定的XML文档，这样便于它们调整提供给客户的内容。将这两个高风险功能（获取不受信任的URL和解析不受信任的URL）与其他模糊和不容易发现的功能结合，似乎形成了可以利用的渠道。但不幸的是，这个请求头没有受到广泛支持。Facebook是我发现对此进行了漏洞悬赏的唯一一家公司，并且他们在对待XML解析上相当谨慎。他们在请求发出后的26个小时才获取指定的XML文档，这使得全面迭代测试非常不切实际。</p>
+<h1 id="远程客户端漏洞利用"><a href="#远程客户端漏洞利用" class="headerlink" title="远程客户端漏洞利用"></a>远程客户端漏洞利用</h1><p>上面这些例子中，如果直接进行SSRF风格的利用是非常困难的，因为我们无法从应用获得反馈。与此对应是利用能够运行的RCE（比如本月的Struts2）向内网进行喷洒似探测，这种方法有点像lcamtuf在<a href="http://phrack.org/issues/57/10.html" target="_blank" rel="external">《Against the System：rise of the Robots》</a>的web爬虫。在娱乐方面，这种技术没什么意思，所以我将焦点放在了与我们相关的客户端上。和反向代理一样，客户端的审计比较差，容易被现成的工具攻击。只需通过和服务器建立一个HTTPS连接，我就能够轻松的从服务器上窃取内存，并且可以在系统上执行古老的客户端心脏滴血攻击。像PhantomJS这种无界面浏览器通常是过时（跟不上最新的安全机制），缺少大量的重要安全补丁。基于Windows的客户端通常会主动将域名凭证发送到运行着SpiderLabs <a href="https://github.com/SpiderLabs/Responder" target="_blank" rel="external">Responder</a>的服务器上，lcmatuf的<a href="http://lcamtuf.coredump.cx/p0f3/" target="_blank" rel="external">p0f</a>能够发现隐藏在假代理后的客户端真正运行的东西。</p>
+<p>虽然应用程序会过滤URL的输入，但许多库对重定向都是透明处理的，所以可能会导致在重定向url上有不同的行为。例如，Tublr的URL预览功能只支持HTTP协议，但却乐于重定向到FTP服务。这些技术未来会有一些研究来完善，因为Orange Tsai正专注于编程语言URL解析和请求库。</p>
+<p>有些客户端所做的工作不仅是下载页面-实际还有渲染和执行javascript。这样的话会使攻击面很大，没办法手动去做映射，所以我的同事Gareth Heyes创建了一个名为“Rendering Engine Hackability Probe”的工具，用于完整的指纹识别客户端的功能。除了识别自定义浏览器中的常见故障（如忽略执行SOP），它还能标记了不寻常的JavaScript属性。</p>
+<p><img src="cracking-lens-targeting-https-hidden/parity.png" alt="parity.png"></p>
+<p>如图所示，我们可以知道这款工具能够检测未识别的Javascript属性<code>parity</code>和<code>System</code>，这两个属性是Parity浏览器注入进去的，目的是让网站初始化<a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank" rel="external">Etherenum</a>。未识别的参数可以分为有点意思的到非常有用的。<code>parity</code>属性可以用来获取用户钱包的公钥（全局唯一的标志）和得知钱包余额。JXBrowser允许开发者插入JavaScript/Java桥接器，去年我们发现可以利用这一点来<a href="http://blog.portswigger.net/2016/12/rce-in-jxbrowser-javascriptjava-bridge.html" target="_blank" rel="external">转义渲染</a>然后进行任意代码执行。如果启用存在配置问题的JavaScript客户端，这可能会连接到file:///URL，这会导致本地文件读取（通过存储在环境变量中的恶意HTML代码）然后在<code>/proc/self/environ</code>中展示——这其实属于跨协议的盲打XSS漏洞。除了可视化显示结果外，每个功能也能触发服务端请求，所以即使你看不到渲染结果，这也很有用。这个工具的基本测试在较为苛刻的客户端上（即使不能执行JavaScript）也能正常工作。</p>
+<h1 id="预缓存"><a href="#预缓存" class="headerlink" title="预缓存"></a>预缓存</h1><p>在寻找路由利用漏洞的时候，我注意到了某个军事服务器有一些奇怪的行为。它发出了这样的请求：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: burpcollaborator.net</div></pre></td></tr></table></figure>
+<p>这个请求从服务器获得了正常的响应，接着几秒后collaborator收到了几个请求。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">GET</span> <span class="string">/jquery.js</span> HTTP/1.1</div><div class="line"><span class="keyword">GET</span> <span class="string">/abrams.jpg</span> HTTP/1.1</div></pre></td></tr></table></figure>
+<p>很明显，这是一次扫描响应，目的是资源引入和资源获取。当它识别出<code>&lt;img src=&quot;/abrams.jpg&quot;/&gt;</code>时，它会使用我提供的host头去把相对url扩展成<code>http://burpcollaborator.net/abrams.jpg</code>并获取该文件，以便作缓存。通过从反向代理那获取缓存响应，我证实了刚才那一理论。这是一个相当有意思的攻击，我在后端应用程序中发现了XSS，接着通过刚才聊的技术在响应中对内部服务器上进行了一次假图片的引用。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">POST</span> <span class="string">/xss.cgi</span> HTTP/1.1</div><div class="line"><span class="attribute">Content-Length</span>: 103</div><div class="line"><span class="attribute">Connection</span>: close</div><div class="line"></div><div class="line"><span class="xml">xss=<span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://internal-server.mil/index.php/fake.jpg"</span>/&gt;</span></span></div></pre></td></tr></table></figure>
+<p>缓存反向代理服务器识别出了这个资源，然后进行资源引入和获取这个<code>image</code>，并将它存储在我能轻易获取的地方：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">GET /index.php/fake.jpg</div><div class="line">Host: internal-server.mil</div><div class="line">Connection: close</div></pre></td></tr></table></figure>
+<p>下面的流程图展示了攻击顺序：</p>
+<p><img src="cracking-lens-targeting-https-hidden/cache.png" alt="cache"></p>
+<p>请注意，在绝对url中使用XSS意味着即使应用程序拒绝了请求（包含不被识别的host头），这种攻击也会起作用。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>最近几年，漏洞悬赏的迅速增加促进了新的攻击类型研究。现在在15分钟内对成千上万点服务器对一个新的攻击概念进行评估了。通过这个技术，我已经向各位展示了即使再小的反响代理问题也可能引发重大致命的漏洞，在这整个过程中国年我获得了33000美元。为了实现深度防御，反向代理被划入防火墙保护范畴内，并接入DMZ，从公网中独立出来。</p>
+<p>我还展示了如何揭开后端系统并详细讲解了他们的操作。相对于前端来说，后端不不容易发生致命的问题，但他们暴露了丰富的攻击面，这面尚在研究中。最后，我确保Burp Suite的Scanner功能可以探测到路由漏洞，并发布了Collaborator Everywhere和Hackability作为开源工具来推动进一步的研究。</p>
+<p>享受这一切吧。-@albinowax。</p>
+<p><a href="http://blog.portswigger.net/2017/07/cracking-lens-targeting-https-hidden.html" target="_blank" rel="external">原文</a></p>
+<p>知乎上有篇翻得更好，<a href="https://zhuanlan.zhihu.com/p/28306016?group_id=876856830662438912" target="_blank" rel="external">猛击这</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/Honeypot-Visualization-Revisited/" rel="next" title="【译】重踏蜜罐可视化之旅">
+                <i class="fa fa-chevron-left"></i> 【译】重踏蜜罐可视化之旅
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/write-file-with-mysql/" rel="prev" title="mysql写入文件的前提">
+                mysql写入文件的前提 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="Ꭰ" />
+          <p class="site-author-name" itemprop="name">Ꭰ</p>
+           
+              <p class="site-description motion-element" itemprop="description">a lazy person. me</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#方法论"><span class="nav-number">2.</span> <span class="nav-text">方法论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#善于监听"><span class="nav-number">2.0.1.</span> <span class="nav-text">善于监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#研究线"><span class="nav-number">2.0.2.</span> <span class="nav-text">研究线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩大规模"><span class="nav-number">2.0.3.</span> <span class="nav-text">扩大规模</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误路由请求"><span class="nav-number">3.</span> <span class="nav-text">错误路由请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不正确的host字段"><span class="nav-number">4.</span> <span class="nav-text">不正确的host字段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调查对象-BT"><span class="nav-number">5.</span> <span class="nav-text">调查对象-BT</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调查对象-METROTEL"><span class="nav-number">6.</span> <span class="nav-text">调查对象-METROTEL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#处理输入"><span class="nav-number">7.</span> <span class="nav-text">处理输入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主机覆盖"><span class="nav-number">8.</span> <span class="nav-text">主机覆盖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#奇怪的请求"><span class="nav-number">9.</span> <span class="nav-text">奇怪的请求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#出乎意料"><span class="nav-number">10.</span> <span class="nav-text">出乎意料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隧道"><span class="nav-number">11.</span> <span class="nav-text">隧道</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#目标辅助系统"><span class="nav-number">12.</span> <span class="nav-text">目标辅助系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#收集信息"><span class="nav-number">12.0.1.</span> <span class="nav-text">收集信息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#X-Forwarded-For"><span class="nav-number">12.0.1.0.1.</span> <span class="nav-text">X-Forwarded-For</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Referer"><span class="nav-number">12.0.1.0.2.</span> <span class="nav-text">Referer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重复的参数"><span class="nav-number">12.0.1.0.3.</span> <span class="nav-text">重复的参数</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#X-Wap-Profile"><span class="nav-number">12.0.1.0.4.</span> <span class="nav-text">X-Wap-Profile</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#远程客户端漏洞利用"><span class="nav-number">13.</span> <span class="nav-text">远程客户端漏洞利用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#预缓存"><span class="nav-number">14.</span> <span class="nav-text">预缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">15.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

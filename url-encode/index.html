@@ -1,0 +1,957 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="basics," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="愿你走出半生，归来仍是少年   编码的相关知识一直以来是计算机的基础。信息的传递必然是建立在一定规则之上。数字、文字和自然语言一样，都是信息的载体。无论是生活中的方言、国际的英语还是计算机中的二进制，都有一套自己的规则。">
+<meta name="keywords" content="basics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊编码">
+<meta property="og:url" content="/url-encode/index.html">
+<meta property="og:site_name" content="Ꭰ&#39;s security blog">
+<meta property="og:description" content="愿你走出半生，归来仍是少年   编码的相关知识一直以来是计算机的基础。信息的传递必然是建立在一定规则之上。数字、文字和自然语言一样，都是信息的载体。无论是生活中的方言、国际的英语还是计算机中的二进制，都有一套自己的规则。">
+<meta property="og:updated_time" content="2017-12-05T14:34:36.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聊聊编码">
+<meta name="twitter:description" content="愿你走出半生，归来仍是少年   编码的相关知识一直以来是计算机的基础。信息的传递必然是建立在一定规则之上。数字、文字和自然语言一样，都是信息的载体。无论是生活中的方言、国际的英语还是计算机中的二进制，都有一套自己的规则。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/url-encode/"/>
+
+
+
+
+
+  <title>聊聊编码 | Ꭰ's security blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?ca5988953450620ca8c294ff5c390a4a";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ꭰ's security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="/url-encode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/header.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ꭰ's security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊聊编码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-24T19:59:30+08:00">
+                2017-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Others/" itemprop="url" rel="index">
+                    <span itemprop="name">Others</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/url-encode/" class="leancloud_visitors" data-flag-title="聊聊编码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">Visitors </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote class="blockquote-center"><p>愿你走出半生，归来仍是少年 </p>
+</blockquote>
+<p><em>编码的相关知识一直以来是计算机的基础。信息的传递必然是建立在一定规则之上。数字、文字和自然语言一样，都是信息的载体。无论是生活中的方言、国际的英语还是计算机中的二进制，都有一套自己的规则。</em><br><a id="more"></a></p>
+<h3 id="由来"><a href="#由来" class="headerlink" title="由来"></a>由来</h3><p>编码是令人头疼的问题，所以必须搞懂它。如果一知半解，编码问题就会时不时的跳出来，妨碍前行。</p>
+<h3 id="字符集、字符编码"><a href="#字符集、字符编码" class="headerlink" title="字符集、字符编码"></a>字符集、字符编码</h3><p>字母表由26个字母组成，每个字母都有对应的符号和序号。字符集是啥，在我看来就是一堆符号的集合或表。比如ASCII码，128个字符的集合；Unicode，N多字符的合集。集合有了，那么排个序吧，方便查找。于是就有了A对应的ascii码为65，B为66。接着，怎么传输呢，全部转为二进制呗。如果只是传输ascii码中的128个字符，一个字节完全够用，当需要传输超过128个字符以外的字符时，那至少需要两个字节了。</p>
+<h3 id="UTF-8和Unicode"><a href="#UTF-8和Unicode" class="headerlink" title="UTF-8和Unicode"></a>UTF-8和Unicode</h3><p>简单来说UTF-8就是Unicode的一种编码方案而已，除此还有UTF-7、UTF-16等。编码是为了数据传输，解码是给人看。</p>
+<p><strong>UTF-8编码为变长编码。最小编码单位（code unit）为一个字节。一个字节的前1-3个bit为描述性部分，后面为实际序号部分。</strong></p>
+<blockquote>
+<ul>
+<li>如果一个字节的第一位为0，那么代表当前字符为单字节字符，占用一个字节的空间。0之后的所有部分（7个bit）代表在Unicode中的序号。 </li>
+<li>如果一个字节以110开头，那么代表当前字符为双字节字符，占用2个字节的空间。110之后的所有部分（5个bit）加上后一个字节的除10外的部分（6个bit）代表在Unicode中的序号。且第二个字节以10开头</li>
+<li>如果一个字节以1110开头，那么代表当前字符为三字节字符，占用2个字节的空间。110之后的所有部分（5个bit）加上后两个字节的除10外的部分（12个bit）代表在Unicode中的序号。且第二、第三个字节以10开头</li>
+<li>如果一个字节以10开头，那么代表当前字节为多字节字符的第二个字节。10之后的所有部分（6个bit）和之前的部分一同组成在Unicode中的序号。</li>
+</ul>
+</blockquote>
+<p>对应的例子请参考原文<a href="https://cenalulu.github.io/linux/character-encoding/" target="_blank" rel="external">十分钟搞清字符集和字符编码</a></p>
+<h3 id="Python中的unicode和utf-8"><a href="#Python中的unicode和utf-8" class="headerlink" title="Python中的unicode和utf-8"></a>Python中的unicode和utf-8</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">a = <span class="string">"\u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01"</span></div><div class="line"><span class="keyword">print</span> a, type(a)</div><div class="line"><span class="comment"># \u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01 &lt;type 'str'&gt;</span></div><div class="line">b = a.decode(<span class="string">'utf-8'</span>)</div><div class="line"><span class="keyword">print</span> b, type(b)</div><div class="line"><span class="comment"># \u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01 &lt;type 'unicode'&gt;</span></div><div class="line">a =  <span class="string">u"\u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01"</span></div><div class="line"><span class="keyword">print</span> a, type(a)</div><div class="line"><span class="comment"># 验证码错误！ &lt;type 'unicode'&gt;</span></div></pre></td></tr></table></figure>
+<p>上述代码是在控制台执行的，最后两行输出不一样是因为<em>Python 在 print unicode 时真正涉及到的是另一组编码：stdin/stdout/stderr 的编码，也就是标准输入、标准输出和标准错误输出的编码</em>，查看stdin的编码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">print</span> sys.stdin.encoding</div><div class="line"><span class="comment"># utf-8</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">u"\u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01"</span> <span class="comment"># 在控制台执行该代码就等于执行了下面这句代码。</span></div><div class="line"><span class="keyword">print</span> <span class="string">u"\u9A8C\u8BC1\u7801\u9519\u8BEF\uFF01"</span>.encoding(<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
+<p><strong>编码是为了数据传输，解码是为了给人看。</strong>在上面的例子中，已经是unicode的代码点(code point)序列了，为什么还需要编码？因为python编译器要看，编译器只能看得懂utf-8编码的unicode，然后再根据编码后的utf-8将对应的字符呈现到屏幕。</p>
+<h3 id="URL的utf-8"><a href="#URL的utf-8" class="headerlink" title="URL的utf-8"></a>URL的utf-8</h3><p>在百度搜索输入<code>找</code>字进行搜索时，仔细观察url会发现<code>找</code>被编码成<code>%E6%89%BE</code>。这种编码方式被称为百分号编码（URL Encoding）。URL默认编码是US-ASCII，当输入<code>找</code>时，US-ASCII中并没该字符，便到Unicode去匹配，然后对其代码点进行utf-8编码，最后进行百分号编码得到<code>%E6%89%BE</code>。</p>
+<p>URL中的不安全字符:  </p>
+<ol>
+<li>空格:      –&gt; %20</li>
+<li>井号: <em>#</em>  –&gt; %23</li>
+<li>单引号: \’ –&gt; %27 </li>
+<li>双引号: \” –&gt; %22</li>
+<li>尖角号: <em>&lt;</em>  –&gt; %3c  <em>&gt;</em> –&gt; %3e</li>
+<li>百分号: %  –&gt; %25</li>
+<li>引用符: &amp;  –&gt; %26</li>
+<li>括号: <em>(</em>  –&gt; %28   <em>)</em> –&gt; %29</li>
+</ol>
+<p>RFC3986和RFC1738分别记录了URI和URL的详细说明。有兴趣的可以参考Reference。</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a href="https://cenalulu.github.io/linux/character-encoding/" target="_blank" rel="external">十分钟搞清字符集和字符编码</a></li>
+<li><a href="http://www.cnblogs.com/coco1s/p/5038412.html" target="_blank" rel="external">URL详解与URL编码</a></li>
+<li><a href="https://www.ietf.org/rfc/rfc1738.txt" target="_blank" rel="external">RFC1738-URL</a></li>
+<li><a href="https://tools.ietf.org/html/rfc3986" target="_blank" rel="external">RFC3986-URI</a></li>
+<li><a href="http://www.cnblogs.com/yyds/p/6171340.html" target="_blank" rel="external">Python中的字符串与字符编码</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/basics/" rel="tag"># basics</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/deepXssPrompt1/" rel="next" title="深入xss-prompt(1)挑战">
+                <i class="fa fa-chevron-left"></i> 深入xss-prompt(1)挑战
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/sop-and-jsonp/" rel="prev" title="sop、jsonp和cors">
+                sop、jsonp和cors <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/header.png"
+               alt="Ꭰ" />
+          <p class="site-author-name" itemprop="name">Ꭰ</p>
+           
+              <p class="site-description motion-element" itemprop="description">a lazy person. me</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.fangheart.top/" title="FangHeart" target="_blank">FangHeart</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.cnblogs.com/lcamry" title="Icamry" target="_blank">Icamry</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#由来"><span class="nav-number">1.</span> <span class="nav-text">由来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符集、字符编码"><span class="nav-number">2.</span> <span class="nav-text">字符集、字符编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UTF-8和Unicode"><span class="nav-number">3.</span> <span class="nav-text">UTF-8和Unicode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python中的unicode和utf-8"><span class="nav-number">4.</span> <span class="nav-text">Python中的unicode和utf-8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#URL的utf-8"><span class="nav-number">5.</span> <span class="nav-text">URL的utf-8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("4uBSvV1VfS66JnxARLfv7BLu-gzGzoHsz", "0bxJ6KeAL6WiGATTp6QW4FpN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
