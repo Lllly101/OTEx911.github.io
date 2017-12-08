@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="basics," />
+  <meta name="keywords" content="vim,cgi," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
-<meta name="keywords" content="basics">
+<meta name="description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
+<meta name="keywords" content="vim,cgi">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Locale and Crontab on Linux">
-<meta property="og:url" content="/2017-12-06-Locale-and-Crontab-on-Linux/index.html">
+<meta property="og:title" content="Procrastinate to the death">
+<meta property="og:url" content="/2017-12-08-Procrastinate-to-the-death/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
-<meta property="og:updated_time" content="2017-12-07T06:18:31.029Z">
+<meta property="og:description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
+<meta property="og:updated_time" content="2017-12-08T07:00:52.615Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Locale and Crontab on Linux">
-<meta name="twitter:description" content="localeDefination of the locale a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale ide">
+<meta name="twitter:title" content="Procrastinate to the death">
+<meta name="twitter:description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="/2017-12-06-Locale-and-Crontab-on-Linux/"/>
+  <link rel="canonical" href="/2017-12-08-Procrastinate-to-the-death/"/>
 
 
 
 
 
-  <title>Locale and Crontab on Linux | Security blog</title>
+  <title>Procrastinate to the death | Security blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/2017-12-06-Locale-and-Crontab-on-Linux/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-08-Procrastinate-to-the-death/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Locale and Crontab on Linux</h1>
+          <h1 class="post-title" itemprop="name headline">Procrastinate to the death</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T23:32:59+08:00">
-                2017-12-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-08T13:29:27+08:00">
+                2017-12-08
               </time>
             
 
@@ -351,18 +351,29 @@
       
 
       
-        <h3 id="locale"><a href="#locale" class="headerlink" title="locale"></a><em>locale</em></h3><h4 id="Defination-of-the-locale"><a href="#Defination-of-the-locale" class="headerlink" title="Defination of the locale"></a><em>Defination of the locale</em></h4><blockquote>
-<p>a set of parameters that defines the user’s language, region and any special variant preferences that the user wants to see in their user interface. Usually a locale identifier consists of at least a language identifier and a region identifier.</p>
+        <h3 id="Change-colorscheme-of-the-Vim"><a href="#Change-colorscheme-of-the-Vim" class="headerlink" title="Change colorscheme of the Vim"></a>Change colorscheme of the <em>Vim</em></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:colorscheme [tab]</div></pre></td></tr></table></figure>
+<p>Just type the colon and <em>colorscheme</em> in the <em>vim</em> editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution. You can add the following command to the <em>$vimpath/.vimrc</em>  file whether it exists.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">syntax on</div><div class="line">colorscheme peachpuff</div></pre></td></tr></table></figure></p>
+<h3 id="Highlight-Nginx-conf"><a href="#Highlight-Nginx-conf" class="headerlink" title="Highlight Nginx.conf"></a>Highlight <em>Nginx.conf</em></h3><p>Download the <em>nginx syntax</em> file from the <em>vim.org</em> and then move it to <em>~/.vim/syntax</em> if not exist then create it.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://www.vim.org/scripts/download_script.php?src_id=14376 -O nginx.vim</div></pre></td></tr></table></figure></p>
+<p>Afterwards, add the following to the last of file named <em>filetype.vim</em> located <em>~/.vim/</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim ~/.vim/filetype.vim</div><div class="line">au BufRead,BufNewFile /etc/nginx/ set ft=nginx</div></pre></td></tr></table></figure></p>
+<p>It depends on your <em>nginx</em> installation that  the location of my <em>nginx.conf</em>  is in the directory <em>/etc/nginx</em>.</p>
+<h3 id="CGI-amp-amp-PHP-FPM-amp-amp-NGINX"><a href="#CGI-amp-amp-PHP-FPM-amp-amp-NGINX" class="headerlink" title="CGI &amp;&amp; PHP-FPM &amp;&amp; NGINX"></a>CGI &amp;&amp; PHP-FPM &amp;&amp; NGINX</h3><h4 id="Why-we-need-CGI"><a href="#Why-we-need-CGI" class="headerlink" title="Why we need CGI"></a>Why we need <em>CGI</em></h4><blockquote>
+<p>Initially, different server software would use different ways to exchange this information with scripts. As a result, it wasn’t possible to write scripts that would work unmodified for different server software, even though the information being exchanged was the same. Therefore, it was decided to establish a standard way for exchanging this information: CGI (the <em>Common Gateway Interface</em>, as it defines a common way for server software to interface with scripts). Webpage generating programs invoked by server software that operate according to the CGI standard are known as <em>CGI scripts</em>.</p>
 </blockquote>
-<a id="more"></a>You must experienced the following error if you often play around with Linux.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">locale: Cannot set LC_CTYPE to default locale: No such file or directory</div><div class="line">locale: Cannot set LC_ALL to default locale: No such file or directory</div><div class="line">LANG=en_US.UTF-8</div><div class="line">LANGUAGE=</div><div class="line">LC_CTYPE=en_CA.UTF-8</div><div class="line">LC_NUMERIC="en_US.UTF-8"</div><div class="line">LC_TIME="en_US.UTF-8"</div><div class="line">LC_COLLATE="en_US.UTF-8"</div><div class="line">LC_MONETARY="en_US.UTF-8"</div><div class="line">LC_MESSAGES="en_US.UTF-8"</div><div class="line">LC_PAPER="en_US.UTF-8"</div><div class="line">LC_NAME="en_US.UTF-8"</div><div class="line">LC_ADDRESS="en_US.UTF-8"</div><div class="line">LC_TELEPHONE="en_US.UTF-8"</div><div class="line">LC_MEASUREMENT="en_US.UTF-8"</div><div class="line">LC_IDENTIFICATION="en_US.UTF-8"</div><div class="line">LC_ALL=</div></pre></td></tr></table></figure>
-<p>It’s the most effective way to change the content of the file named <em>/etc/default/locale</em>, but rememebered that you must check what you can do by  command <em>locale -a</em>.<br><em>file: /etc/default/locale</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LANG=en_US.UTF-8</div></pre></td></tr></table></figure></p>
-<p><em>command</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">root@debian:~# locale -a</div><div class="line">C</div><div class="line">C.UTF-8</div><div class="line">en_US.utf8</div><div class="line">POSIX</div><div class="line">root@debian:~#</div></pre></td></tr></table></figure></p>
-<p><em>changed: /etc/default/locale</em><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span>  File generated by update-locale</div><div class="line">LANG=en_US.UTF-8</div><div class="line">LANGUAGE=en_US.UTF-8</div><div class="line">LC_CTYPE=en_US.UTF-8</div><div class="line">LC_ALL=en_US.UTF-8</div></pre></td></tr></table></figure></p>
-<p>You should execute <em>source bash</em> or logout after you change the file <em>/etc/default/locale</em>.<br>Please, pay attention to the priority to these setting.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">LC_ALL &gt; LC_* &gt; LANG</div></pre></td></tr></table></figure></p>
-<p>All in one word, the <em>LC_ALL</em> is the boss and the <em>LANG</em> is the lowest.</p>
-<h3 id="Crontab"><a href="#Crontab" class="headerlink" title="Crontab"></a>Crontab</h3><p>The first thing to do is check the status of the program <em>crond</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">root@debian:~# systemctl is-active crond</div><div class="line">inactive</div><div class="line">root@debian:~#</div></pre></td></tr></table></figure></p>
-<p>It’s very easy to use the command <em>crontab</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">crontab [-u user] file</div><div class="line">crontab [ -u user ] [ -i ] &#123; -e | -l | -r &#125;</div><div class="line">crontab -l    # check the taks for current user if without -u option</div><div class="line">conntab file  # take the file as timing task</div><div class="line">crontab -e    # delete current user task</div></pre></td></tr></table></figure></p>
-<p><strong><em>Happy Linux</em></strong></p>
+<h4 id="What’s-Fastcgi"><a href="#What’s-Fastcgi" class="headerlink" title="What’s Fastcgi"></a>What’s <em>Fastcgi</em></h4><blockquote>
+<p><em>FastCGI</em> is a binary protocol for interfacing interactive programs with a web server. FastCGI is a variation on the earlier Common Gateway Interface (CGI); FastCGI’s main aim is to reduce the overhead associated with interfacing the web server and CGI programs, allowing a server to handle more web page requests at once</p>
+</blockquote>
+<h4 id="FPM-FastCGI-Process-Manager"><a href="#FPM-FastCGI-Process-Manager" class="headerlink" title="FPM FastCGI Process Manager"></a><em>FPM</em> FastCGI Process Manager</h4><blockquote>
+<p>FPM (FastCGI Process Manager) is an alternative PHP FastCGI implementation with some additional features (mostly) useful for heavy-loaded sites.</p>
+</blockquote>
+<h4 id="Nginx-http-fastcgi-moudle"><a href="#Nginx-http-fastcgi-moudle" class="headerlink" title="Nginx http-fastcgi-moudle"></a>Nginx <em>http-fastcgi-moudle</em></h4><blockquote>
+<p>The <em>ngx_http_fastcgi_module</em> module allows passing requests to a FastCGI server.</p>
+</blockquote>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="http://php.net/manual/en/install.fpm.php" target="_blank" rel="external">FPM</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface" target="_blank" rel="external">CGI</a></li>
+<li><a href="http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html" target="_blank" rel="external">Ngx-http-fastcgi-moudle</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/understanding-and-implementing-fastcgi-proxying-in-nginx" target="_blank" rel="external">Understanding and Implementing FastCGI Proxying in Nginx</a></li>
+</ul>
 
       
     </div>
@@ -380,7 +391,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/basics/" rel="tag"># basics</a>
+            <a href="/tags/vim/" rel="tag"># vim</a>
+          
+            <a href="/tags/cgi/" rel="tag"># cgi</a>
           
         </div>
       
@@ -393,8 +406,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017-12-03-Windows-Powershell-backdoor/" rel="next" title="Windows Powershell Backdoor -- Timing Task">
-                <i class="fa fa-chevron-left"></i> Windows Powershell Backdoor -- Timing Task
+              <a href="/2017-12-06-Locale-and-Crontab-on-Linux/" rel="next" title="Locale and Crontab on Linux">
+                <i class="fa fa-chevron-left"></i> Locale and Crontab on Linux
               </a>
             
           </div>
@@ -402,10 +415,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017-12-08-Procrastinate-to-the-death/" rel="prev" title="Procrastinate to the death">
-                Procrastinate to the death <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -566,7 +575,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#locale"><span class="nav-number">1.</span> <span class="nav-text">locale</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Defination-of-the-locale"><span class="nav-number">1.1.</span> <span class="nav-text">Defination of the locale</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crontab"><span class="nav-number">2.</span> <span class="nav-text">Crontab</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Change-colorscheme-of-the-Vim"><span class="nav-number">1.</span> <span class="nav-text">Change colorscheme of the Vim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Highlight-Nginx-conf"><span class="nav-number">2.</span> <span class="nav-text">Highlight Nginx.conf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CGI-amp-amp-PHP-FPM-amp-amp-NGINX"><span class="nav-number">3.</span> <span class="nav-text">CGI && PHP-FPM && NGINX</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-we-need-CGI"><span class="nav-number">3.1.</span> <span class="nav-text">Why we need CGI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#What’s-Fastcgi"><span class="nav-number">3.2.</span> <span class="nav-text">What’s Fastcgi</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FPM-FastCGI-Process-Manager"><span class="nav-number">3.3.</span> <span class="nav-text">FPM FastCGI Process Manager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Nginx-http-fastcgi-moudle"><span class="nav-number">3.4.</span> <span class="nav-text">Nginx http-fastcgi-moudle</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

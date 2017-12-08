@@ -261,6 +261,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-12-08-Procrastinate-to-the-death/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017-12-08-Procrastinate-to-the-death/" itemprop="url">Procrastinate to the death</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-08T13:29:27+08:00">
+                2017-12-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="Change-colorscheme-of-the-Vim"><a href="#Change-colorscheme-of-the-Vim" class="headerlink" title="Change colorscheme of the Vim"></a>Change colorscheme of the <em>Vim</em></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:colorscheme [tab]</div></pre></td></tr></table></figure>
+<p>Just type the colon and <em>colorscheme</em> in the <em>vim</em> editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution. You can add the following command to the <em>$vimpath/.vimrc</em>  file whether it exists.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">syntax on</div><div class="line">colorscheme peachpuff</div></pre></td></tr></table></figure></p>
+<h3 id="Highlight-Nginx-conf"><a href="#Highlight-Nginx-conf" class="headerlink" title="Highlight Nginx.conf"></a>Highlight <em>Nginx.conf</em></h3><p>Download the <em>nginx syntax</em> file from the <em>vim.org</em> and then move it to <em>~/.vim/syntax</em> if not exist then create it.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://www.vim.org/scripts/download_script.php?src_id=14376 -O nginx.vim</div></pre></td></tr></table></figure></p>
+<p>Afterwards, add the following to the last of file named <em>filetype.vim</em> located <em>~/.vim/</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim ~/.vim/filetype.vim</div><div class="line">au BufRead,BufNewFile /etc/nginx/ set ft=nginx</div></pre></td></tr></table></figure></p>
+<p>It depends on your <em>nginx</em> installation that  the location of my <em>nginx.conf</em>  is in the directory <em>/etc/nginx</em>.</p>
+<h3 id="CGI-amp-amp-PHP-FPM-amp-amp-NGINX"><a href="#CGI-amp-amp-PHP-FPM-amp-amp-NGINX" class="headerlink" title="CGI &amp;&amp; PHP-FPM &amp;&amp; NGINX"></a>CGI &amp;&amp; PHP-FPM &amp;&amp; NGINX</h3><h4 id="Why-we-need-CGI"><a href="#Why-we-need-CGI" class="headerlink" title="Why we need CGI"></a>Why we need <em>CGI</em></h4><blockquote>
+<p>Initially, different server software would use different ways to exchange this information with scripts. As a result, it wasn’t possible to write scripts that would work unmodified for different server software, even though the information being exchanged was the same. Therefore, it was decided to establish a standard way for exchanging this information: CGI (the <em>Common Gateway Interface</em>, as it defines a common way for server software to interface with scripts). Webpage generating programs invoked by server software that operate according to the CGI standard are known as <em>CGI scripts</em>.</p>
+</blockquote>
+<h4 id="What’s-Fastcgi"><a href="#What’s-Fastcgi" class="headerlink" title="What’s Fastcgi"></a>What’s <em>Fastcgi</em></h4><blockquote>
+<p><em>FastCGI</em> is a binary protocol for interfacing interactive programs with a web server. FastCGI is a variation on the earlier Common Gateway Interface (CGI); FastCGI’s main aim is to reduce the overhead associated with interfacing the web server and CGI programs, allowing a server to handle more web page requests at once</p>
+</blockquote>
+<h4 id="FPM-FastCGI-Process-Manager"><a href="#FPM-FastCGI-Process-Manager" class="headerlink" title="FPM FastCGI Process Manager"></a><em>FPM</em> FastCGI Process Manager</h4><blockquote>
+<p>FPM (FastCGI Process Manager) is an alternative PHP FastCGI implementation with some additional features (mostly) useful for heavy-loaded sites.</p>
+</blockquote>
+<h4 id="Nginx-http-fastcgi-moudle"><a href="#Nginx-http-fastcgi-moudle" class="headerlink" title="Nginx http-fastcgi-moudle"></a>Nginx <em>http-fastcgi-moudle</em></h4><blockquote>
+<p>The <em>ngx_http_fastcgi_module</em> module allows passing requests to a FastCGI server.</p>
+</blockquote>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a href="http://php.net/manual/en/install.fpm.php" target="_blank" rel="external">FPM</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Common_Gateway_Interface" target="_blank" rel="external">CGI</a></li>
+<li><a href="http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html" target="_blank" rel="external">Ngx-http-fastcgi-moudle</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/understanding-and-implementing-fastcgi-proxying-in-nginx" target="_blank" rel="external">Understanding and Implementing FastCGI Proxying in Nginx</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="/2017-12-06-Locale-and-Crontab-on-Linux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -980,152 +1144,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ꭰ">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Security blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/" itemprop="url">Commparing PHP shell_exec , Java exec and Shell backslash</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-28T21:16:06+08:00">
-                2017-11-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Penetration-Test/" itemprop="url" rel="index">
-                    <span itemprop="name">Penetration Test</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Command injection vulnerabilities allow an attacker to inject arbitrary system commands into an application. The command executes at the same privilege as the web application.<br></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1176,7 +1194,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">33</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1198,7 +1216,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
