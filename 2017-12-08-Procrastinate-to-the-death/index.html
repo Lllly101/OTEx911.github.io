@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
+<meta name="description" content="If you are the procrastinator, please do it now then you changed.">
 <meta name="keywords" content="vim,cgi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Procrastinate to the death">
 <meta property="og:url" content="/2017-12-08-Procrastinate-to-the-death/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
-<meta property="og:updated_time" content="2017-12-08T07:00:52.615Z">
+<meta property="og:description" content="If you are the procrastinator, please do it now then you changed.">
+<meta property="og:updated_time" content="2017-12-08T07:02:28.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Procrastinate to the death">
-<meta name="twitter:description" content="Change colorscheme of the Vim1:colorscheme [tab] Just type the colon and colorscheme in the vim editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution.">
+<meta name="twitter:description" content="If you are the procrastinator, please do it now then you changed.">
 
 
 
@@ -351,7 +351,8 @@
       
 
       
-        <h3 id="Change-colorscheme-of-the-Vim"><a href="#Change-colorscheme-of-the-Vim" class="headerlink" title="Change colorscheme of the Vim"></a>Change colorscheme of the <em>Vim</em></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:colorscheme [tab]</div></pre></td></tr></table></figure>
+        <p>If you are the procrastinator, please do it now then you changed. <a id="more"></a></p>
+<h3 id="Change-colorscheme-of-the-Vim"><a href="#Change-colorscheme-of-the-Vim" class="headerlink" title="Change colorscheme of the Vim"></a>Change colorscheme of the <em>Vim</em></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:colorscheme [tab]</div></pre></td></tr></table></figure>
 <p>Just type the colon and <em>colorscheme</em> in the <em>vim</em> editor, then follows the whitespace ant tab to select the built-in colorschemes. It’s one-time solution. You can add the following command to the <em>$vimpath/.vimrc</em>  file whether it exists.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">syntax on</div><div class="line">colorscheme peachpuff</div></pre></td></tr></table></figure></p>
 <h3 id="Highlight-Nginx-conf"><a href="#Highlight-Nginx-conf" class="headerlink" title="Highlight Nginx.conf"></a>Highlight <em>Nginx.conf</em></h3><p>Download the <em>nginx syntax</em> file from the <em>vim.org</em> and then move it to <em>~/.vim/syntax</em> if not exist then create it.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://www.vim.org/scripts/download_script.php?src_id=14376 -O nginx.vim</div></pre></td></tr></table></figure></p>
 <p>Afterwards, add the following to the last of file named <em>filetype.vim</em> located <em>~/.vim/</em>.<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim ~/.vim/filetype.vim</div><div class="line">au BufRead,BufNewFile /etc/nginx/ set ft=nginx</div></pre></td></tr></table></figure></p>
