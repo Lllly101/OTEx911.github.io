@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="jenkins," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta name="keywords" content="jenkins">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁">
+<meta property="og:url" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/01.png">
+<meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/02.png">
+<meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/03.png">
+<meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/04.png">
+<meta property="og:updated_time" content="2017-12-13T09:18:44.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁">
+<meta name="twitter:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta name="twitter:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/"/>
+
+
+
+
+
+  <title>【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁 | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-24T21:16:27+08:00">
+                2017-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Translation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前在LevelUP会议上演讲了<a href="https://www.youtube.com/watch?v=1Kg0_53ZEq8" target="_blank" rel="external">《Doing Recon Like a Boss》</a>，之后在HackerOne上发布了一篇同样主题的<a href="https://www.hackerone.com/blog/how-to-recon-and-content-discovery" target="_blank" rel="external">博文</a>。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。</p>
+<p>###第一步-子域名爆破</p>
+<p>对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我所发现的域名没有什么意思，我就是想找到一些看起来有意思的事。</p>
+<p>那接着开始第二阶段吧。</p>
+<p>###第二步-亚马逊的web服务</p>
+<p>亚马逊算不上一个好的切入点，但从snapchat的外观来看可得知它是高度依赖google的，除此之外他们在HackOne的赏金程序说明中提到他们的app是托管在google的。</p>
+<p>所以不要在s3 buckets上浪费时间了，去看看其他的地方还有些什么。</p>
+<p>###第三步-查阅Snapchat在HackerOne的公开报告</p>
+<p>作为侦察的一部分，我通常是去寻找已知或公开的漏洞。我快速浏览了他们的活动踪迹，有了下面这些发现</p>
+<ul>
+<li>render.bitstrips.com</li>
+</ul>
+<ul>
+<li>blog.snapchat.com</li>
+<li>accounts.snapchat.com</li>
+<li>fastly.sc-cdn.net</li>
+<li>sc-corp.net (Thanks, <t0>Shubs<t1>)</t1></t0></li>
+</ul>
+<p>“sc-cdn.net” and “sc-corp.net” 引起了我的注意。</p>
+<p>我的第一反应是子域名爆破，但这不是在开玩笑么。这些都是corp和cdn域名，更有可能的是大多数有趣的子域名更可能是独立的形式。</p>
+<p>现在的问题是如何找到它们？</p>
+<p>###第四步-使用Censys和Shodan</p>
+<p>通常好的开始是从Censys.io上寻找网站证书入手。在censys上，我通常去查询看起来像这样的东西：</p>
+<p><code>443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names:domain.com</code></p>
+<p>这足够我找到一些有意思的子域名了，这些域名通过暴力破解是无法找到的。现在来看下找到的结果，有这么一个子域名：REDACTED-jenkins-Environment.sc-corp.net指向了登录的用户能够查看网站内容。在这个时候，我怀疑这上面是否会有生产环境，甚至可能存在更多内容等待我们去探寻.为了提快速度，我将这个清单“dev, alpha, stage, prod, beta, local, test”配合脚本来寻找不同组合的REDACTED-jenkins-$env.sc-corp.net域名.正如预期的那样，其中一些返回的是302作为其响应代码，这意味它们可能在登录请求的背后。</p>
+<p>###第五步-从这开始该做什么？</p>
+<p>我最初的想法是去尝试访问生产环境然后尝试登陆，接着我去实践了这个想法，才发现这并没有作用。所以，让我们跳到清单上的下一个项，在其他实例上同样进行一样的尝试。现在才是所有乐趣的开始。我运气真是好到爆了。我发现有个实例允许我使用gmail账号登陆到JenKins上。现在我被授权登陆上了它们的Jenkins生产环境上，但我不认为我有足够的权限去做我想要做的事情，更别说让我访问控制台了。这个时候，我在Jenkins上运行了一个脚本并能读取到服务器文件，接着立马停止了深入的测试并向Snapchat团队报告了这个问题。可能有人会疑惑，为什么不进一步演示。因为我可以读取系统上的任意文件，所以进一步的演示是不必要的。为了展示远程命令执行，我列出了允许命令执行的脚本并要求他们自行尝试。现在暂时先不讨论这些脚本，后面再聊。</p>
+<p>###第六步-利用Jenkins</p>
+<p>我写这篇文章不是来谈论提交给Snapchat团队的报告，因为通过阅读在HackerOne上仅有的公开报告和一些基本调查就能猜测到大部分的信息。我写这篇文章的目的是想深入一点利用Jenkins，同时和大家探讨下这个漏洞是否真的价值2万美元。</p>
+<p>为了演示这些，我使用自己的Jenkins实例来演示不同的攻击场景（截图与提交给Snapchat的报告无关系）</p>
+<p>#####例子1：公开漏洞</p>
+<p>CVE-2016-9299 – Jenkins ‘Java Deserialization’ Remote Code Execution Vulnerability.</p>
+<p>CVE-2015-8103 – Jenkins CLI – RMI Java Deserialization (<a href="https://www.exploit-db.com/exploits/38983/" target="_blank" rel="external">Exploit</a>)</p>
+<p>#####例子2：访问构建信息</p>
+<p>通常拥有了访问Jenkins内容权限，就相当于拥有访问凭证、API_KEYS，密钥甚至是源码的权限。</p>
+<p><img src="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/01.png" alt="01"></p>
+<p>#####例子3：插件</p>
+<p>Jenkins允许设置不同的插件，比如Github的OAuth凭证，你可以用来控制用户登录你的组织，这可能导致你的Github token泄漏。</p>
+<p><img src="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/02.png" alt=""></p>
+<p>接着可以通过Github的API来获取更多的数据。</p>
+<p>比如: <a href="https://api.github.com/orgs/ORG_NAME/repos?access_token=XXXXX" target="_blank" rel="external">https://api.github.com/orgs/ORG_NAME/repos?access_token=XXXXX</a></p>
+<p>#####例子4：诱人的脚本</p>
+<p>正如前面所提到的，脚本控制台允许使用一行代码读取文件：</p>
+<p><img src="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/03.png" alt=""></p>
+<p>你可以通过执行下面的操作在服务器上执行命令：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def sout = new StringBuilder(), serr = new StringBuilder()</div><div class="line">def proc = 'ls /etc/'.execute()</div><div class="line">proc.consumeProcessOutput(sout, serr)</div><div class="line">proc.waitForOrKill(1000)</div><div class="line">println "out&gt; $sout err&gt; $serr"</div></pre></td></tr></table></figure>
+<p><img src="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/04.png" alt=""></p>
+<p>关键点：</p>
+<ol>
+<li>Jenkins允许你拥有不同用户权限。这意味着你已经被授权了，但不能保证你能够进行远程代码执行。</li>
+<li>如果需要通过Github或者Google OAuth进行认证，请不要慌张.</li>
+<li>你的权限可能是有限的（不能执行脚本、访问构建信息等等），或许你能访问到人员下的名单用户。这可能赋予你访问Jenkins实例的权限，当然前提是通过暴力破解来获取凭证（一般情况下我不会采取这种极端做法）。</li>
+<li>通常情况，JenKins是用来部署的，所以思路就是寻找IP、主机名等等。如果你控制了Jenkins并想深入的话（在赏金程序中请不要这样做，一是没必要，二是大多程序规定了不允许这样做），那就不得不提下Jenkins服务器是很可能拥有访问很多生产环境和内网的权限。所以尝试在服务器上寻找私钥和主机用来做跳板，</li>
+<li>不要向赏金程序提交公开可访问的Jenkins报告，除非你能利用其中一个或者上面例子中的一个。</li>
+<li>在提交报告后不久，Snapchat立马删除了实例并给予了我奖励。</li>
+</ol>
+<p>他们人也很好，同意我写了这篇文章。</p>
+<p>感谢阅读，享受hacking吧。</p>
+<p><a href="http://nahamsec.com/secure-your-jenkins-instance-or-hackers-will-force-you-to/" target="_blank" rel="external">译文</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jenkins/" rel="tag"># jenkins</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/write-file-with-mysql/" rel="next" title="mysql写入文件的前提">
+                <i class="fa fa-chevron-left"></i> mysql写入文件的前提
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/talk-about-ssh-tunnel/" rel="prev" title="聊聊ssh的端口转发（NAT穿透）">
+                聊聊ssh的端口转发（NAT穿透） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

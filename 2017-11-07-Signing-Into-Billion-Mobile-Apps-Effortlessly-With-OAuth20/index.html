@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="oauthi," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="摘要主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现">
+<meta name="keywords" content="oauthi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】通过OAuth2.0可轻松登录数百万手机应用账号">
+<meta property="og:url" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="摘要主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/compare.jpg">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/openID_connect.png">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/client-side-app.png">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/exploit.png">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-one.png">
+<meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-two.png">
+<meta property="og:updated_time" content="2017-12-13T09:05:50.409Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】通过OAuth2.0可轻松登录数百万手机应用账号">
+<meta name="twitter:description" content="摘要主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现">
+<meta name="twitter:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/compare.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/"/>
+
+
+
+
+
+  <title>【译】通过OAuth2.0可轻松登录数百万手机应用账号 | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【译】通过OAuth2.0可轻松登录数百万手机应用账号</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-07T12:16:27+08:00">
+                2017-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Translation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现了第三方app开发人员不合理的使用OAuth导致的一种影响甚广的新型攻击手法，攻击者可以远程利用该攻击，悄无声息的登录受害者的app帐户。为了证明该漏洞的普遍性和严重影响，我们编写了一个exp来检测在美国和中国排名前600的android应用，这些应用都使用了顶级IdP（即Facebook ，Google或新浪）提供的基于OAuth2.0的身份验证服务。结果令人震惊：这些应用程序平均有41.21％容易受到新的攻击。我们已经向受影响的IdP汇报了我们的发现，并收到了他们不同形式的确认/奖励。</p>
+<p>###1. 介绍</p>
+<p>由于第三方网站采用的基于OAuth2.0的单点登录（SSO）服务广受用户喜爱，最近，许多主流身份提供商（IdP）（如Facebook，Google和Sina）已经将OAuth2.0协议进行了调整，以在其社交媒体平台上支持第三方app的SSO。但由于移动应用程序SSO服务的端到端系统设置和操作环境的差异，原来的OAuth2.0协议不够用了。这一点尤其体现在OAuth2.0标准没有定义关键的安全要求和协议细节用来管理SSO过程中第三方（客户端）移动应用程序与其对应的后端服务器之间的交互。因此，各个IdP厂商基于OAuth2.0的应用程序编程接口（API）开发了不同的扩展用来以支持自己平台上的第三方移动应用程序的SSO服务。不幸的是，第三方移动应用程序开发人员无法完全理解IdP提供的文档，同时文档上也并未清晰的记录了可能的安全问题和API使用说明。更糟的是，第三方应用程序开发人员缺乏SSO-API的安全使用指南规范。</p>
+<p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/compare.jpg" alt=""></p>
+<p>由于上述的问题，我们进一步对使用了顶级IdP服务的第三方移动应用程序进行了测试，发现了一种影响非常广的基于OAuth2.0的SSO服务的不安全实现。这个问题的本质非常普通，仅仅是因为第三方应用的服务器在接受来自客户端app的授权信息不需经过认证，反过来看，这个漏洞其实是依赖于IdP客户移动app发送的信息被篡改所导致的。根据这个新发现的漏洞，我们写了exp，攻击者可以通过OAuth2.0 1毫不费力地登录受害者的移动应用程序帐户，而无需欺骗或与受害者进行交互，例如通过恶意应用程序或网络窃听等等。就目前来说我们的攻击是基于Android平台进行展示的，但攻击手法本身是平台无关的：只要使用了基于OAuth2.0的SSO服务的app，iOS或Android用户都会受到影响。</p>
+<p>###2. 背景<br>第三方移动应用的SSO服务细节涉及到四个部分</p>
+<ul>
+<li>a. 第三方移动应用程序的后端服务器（app Server）</li>
+<li>b. IdP的后端服务器（IdP Server）</li>
+<li><p>c. 第三方移动应用（App）</p>
+</li>
+<li><p>d. IdP的移动应用（IdP App）</p>
+</li>
+</ul>
+<p>OAuth的最终目标是让IdP服务器（IdP Server）向app Server发出身份证明，比如access token。通过access token，app Server可以获取到由IdP服务器管理的用户信息，并进一步根据该信息识别用户并授权登录。</p>
+<p>####2.1 移动平台上的OAuth 2.0协议流程<br>图1描述了OAuth协议在网站和移动平台上实现的流程。为简单起见，我们首先介绍移动端OAuth实现的协议流程，然后指出与Web站点SSO服务的差异。请注意，由于OAuth不是为手机app设计的，所以RFC和IdP不会为第三方移动应用程序开发人员提供完整的调用流程图。然而，有研究员针对移动端的OAuth安全方面投入了大量的精力[2,3,5,6]，一个被认为是安全的实施方案如下：</p>
+<ol>
+<li>用户访问app，并尝试通过IdP进行登录。app通过手机操作系统（Android）提供的安全通道将应用信息（如包名，签名和请求的权限等）发送给IdP的客户端。</li>
+<li>通过调用低级系统API，IdP客户端（IdP app）可以验证app的应用信息。如果信息无误，那么IdP客户端（IdP app）会向IdP服务器（IdP Server）发送授权请求。</li>
+<li>IdP Server收到请求后，会比较来自IdP客户端（IdP app）的授权请求的信息和由第三方移动应用开发者预先注册的信息。如果相同，则IdP服务器（IdP Server）将通过自己的IdP客户端（IdP App）向第三方手机客户端（app）发出access token（AT）和可选的用户信息。</li>
+<li>IdP app通过安全通道将access token（AT）返回给app（第三方客户端应用程序）。</li>
+<li>第三方客户端应用程序（app）将AT发送到其后端服务器（app Server）。</li>
+<li>第三方后端服务器（app Server）调用由IdP提供的重要安全SSO-API来调试access token。</li>
+<li>在验证access token的有效性之后，IdP服务器（IdP Server）会向第三方应用服务器（app Server）发送授权信息，同时指明access token发给哪个app。</li>
+<li>只有在授权信息正确的情况下，第三方应用服务器（app Server）才能通过access token获取用户数据。</li>
+<li>IdP服务器（IdP Server）返回与access token关联的用户信息。</li>
+<li>通过用户信息，第三方应用程序服务器（app Server）可以识别用户并授权登录。</li>
+</ol>
+<p>####2.2 OpenID连接协议<br>由于OAuth2.0最初是为授权而设计的，为了适应认证需求，这就涉及了多次高延迟的请求，即图1（b）的步骤6到步骤9。为了更好地支持使用OAuth2.0进行身份验证（即减少请求次数），像Google和Facebook这样的IdP开发了OpenID Connect（OIDC）协议[4]和拓展。具体而言，IdP服务器需要对用户信息进行数字签名。如图2所示，签名的用户信息以及原始的access token，随后会被发送到app Server（第三方移动应用程序的后端服务器）。由于签名不能被攻击者篡改/伪造，app Server现在可以通过签名直接识别用户。换句话说，app Server可以立即从签名中提取用户信息，而不需要进行高延迟的API调用。</p>
+<p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/openID_connect.png" alt=""></p>
+<p>####2.3 不同于网站OAuth实现中的差异<br>从图1所示的协议实现流程图去看，网站和移动端的差异看起来似乎很简单，但实际上正是因为这种简单的不同，导致重要的安全结论并促使OAuth在移动平台上实现的复杂化。可以看到在网站使用OAuth过程中，有三个部分在交互：</p>
+<p>（i）第三方web服务器（Client Server）</p>
+<p>（ii）IdP的后端服务器（IdP Server）</p>
+<p>（iii）终端用户的浏览器（Browser），要求能够支持第三方网站OAuth2.0的SSO。</p>
+<p>而之前聊到过的移动端SSO交互过程，却涉及到了4个部分（a、b、c、d）。首先，（c）和（d）都在用户设备上运行，并且可能被篡改。其次，OAuth2.0协议标准并未涉及到（a）和（c）以及（c）和（d）之间的交互和安全问题。第三，在同一用户设备上可能同时存在（c）和（d），第三方移动应用程序开发人员可能会忍不住直接在（c）和（d）之间进行认证交换（恰好与（a）和（b）之间的直接验证相反，就像OAuth2.0标准中定义的（i）和（ii）之间的直接验证交换一样）。再看一个例子，不同于web服务供应商，IdP供应商要求移动应用程序开发人员在OAuth中使用与IdP特定业务逻辑（即授权代码流与隐式流）紧密相关的授权流程，即授权码流程vs无授权码流程（参考文章第二段第二句话<a href="https://labs.hybris.com/2012/06/05/oauth2-the-implicit-flow-aka-as-the-client-side-flow/" target="_blank" rel="external">implicit flow</a>）。此外，典型的移动应用程序的客户端负责更多的消息交换，相反，在第三方网站（及其相应的web服务）的情况下，这些消息是由后端服务器管理。</p>
+<p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/client-side-app.png" alt=""></p>
+<p>###3. 不同的错误实现方式<br>尽管平台之间差异巨大，但IdP没有提供明确的开发手册来降低OAuth用于移动端可能发生的隐患。所以，第三方移动应用程序开发人员早就犯了各种各样的错误，比如下面这些：</p>
+<ol>
+<li>如图3（a）所示，当IdP服务器会返回用户信息和OAuthaccess token（例如，用户ID /电子邮件地址）时，许多第三方应用的后端服务器根据收到的用户信息来授权登录，而不验证收到的用户信息是否真的绑定到已发布的OAuth access token。</li>
+<li>图3（b）显示了Facebook和Google采用OpenID Connect协议的另一种情况。在这种情况下，IdP需要对用户信息进行数字签名，以便第三方应用的后端服务器可以通过签名验证来对用户进行鉴别。但是，某些第三方应用程序根本不验证此签名，只从签名中提取用户ID，然后不验证ID就将其作为身份证明。</li>
+<li>还有些第三方移动应用程序直接从其正在运行的移动设备获取用户信息，直接忽视IdP接收到的OAuth token。（例如，图4(a)所示的IdP服务器提供API，应用通过调用获取用户信息或图4(b)所示设备上有个账户系统存储了用户Google账户信息，可以用来支持SSO服务）。移动应用程序仅将用户标识符作为身份证明发送到其后端服务器。如果没有access token，第三方后端服务器无法验证返回的用户标识符是否绑定了OAuth access token。</li>
+</ol>
+<h3 id="4-漏洞利用"><a href="#4-漏洞利用" class="headerlink" title="4. 漏洞利用"></a>4. 漏洞利用</h3><p>因为第三方应用程序开发人员的不规范开发，攻击者可以利用受害者信息登录到存在问题的app，这一切只需要下面这些步骤：</p>
+<ol>
+<li><p>如图5所示，攻击者在自己的移动设备上启用了ssl的MITM代理（比如mitm-proxy），监控往来的网络流量。</p>
+</li>
+<li><p>攻击者在自己的移动设备上安装了易受攻击的第三方应用程序。</p>
+</li>
+<li><p>攻击者通过自己的IdP用户密码，用OAuth登录了易受攻击的移动应用程序。</p>
+</li>
+<li><p>在步骤3触发的OAuth消息交换过程中，攻击者通过ssl的MITM代理将受害者的用户标识替换为自己的用户标识（IdP或电子邮件地址中的用户标识）。受害者的用户ID是可公开获得的信息（信息来源于受害者公开网页，比如G+和新浪），一般也易于猜测（前提是使用电子邮件地址作为用户名的情况下）。虽然自2014年5月以来Facebook已经开始为每个第三方应用程序发布独立用户ID，但为了向后兼容，Facebook仍然使用公共用户标识来识别第三方应用程序的早期使用者。所以，只要用户在2014年5月之前通过OAuth登录过应用程序，那么即使用最新版本应用程序，仍容易受到攻击。</p>
+</li>
+<li><p>由于第三方后端服务器直接使用客户端应用程序返回的用户身份证明来标识app用户，因此攻击者可以用受害者的身份登录app，并且在大多数情况下拥有完整的权限访问第三方app服务器管理的受害者敏感信息。<br><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/exploit.png" alt=""></p>
+</li>
+</ol>
+<p>除了受SSL / HTTPS保护外，应对第三方移动应用程序的客户端与其后端服务器之间的消息交换进行加密或签名。否则的话，篡改IdP服务器返回的用户标识信息是很容易的。</p>
+<p>在IdP客户端应用程序（例如Facebook的应用程序）应用证书锁定的情况下，如果攻击者通过MIMT代理篡改了IdP服务器发送给其客户端应用程序的消息，那该消息不会被接受。那攻击者该如何继续攻击？这儿有一种解决思路，通过卸载IdP客户端应用程序，以便IdP SDK（通常是由OAuth2.0第三方移动应用程序广泛使用）将自动降级，然后通过内置webview浏览器进行OAuth身份验证。对于常见的内置浏览器来说，webview不支持特定IdP的证书锁定。所以，攻击者又能继续篡改消息了。</p>
+<p>除了IdP不支持基于webview的OAuth授权情况，还有一些其他的情况。对于这些情况下的IdP来说，攻击者可以使用现成的工具，如SSLUnpinning（如果他们使用原生的Android框架来实现证书锁定），或对IdP客户端应用程序进行逆向来达到手动删除证书锁定的目的（前提是他们使用了cutomized方法）。为了解释这种方法的可行性，我们已成功地在Facebook的app上进行了poc验证，通过手动禁用其证书锁定功能，以便我们通过ssl-enabled-MITM代理为app提供假的用户标识信息。</p>
+<p>###5. 现实的惨状<br>我们研究了由三家顶级IdP（即新浪，Facebook和Google）提供的基于OAuth2.0的API，这三家IdP支持全球许多第三方移动应用的SSO服务。如表1所示，这些IdP的注册用户数量从8亿以上到超过25亿。由于支持SSO服务的中国app越来越多，所以我们选择了使用了新浪服务的Top200移动应用程序，另外选择了Top400使用了Google和Facebook服务的移动应用程序。接着我们识别出使用了多个IdP的SSO服务的应用程序，最后使用基于OAuth2.0开发的exp进行测试。结果令人担忧：平均有41.21％的被测移动应用容易受到新的攻击。表2列出了目前为止识别出的易受攻击app中的一部分：这张不完整的列表已经包含两个排名前五的旅行计划app，一个受欢迎的旅馆预订应用程序，一个为情侣/合作伙伴设计的顶级私人聊天应用程序，一个排名前5的约会应用程序，两个顶级的个人金融应用程序，以及其他流行的视频或网上购物应用程序，这里仅列举几例。请注意，这张不完整列表所包含的流行app，总下载量已经超过24亿次。根据Janrain [1]最近的调查，以51％的SSO用户采用率进行保守估计的话，截至撰写本文时，有超过10亿的不同类型的移动应用账号容易受本文所讲述的攻击。</p>
+<p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-one.png" alt=""></p>
+<p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-two.png" alt=""></p>
+<p>攻击者通过exp登录受害者手机应用账号，并且大多数情况下他们是拥有完整的权限，能够访问受害者的隐私，尽管这些信息由被黑app的服务器管理。单纯是针对表2中列出的易受攻击的应用程序，我们可以通过漏洞获取大量极其敏感的个人信息：包括详细的旅行行程，个人/亲密通信档案，家庭/私人照片，个人财务记录以及受害者的观看或购物历史。对于某些特殊的app来说，攻击者甚至可以随意操作与受害者账户相关联的线上货币。</p>
+<p>###6.  建议<br>我们的研究已经展示了这个问题的危害性，对于第三方开发来说在实现或使用基于OAuth2.0的服务时应采取如下措施进行补救：</p>
+<ol>
+<li>IdP应该提供基于OAuth2.0的SSO API更清晰、更侧重安全性的使用准则。</li>
+<li>app的后端服务器不应该信任任何信息，即使信息被app或IdP的app签了名。最好只相信来自IdP服务器的信息。</li>
+</ol>
+<ol>
+<li><p>IdP不应依赖全球用户标识符来进行第三方应用程序认证/授权，而应根据每个移动应用程序发布私人用户标识符。事实上，自2014年5月以来，Facebook已经采用了这种做法。但是，Facebook仍然坚持在2014年5月之前用户开始使用移动应用程序的全球用户标识符。因此，对于易受攻击app的老用户来说，攻击仍存在。</p>
+</li>
+<li><p>IdP应对第三方移动应用程序进行更加全面的安全测试，特别是通过OAuth2.0或其他类似协议（如OpenID Connect（OIDC）协议）实施单点登录服务这块。</p>
+</li>
+</ol>
+<p>###7. 结论<br>本文中，我们已经确定了一个以前未知的漏洞，攻击者无需交互就能利用这个漏洞劫持受害者的移动应用账户。我们已经检查了美国Top200的app和中国Android app情况，当然这些app都是使用了三家顶级IdP的OAuth2.0授权服务。同时我们展示了这些流行应用程序在多大程度上会受到这种新漏洞的攻击。我们的发现表明，各方迫切需要重新审视他们的SSO实施并据此采取补救。</p>
+<p>###8. 负责任的披露<br>于二零一六年四月，我们将研究结果报告予所有受影响的正在研究的IdPs。他们都承认安全问题，并承诺帮助通知受影响的第三方应用程序开发人员。特别是，新浪已经向所有第三方发出了具体的通知</p>
+<p>9个应用开发者在其平台上告知他们这个问题。该公司还授予我们最大数量的奖励积分允许他们的错误奖金计划。它也相应地为第三方开发者更新了其编程指南的单点登录部分。 Google已经通过他们的Google安全名人堂确认我们的发现，并表示他们将修改第三方应用开发者的相应文档。 Facebook已经通知我们，他们正在寻找一种方法，让他们的应用程序开发人员意识到这个问题。</p>
+<p>###致谢<br>这项研究得到了香港创新科技委员会（项目编号：ITS / 216/15）和国家自然科学基金资助项目（编号：61572415）的部分支持。</p>
+<p>###引用<br>[1] “Social login continues strong adoption,” 2014. [Online]. Available:</p>
+<p><a href="http://janrain.com/blog/social-login-continues-strong-adoption/" target="_blank" rel="external">http://janrain.com/blog/social-login-continues-strong-adoption/</a></p>
+<p>[2] E. Y. Chen, Y. Pei, S. Chen, Y. Tian, R. Kotcher, and P. Tague, “OAuth demystiﬁed for mobile application developers,” in Proceedings of the 2014 ACM SIGSAC Conference on Computer and Communications Security. ACM, 2014.</p>
+<p>[3] C. Eric, P. Tague, R. Kotcher, S. Chen, Y. Tian, and Y. Pei, “1000 ways to die in mobile OAuth,” in BlackHat USA, 2016.</p>
+<p>[4] N. Sakimura, J. Bradley, M. Jones, B. de Medeiros, and C. Mortimore, “OpenID Connect core 1.0,” The OpenID Foundation, p. S3, 2014.</p>
+<p>[5] H. Wang, Y. Zhang, J. Li, H. Liu, W. Yang, B. Li, and D. Gu, “Vulnerability assessment of OAuth implementations in Android applications,” in Proceedings of the 31st Annual Computer Security Applications Conference. ACM, 2015.</p>
+<p>[6] Q. Ye, G. Bai, K. Wang, and J. S. Dong, “Formal analysis of a Single Sign-On protocol implementation for Android,” in 20th International Conference on Engineering of Complex Computer Systems, ICECCS 2015, 2015.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/oauthi/" rel="tag"># oauthi</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-10-09-XSLT-attack/" rel="next" title="【译】XSLT服务端注入攻击">
+                <i class="fa fa-chevron-left"></i> 【译】XSLT服务端注入攻击
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/Write-Up LCTF萌萌哒报名系统/" rel="prev" title="Write-Up LCTF萌萌哒报名系统">
+                Write-Up LCTF萌萌哒报名系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-漏洞利用"><span class="nav-number"></span> <span class="nav-text">4. 漏洞利用</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
