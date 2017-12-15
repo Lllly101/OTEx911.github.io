@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="snmp,sip," />
+  <meta name="keywords" content="port," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
-<meta name="keywords" content="snmp,sip">
+<meta name="description" content="Here are some usefult tips to pay attention when using nmap and masscan.">
+<meta name="keywords" content="port">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记笔记-SIP和SNMP-python拓展安装">
-<meta property="og:url" content="/Net-snmp-python拓展安装/index.html">
+<meta property="og:title" content="Basics Of Nmap and Masscan">
+<meta property="og:url" content="/2017-12-15-Basics-Of-Nmap-and-Masscan/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
-<meta property="og:updated_time" content="2017-12-05T14:32:28.966Z">
+<meta property="og:description" content="Here are some usefult tips to pay attention when using nmap and masscan.">
+<meta property="og:updated_time" content="2017-12-15T04:09:12.615Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记笔记-SIP和SNMP-python拓展安装">
-<meta name="twitter:description" content="OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。">
+<meta name="twitter:title" content="Basics Of Nmap and Masscan">
+<meta name="twitter:description" content="Here are some usefult tips to pay attention when using nmap and masscan.">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="/Net-snmp-python拓展安装/"/>
+  <link rel="canonical" href="/2017-12-15-Basics-Of-Nmap-and-Masscan/"/>
 
 
 
 
 
-  <title>记笔记-SIP和SNMP-python拓展安装 | Security blog</title>
+  <title>Basics Of Nmap and Masscan | Security blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/Net-snmp-python拓展安装/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-15-Basics-Of-Nmap-and-Masscan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">记笔记-SIP和SNMP-python拓展安装</h1>
+          <h1 class="post-title" itemprop="name headline">Basics Of Nmap and Masscan</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-18T12:38:34+08:00">
-                2017-05-18
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-15T12:07:27+08:00">
+                2017-12-15
               </time>
             
 
@@ -314,8 +314,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Others/" itemprop="url" rel="index">
-                    <span itemprop="name">Others</span>
+                  <a href="/categories/Penetrate-Test/" itemprop="url" rel="index">
+                    <span itemprop="name">Penetrate Test</span>
                   </a>
                 </span>
 
@@ -351,14 +351,40 @@
       
 
       
-        <p><em>OS X EI Capitan上有个系统完整性保护技术(SIP-System Integrity Protection)，旨在帮助防止潜在恶意软件修改 Mac 上受保护的文件和文件夹。系统完整性保护可以限制 root 用户帐户，以及 root 用户能够在 Mac 操作系统的受保护部分执行的操作。</em><a id="more"></a><em>所以有些时候，你需要关闭SIP。</em></p>
-<h3 id="关闭SIP"><a href="#关闭SIP" class="headerlink" title="关闭SIP"></a>关闭SIP</h3><p>开机，command+R进入恢复模式，打开terminal，输入csrutil命令。根据提示进行关闭或者启用SIP。</p>
-<h3 id="net-snmp安装"><a href="#net-snmp安装" class="headerlink" title="net-snmp安装"></a>net-snmp安装</h3><p>Mac本身自带了net-snmp，但并没有提供python的扩展。尝试用pip和easy_install去安装，仍然无果。只能源码安装。</p>
+        <p>Here are some usefult tips to pay attention when using nmap and masscan.</p>
+<a id="more"></a>
+<h4 id="Tips-One-Scan-type-differs-on-the-user-role-when-using-nmap"><a href="#Tips-One-Scan-type-differs-on-the-user-role-when-using-nmap" class="headerlink" title="Tips One: Scan type differs on the user role when using nmap"></a><em>Tips One: Scan type differs on the user role when using nmap</em></h4><p>For Privledged users, the default option is the <em>-sS</em> scan(<em>TCP SYN scan</em>):</p>
 <blockquote>
-<p><a href="http://downloads.sourceforge.net/project/net-snmp/net-snmp/5.6.2/net-snmp-5.6.2.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnet-snmp%2Ffiles%2Fnet-snmp%2F5.6.2%2F&amp;ts=1357547749&amp;use_mirror=nchc" target="_blank" rel="external">net-snmp-5.6.2</a></p>
+<p>TCP SYN scan: This technique is often referred to as “half-open” scanning, because you don’t open a full TCP connection. You send a SYN packet, as if you are going to open a real connection and you wait for a response. A SYN|ACK indicates the port is listen- ing. A RST is indicative of a non-listener. If a SYN|ACK is received, a RST is immediately sent to tear down the connection (actually our OS kernel does this for us). The primary advantage to this scanning technique is that fewer sites will log it. Unfortunately you need root privileges to build these custom SYN packets. This is the default scan type for privileged users.</p>
 </blockquote>
-<p>下载完成后，进行编译、测试、安装即可。</p>
-<h3 id="资料参考"><a href="#资料参考" class="headerlink" title="资料参考"></a>资料参考</h3><p><a href="http://www.huilog.com/?p=629" target="_blank" rel="external">Mac OS X系统上安装net-snmp python扩展</a><br><a href="https://support.apple.com/zh-cn/HT204899" target="_blank" rel="external">关于 Mac 上的系统完整性保护</a><br><a href="https://en.wikipedia.org/wiki/System_Integrity_Protection" target="_blank" rel="external">System Integrity Protection</a></p>
+<p>This technique is often referred to as “half-open” scanning, because you don’t open a full TCP connection. You send a SYN packet, as if you are going to open a real connection and you wait for a response. A SYN|ACK indicates the port is listen- ing. A RST is indicative of a non-listener. If a SYN|ACK is received, a RST is immediately sent to tear down the connection (actually our OS kernel does this for us). The primary advantage to this scanning technique is that fewer sites will log it. Unfortunately you need root privileges to build these custom SYN packets. This is the default scan type for privileged users.</p>
+<p>and for unpriledged users, the default option is the <em>-sT</em> scan( TCP connect() scan):</p>
+<blockquote>
+<p>TCP connect() scan: This is the most basic form of TCP scanning. The connect() system call provided by your operating system is used to open a connection to every interesting port on the machine. If the port is listening, connect() will succeed, oth- erwise the port isn’t reachable. One strong advantage to this technique is that you don’t need any special privileges. Any user on most UNIX boxes is free to use this call.</p>
+<p>This sort of scan is easily detectable as target host logs will show a bunch of connection and error messages for the services which accept() the connection just to have it immediately shut- down. This is the default scan type for unprivileged users.</p>
+</blockquote>
+<p>This is the most basic form of TCP scanning. The connect() system call provided by your operating system is used to open a connection to every interesting port on the machine. If the port is listening, connect() will succeed, oth erwise the port isn’t reachable. One strong advantage to this technique is that you don’t need any special privileges. Any user on most UNIX boxes is free to use this call.</p>
+<p>This sort of scan is easily detectable as target host logs will show a bunch of connection and error messages for the services which accept() the connection just to have it immediately shut- down. This is the default scan type for unprivileged users.</p>
+<h4 id="Tips-Two-Masscan-default-options"><a href="#Tips-Two-Masscan-default-options" class="headerlink" title="Tips Two: Masscan default options"></a><em>Tips Two: Masscan default options</em></h4><p>When executing the command  <em>masscan –rate 10000 -p 80,8080,443 192.168.1.1</em>, the defalut options as the following are enabled and not changeable.</p>
+<ol>
+<li><em>-sS</em></li>
+<li><em>-Pn</em></li>
+<li><em>-n</em></li>
+<li><em>—randomize-hosts</em></li>
+<li><em>—send-eth</em></li>
+</ol>
+<p>Of course, you can use the default <em>config</em> file  in the <em>/etc/masscan/masscan.conf</em> to set others params.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">masscan -p80,443,8080 --rate=1000 -ON result.txt --echo &gt;masscan.conf</div><div class="line">masscan -c masscan.conf</div></pre></td></tr></table></figure>
+<p>Using the command above to export the <em>config</em> file and read the <em>config</em> file you want.</p>
+<h4 id="Tips-Three-Confuse-Nmap-with-Iptables"><a href="#Tips-Three-Confuse-Nmap-with-Iptables" class="headerlink" title="Tips Three: Confuse Nmap with Iptables"></a><em>Tips Three: Confuse Nmap with Iptables</em></h4><p>You can use the <em>iptables</em> If you want to hide your service exposed on the internet.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iptables -A INPUT -s blacklist -j REJECT</div></pre></td></tr></table></figure>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><p><a href="https://superuser.com/questions/1079493/what-are-the-default-nmap-options" target="_blank" rel="external">NMAP-default-options</a></p>
+</li>
+<li><p><a href="https://superuser.com/questions/857446/whats-the-difference-between-ss-and-st-on-nmap" target="_blank" rel="external">Difference between sS and sT</a></p>
+<p>​</p>
+</li>
+</ul>
 
       
     </div>
@@ -376,9 +402,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/snmp/" rel="tag"># snmp</a>
-          
-            <a href="/tags/sip/" rel="tag"># sip</a>
+            <a href="/tags/port/" rel="tag"># port</a>
           
         </div>
       
@@ -391,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/markdown语法-指南/" rel="next" title="markdown语法-指南">
-                <i class="fa fa-chevron-left"></i> markdown语法-指南
+              <a href="/2017-12-01-How-to-write-shell-with-redis-unauthorized/" rel="next" title="From SSRF to getshell with Redis Unauthorized">
+                <i class="fa fa-chevron-left"></i> From SSRF to getshell with Redis Unauthorized
               </a>
             
           </div>
@@ -400,10 +424,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/deepXssPrompt1/" rel="prev" title="深入xss-prompt(1)挑战">
-                深入xss-prompt(1)挑战 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -564,7 +584,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭SIP"><span class="nav-number">1.</span> <span class="nav-text">关闭SIP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#net-snmp安装"><span class="nav-number">2.</span> <span class="nav-text">net-snmp安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资料参考"><span class="nav-number">3.</span> <span class="nav-text">资料参考</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Tips-One-Scan-type-differs-on-the-user-role-when-using-nmap"><span class="nav-number">1.</span> <span class="nav-text">Tips One: Scan type differs on the user role when using nmap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tips-Two-Masscan-default-options"><span class="nav-number">2.</span> <span class="nav-text">Tips Two: Masscan default options</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tips-Three-Confuse-Nmap-with-Iptables"><span class="nav-number">3.</span> <span class="nav-text">Tips Three: Confuse Nmap with Iptables</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number"></span> <span class="nav-text">Reference</span></a></div>
             
 
           </div>
