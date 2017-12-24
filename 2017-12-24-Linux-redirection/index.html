@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="cmd-inject," />
+  <meta name="keywords" content="shell," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Command injection vulnerabilities allow an attacker to inject arbitrary system commands into an application. The command executes at the same privilege as the web application.">
-<meta name="keywords" content="cmd-inject">
+<meta name="description" content="还没搞懂command &amp;gt;file 2&amp;gt;&amp;amp;1？怎么回事">
+<meta name="keywords" content="shell">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Commparing PHP shell_exec , Java exec and Shell backslash">
-<meta property="og:url" content="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/index.html">
+<meta property="og:title" content="Linux重定向">
+<meta property="og:url" content="/2017-12-24-Linux-redirection/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="Command injection vulnerabilities allow an attacker to inject arbitrary system commands into an application. The command executes at the same privilege as the web application.">
-<meta property="og:updated_time" content="2017-12-05T14:27:02.787Z">
+<meta property="og:description" content="还没搞懂command &amp;gt;file 2&amp;gt;&amp;amp;1？怎么回事">
+<meta property="og:updated_time" content="2017-12-24T07:33:43.322Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Commparing PHP shell_exec , Java exec and Shell backslash">
-<meta name="twitter:description" content="Command injection vulnerabilities allow an attacker to inject arbitrary system commands into an application. The command executes at the same privilege as the web application.">
+<meta name="twitter:title" content="Linux重定向">
+<meta name="twitter:description" content="还没搞懂command &amp;gt;file 2&amp;gt;&amp;amp;1？怎么回事">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/"/>
+  <link rel="canonical" href="/2017-12-24-Linux-redirection/"/>
 
 
 
 
 
-  <title>Commparing PHP shell_exec , Java exec and Shell backslash | Security blog</title>
+  <title>Linux重定向 | Security blog</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/Commparing-PHP-shell_exec-,-Java-exec-and-Shell-b/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-24-Linux-redirection/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Commparing PHP shell_exec , Java exec and Shell backslash</h1>
+          <h1 class="post-title" itemprop="name headline">Linux重定向</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-28T21:16:06+08:00">
-                2017-11-28
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-24T15:39:27+08:00">
+                2017-12-24
               </time>
             
 
@@ -314,8 +314,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Penetration-Test/" itemprop="url" rel="index">
-                    <span itemprop="name">Penetration Test</span>
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
                   </a>
                 </span>
 
@@ -351,26 +351,34 @@
       
 
       
-        <p>Command injection vulnerabilities allow an attacker to inject arbitrary system commands into an application. The command executes at the same privilege as the web application.<br><a id="more"></a></p>
-<p>There are serveral ways to execute command in PHP.</p>
-<ol>
-<li>shell_exec()  return the whole output as string</li>
-<li>exec()  always return the last line of the output</li>
-<li>execution operation(``) the same to shell_exec()</li>
-<li>system() execute external program and return the last line of the output</li>
-</ol>
-<p>In Java, you can only use the <code>Runtime.getRuntime().exec()</code> . Execute multiple commands in Java.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">String[] cmd = &#123;</div><div class="line">  <span class="string">"/bin/sh"</span>,</div><div class="line">  <span class="string">"-c"</span>,</div><div class="line">  <span class="string">"ls /etc"</span></div><div class="line">&#125;;</div><div class="line">Process p = Runtime.getRuntime().exec(cmd);</div></pre></td></tr></table></figure>
-<p>Execute the command once.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">String cmd = <span class="string">"pwd"</span>;</div><div class="line">Process p = Runtime.getRuntime().exec(cmd);</div></pre></td></tr></table></figure>
-<p><strong>Important</strong>: It will start a new process when the function <code>exec</code> was executed. You can check the following code.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Runtime rt = Runtime.getRuntime();</div><div class="line">	Process p = rt.exec(<span class="string">"su - test"</span>);</div><div class="line">	String line = <span class="keyword">null</span>;</div><div class="line">	BufferedReader input = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(p.getInputStream()));</div><div class="line">	</div><div class="line">	<span class="keyword">while</span>((line=input.readLine()) != <span class="keyword">null</span>)&#123;</div><div class="line">      System.out.println(line);</div><div class="line">	&#125;</div><div class="line">	p = rt.exec(<span class="string">"whoami"</span>);</div><div class="line">		input = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(p.getInputStream()));</div><div class="line">		line = <span class="keyword">null</span>;</div><div class="line">	<span class="keyword">while</span>((line=input.readLine()) != <span class="keyword">null</span>) &#123;</div><div class="line">  		System.out.println(line);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">int</span> exitVal = p.waitFor();</div><div class="line">	System.out.println(<span class="string">"Exited with error code"</span> + exitVal);</div><div class="line">&#125; <span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">  	System.out.println(e.toString());</div><div class="line">  	e.printStackTrace();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>The symbol  `` in shell is deprecated and it’s encouraged to use <code>$(command)</code>. Bash performs the expansion by executing command in a <strong>subshell</strong>. Here is the more detail about it.</p>
-<blockquote>
-<p>When the old-style backquote form of substitution is used, backslash retains its literal meaning except when followed by $, `, or . The first backquote not preceded by a backslash terminates the command substitution. When using the <code>$(command)</code> form, all characters between the parentheses make up the command; none are treated specially.</p>
-<p>Command substitutions may be nested. To nest when using the backquoted form, escape the inner backquotes with backslashes.</p>
-</blockquote>
-<p>Happy Weekday</p>
+        <p>还没搞懂<em>command &gt;file 2&gt;&amp;1</em>？怎么回事<a id="more"></a></p>
+<h3 id="标准输出、输入、错误"><a href="#标准输出、输入、错误" class="headerlink" title="标准输出、输入、错误"></a>标准输出、输入、错误</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span> stdout</div><div class="line">root@debian:~# ls /</div><div class="line">bin   initrd.img  lib64 proc srv var boot  lost+found  root swap  vmlinuz  dev   media   run   sys   vmlinuz.old etc   mnt sbin     tmp home  lib                                                   opt   shadowsocksr  usr</div><div class="line"><span class="meta">#</span> stderr </div><div class="line">root@debian:~# ls test</div><div class="line">ls: cannot access 'test': No such file or directory</div><div class="line"><span class="meta">#</span> stdin</div><div class="line">root@debian:~# cat</div><div class="line">test</div><div class="line">test</div></pre></td></tr></table></figure>
+<h3 id="文件描述符"><a href="#文件描述符" class="headerlink" title="文件描述符"></a>文件描述符</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 ---&gt; stdin</div><div class="line">1 ---&gt; stdout</div><div class="line">2 ---&gt; stderr</div></pre></td></tr></table></figure>
+<p>为什么标准输出、输入、错误的输出都呈现在终端呢？在你启动<em>bash</em>的时候，它会同时打开三个标准的文件描述符0、1、2，并且它们都是指向<em>/dev/tty0</em>。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  /dev/tty0</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure></p>
+<h4 id="新建文件描述符"><a href="#新建文件描述符" class="headerlink" title="新建文件描述符"></a>新建文件描述符</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">exec 3&gt;file</div><div class="line">ls &gt;&amp;3</div><div class="line">exec 3&lt;file</div><div class="line">cat &lt;&amp;3</div><div class="line">exec 3&lt;&gt;file</div></pre></td></tr></table></figure>
+<h4 id="删除文件描述符"><a href="#删除文件描述符" class="headerlink" title="删除文件描述符"></a>删除文件描述符</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">exec 3&gt;&amp;-</div></pre></td></tr></table></figure>
+<h3 id="重定向标准输出和错误"><a href="#重定向标准输出和错误" class="headerlink" title="重定向标准输出和错误"></a>重定向标准输出和错误</h3><p><strong>缩写模式</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">command &amp;&gt; file</div></pre></td></tr></table></figure>
+<p><em>&amp;&gt;</em>是<em>bash</em>的重定向标准输出和错误的<em>shortcut</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">command &gt;&amp; file</div></pre></td></tr></table></figure>
+<p>常用的是第一种模式</p>
+<p><strong>另一种写法</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">command &gt;file 2&gt;&amp;1   # 正确写法</div><div class="line">command 2&gt;&amp;1 file    # 错误写法</div></pre></td></tr></table></figure>
+<p>这怎么理解呢？为什么第一种写法正确，第二种写法错误呢？先来看第一条命令<em>command &gt;file 2&gt;&amp;1</em><br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  /dev/tty0</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure></p>
+<p><em>&gt;file</em>其实就是<em>1&gt;file</em>，<em>bash</em>将<em>stdout</em>重定向至<em>file</em>文件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  file</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure>
+<p>接着<em>2&gt;&amp;1</em>，可以理解为<em>stderr</em>的内容复制了一份给<em>&amp;1</em>即<em>file</em>。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  file</div><div class="line">2 -----------&gt;  file</div></pre></td></tr></table></figure></p>
+<p>接着我们来看第二条命令<em>command 2&gt;&amp;1 &gt;file</em></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  /dev/tty0</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure>
+<p>首先是<em>2&gt;&amp;1</em>，因为<em>&amp;1</em>指向的是<em>/dev/tty0</em>，所以将<em>stderr</em>重定向至1时，依然是<em>/dev/tty0</em></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  /dev/tty0</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure>
+<p>接着<em>&gt;file</em>，由于此时将<em>stdout</em>指向了<em>file</em>，而<em>stderr</em>并未发生改变，所以<em>command &gt;file 2&gt;&amp;1</em>命令无法将<em>stdout</em>和<em>stdin</em>同时重定向到<em>file</em>文件中。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  file</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure>
+<p>注意：<strong>为了便于理解，可以将<em>&amp;</em>看作指针，<em>&amp;1</em>即指向其所在文件的位置，切勿看成引用</strong></p>
+<h3 id="特殊重定向"><a href="#特殊重定向" class="headerlink" title="特殊重定向"></a>特殊重定向</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">command &gt;/dev/null 2&gt;&amp;1   # 丢掉命令的标准输出和标准错误</div></pre></td></tr></table></figure>
+<h3 id="访问网站"><a href="#访问网站" class="headerlink" title="访问网站"></a>访问网站</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">echo 3&lt;&gt;/dev/tcp/www.google.com/80</div><div class="line">echo -e &quot;GET / HTTP/1.1\n\n&quot; &gt;&amp;3</div><div class="line">cat &lt;&amp;3</div></pre></td></tr></table></figure>
+<p><em>/dev/tcp/host/port</em>是个特殊文件，简单说就是用来通过<em>bash</em>建立<em>tcp</em>链接的。当然也可以使用<em>UDP</em></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">echo 3&lt;&gt;/dev/udp/www.google.com/80</div><div class="line">echo -e "GET / HTTP/1.1\n\n" &gt;&amp;3</div><div class="line">cat &lt;&amp;3</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -388,7 +396,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/cmd-inject/" rel="tag"># cmd-inject</a>
+            <a href="/tags/shell/" rel="tag"># shell</a>
           
         </div>
       
@@ -401,8 +409,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/Install-msf-on-centos7-from-scratch/" rel="next" title="Install msf on centos 7 from scratch">
-                <i class="fa fa-chevron-left"></i> Install msf on centos 7 from scratch
+              <a href="/2017-12-15-Basics-Of-Nmap-and-Masscan/" rel="next" title="Basics Of Nmap and Masscan">
+                <i class="fa fa-chevron-left"></i> Basics Of Nmap and Masscan
               </a>
             
           </div>
@@ -410,10 +418,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017-12-01-The-repo-in-CentOS7/" rel="prev" title="The repo in CentOS7">
-                The repo in CentOS7 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -470,8 +474,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -555,6 +568,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输出、输入、错误"><span class="nav-number">1.</span> <span class="nav-text">标准输出、输入、错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件描述符"><span class="nav-number">2.</span> <span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建文件描述符"><span class="nav-number">2.1.</span> <span class="nav-text">新建文件描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除文件描述符"><span class="nav-number">2.2.</span> <span class="nav-text">删除文件描述符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重定向标准输出和错误"><span class="nav-number">3.</span> <span class="nav-text">重定向标准输出和错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊重定向"><span class="nav-number">4.</span> <span class="nav-text">特殊重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问网站"><span class="nav-number">5.</span> <span class="nav-text">访问网站</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
