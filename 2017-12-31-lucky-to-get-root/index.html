@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="basics," />
+  <meta name="keywords" content="repo,linux," />
 
 
 
@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
-<meta name="keywords" content="basics">
+<meta name="description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？">
+<meta name="keywords" content="repo,linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="碰巧就成为root了？">
-<meta property="og:url" content="/2017-12-29-lucky-to-get-root/index.html">
+<meta property="og:url" content="/2017-12-31-lucky-to-get-root/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
-<meta property="og:updated_time" content="2017-12-31T13:42:48.551Z">
+<meta property="og:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？">
+<meta property="og:updated_time" content="2017-12-31T15:08:35.148Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="碰巧就成为root了？">
-<meta name="twitter:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？ 12341Person@ubuntu:~$ sudo su[sudo] password for 1Person:root@ubuntu:/home/1Person# whoamiroot Sudo &amp;amp; suSudo可以理">
+<meta name="twitter:description" content="Get root当我不小心在键盘输入了sudo su命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了Root。心里顿时一万个草泥马在奔腾，这是个啥情况？">
 
 
 
@@ -119,7 +119,7 @@
 
 
 
-  <link rel="canonical" href="/2017-12-29-lucky-to-get-root/"/>
+  <link rel="canonical" href="/2017-12-31-lucky-to-get-root/"/>
 
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="/2017-12-29-lucky-to-get-root/">
+    <link itemprop="mainEntityOfPage" href="/2017-12-31-lucky-to-get-root/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Ꭰ">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-31T21:39:27+08:00">
-                2017-12-31
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-01T13:39:27+08:00">
+                2017-12-01
               </time>
             
 
@@ -351,7 +351,7 @@
       
 
       
-        <h3 id="Get-root"><a href="#Get-root" class="headerlink" title="Get root"></a><em>Get root</em></h3><p>当我不小心在键盘输入了<code>sudo su</code>命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了<em>Root</em>。心里顿时一万个草泥马在奔腾，这是个啥情况？</p>
+        <h3 id="Get-root"><a href="#Get-root" class="headerlink" title="Get root"></a><em>Get root</em></h3><p>当我不小心在键盘输入了<code>sudo su</code>命令后，终端提醒我输密码，本着试试的心态输了进去。然后我就成为了<em>Root</em>。心里顿时一万个草泥马在奔腾，这是个啥情况？<a id="more"></a></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1Person@ubuntu:~$ sudo su</div><div class="line">[sudo] password for 1Person:</div><div class="line">root@ubuntu:/home/1Person# whoami</div><div class="line">root</div></pre></td></tr></table></figure>
 <h4 id="Sudo-amp-su"><a href="#Sudo-amp-su" class="headerlink" title="Sudo &amp; su"></a><em>Sudo &amp; su</em></h4><p><em>Sudo</em>可以理解为<em>Super user do</em>，执行<em>Sudo</em>命令时，系统会从<strong><em>/etc/sudoers</em></strong>读取配置，按照配置文件的信息来判断当前用户是否能够以<em>root</em>身份执行命令。当该命令被调用时，系统会要求输入<strong>当前用户的密码</strong>！</p>
 <p><em>su</em>命令可以理解为<em>switch user</em>或者<em>subtitute user</em>。<em>su [username]</em>命令会调用一个具有<em>username</em>权限的<em>shell instance</em>，此时系统会要求输入<strong>目标用户的密码</strong>。</p>
@@ -398,7 +398,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/basics/" rel="tag"># basics</a>
+            <a href="/tags/repo/" rel="tag"># repo</a>
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
           
         </div>
       
@@ -411,8 +413,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017-12-24-Linux-redirection/" rel="next" title="Linux重定向">
-                <i class="fa fa-chevron-left"></i> Linux重定向
+              <a href="/2017-12-01-The-repo-in-CentOS7/" rel="next" title="The repo in CentOS7">
+                <i class="fa fa-chevron-left"></i> The repo in CentOS7
               </a>
             
           </div>
@@ -420,6 +422,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-12-02-The-Summary-of-the-absolute-baics-of-penetration-/" rel="prev" title="The Summary of the absolute baics of penetration testing">
+                The Summary of the absolute baics of penetration testing <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -523,7 +529,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
