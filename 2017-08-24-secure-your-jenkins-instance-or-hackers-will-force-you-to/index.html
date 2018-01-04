@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta name="description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。">
 <meta name="keywords" content="jenkins">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁">
 <meta property="og:url" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/index.html">
 <meta property="og:site_name" content="Security blog">
-<meta property="og:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta property="og:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。">
 <meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/01.png">
 <meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/02.png">
 <meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/03.png">
 <meta property="og:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/04.png">
-<meta property="og:updated_time" content="2017-12-13T09:18:44.643Z">
+<meta property="og:updated_time" content="2018-01-04T06:24:16.429Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】要么保证你的JENKINS绝对安全，要么就受黑客威胁">
-<meta name="twitter:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。 ###第一步-子域名爆破 对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我">
+<meta name="twitter:description" content="之前在LevelUP会议上演讲了《Doing Recon Like a Boss》，之后在HackerOne上发布了一篇同样主题的博文。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。">
 <meta name="twitter:image" content="/2017-08-24-secure-your-jenkins-instance-or-hackers-will-force-you-to/secure-your-jenkins-instance-or-hackers-will-force-you-to/01.png">
 
 
@@ -356,7 +356,7 @@
       
 
       
-        <p>之前在LevelUP会议上演讲了<a href="https://www.youtube.com/watch?v=1Kg0_53ZEq8" target="_blank" rel="external">《Doing Recon Like a Boss》</a>，之后在HackerOne上发布了一篇同样主题的<a href="https://www.hackerone.com/blog/how-to-recon-and-content-discovery" target="_blank" rel="external">博文</a>。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。</p>
+        <p>之前在LevelUP会议上演讲了<a href="https://www.youtube.com/watch?v=1Kg0_53ZEq8" target="_blank" rel="external">《Doing Recon Like a Boss》</a>，之后在HackerOne上发布了一篇同样主题的<a href="https://www.hackerone.com/blog/how-to-recon-and-content-discovery" target="_blank" rel="external">博文</a>。所以我决定开始在公开应用上寻找漏洞来验证那个方法论是否同样适用。作为整个实践过程序的一部分，我决定去瞧瞧Slack和Snapchat的赏金程序，并按之前演讲中那样实施侦察。<a id="more"></a></p>
 <p>###第一步-子域名爆破</p>
 <p>对于大型的赏金程序来说，子域名爆破是个经典的切入口，但不幸的是我所发现的域名没有什么意思，我就是想找到一些看起来有意思的事。</p>
 <p>那接着开始第二阶段吧。</p>
@@ -530,7 +530,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">42</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>

