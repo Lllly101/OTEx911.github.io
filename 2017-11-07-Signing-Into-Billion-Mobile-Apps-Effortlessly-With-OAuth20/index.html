@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="oauthi," />
+  <meta name="keywords" content="oauth," />
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="摘要主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现">
-<meta name="keywords" content="oauthi">
+<meta name="keywords" content="oauth">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【译】通过OAuth2.0可轻松登录数百万手机应用账号">
 <meta property="og:url" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/index.html">
@@ -92,7 +92,7 @@
 <meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/exploit.png">
 <meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-one.png">
 <meta property="og:image" content="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/table-two.png">
-<meta property="og:updated_time" content="2017-12-13T09:05:50.409Z">
+<meta property="og:updated_time" content="2018-01-12T07:00:05.089Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【译】通过OAuth2.0可轻松登录数百万手机应用账号">
 <meta name="twitter:description" content="摘要主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现">
@@ -358,7 +358,7 @@
       
 
       
-        <h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现了第三方app开发人员不合理的使用OAuth导致的一种影响甚广的新型攻击手法，攻击者可以远程利用该攻击，悄无声息的登录受害者的app帐户。为了证明该漏洞的普遍性和严重影响，我们编写了一个exp来检测在美国和中国排名前600的android应用，这些应用都使用了顶级IdP（即Facebook ，Google或新浪）提供的基于OAuth2.0的身份验证服务。结果令人震惊：这些应用程序平均有41.21％容易受到新的攻击。我们已经向受影响的IdP汇报了我们的发现，并收到了他们不同形式的确认/奖励。</p>
+        <h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>主流的身份提供商（IdP）使用OAuth2.0协议来支持单点登录服务。由于此协议最初设计用于满足第三方网站的授权需求，所以在使用OAuth来支持移动应用程序（app）身份验证时，研究人员已经发现了很多的缺陷。据我们所知，之前包括BlackHat USA’16 [3]，CCS’14 [2]和ACSAC’15 [5]提到的所有攻击都需要与受害者进行交互。例如通过恶意应用程序网络窃听等。但，我们发现了第三方app开发人员不合理的使用OAuth导致的一种影响甚广的新型攻击手法，攻击者可以远程利用该攻击，悄无声息的登录受害者的app帐户。为了证明该漏洞的普遍性和严重影响，我们编写了一个exp来检测在美国和中国排名前600的android应用，这些应用都使用了顶级IdP（即Facebook ，Google或新浪）提供的基于OAuth2.0的身份验证服务。结果令人震惊：这些应用程序平均有41.21％容易受到新的攻击。我们已经向受影响的IdP汇报了我们的发现，并收到了他们不同形式的确认/奖励。<a id="more"></a></p>
 <p>###1. 介绍</p>
 <p>由于第三方网站采用的基于OAuth2.0的单点登录（SSO）服务广受用户喜爱，最近，许多主流身份提供商（IdP）（如Facebook，Google和Sina）已经将OAuth2.0协议进行了调整，以在其社交媒体平台上支持第三方app的SSO。但由于移动应用程序SSO服务的端到端系统设置和操作环境的差异，原来的OAuth2.0协议不够用了。这一点尤其体现在OAuth2.0标准没有定义关键的安全要求和协议细节用来管理SSO过程中第三方（客户端）移动应用程序与其对应的后端服务器之间的交互。因此，各个IdP厂商基于OAuth2.0的应用程序编程接口（API）开发了不同的扩展用来以支持自己平台上的第三方移动应用程序的SSO服务。不幸的是，第三方移动应用程序开发人员无法完全理解IdP提供的文档，同时文档上也并未清晰的记录了可能的安全问题和API使用说明。更糟的是，第三方应用程序开发人员缺乏SSO-API的安全使用指南规范。</p>
 <p><img src="/2017-11-07-Signing-Into-Billion-Mobile-Apps-Effortlessly-With-OAuth20/billion_mobile_app/compare.jpg" alt=""></p>
@@ -459,7 +459,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/oauthi/" rel="tag"># oauthi</a>
+            <a href="/tags/oauth/" rel="tag"># oauth</a>
           
         </div>
       
@@ -566,7 +566,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -577,7 +577,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -588,7 +588,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

